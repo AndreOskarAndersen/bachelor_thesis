@@ -8,4 +8,3 @@ Inspiration:
 * https://github.com/Pjuske/Bachelors-Thesis/blob/master/Iversen-Truong-BachelorsThesis.pdf
 * https://github.com/Mystiking/bachelor-BA17
 * http://www.arxiv-sanity.com/
-* https://www.kaggle.com/c/titanic/discussion/5105 (godt eksempel på data science project udførelse)

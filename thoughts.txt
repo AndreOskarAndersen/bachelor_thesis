@@ -2,3 +2,41 @@ Hvorfor er Bjarkes thesis så spændende:
 1. Det er relevant/brugbart for et erhverv
 2. Det gør brug af mange metoder som vi har haft om i undervisningen
 3. Det er ikke lavet før
+
+Noter:
+* Det lader som om, at Bjarkes thesis består af flere delproblemer (som hver går igennem DS pipelinenen), som samlet er med til at optimere vindsandsynligheden)
+
+
+Hvilke metoder gør Bjarkes brug af:
+* Data gathering (using API)
+* Data cleaning (feature selection)
+* Clustering (and gap statistics)
+* Exploratory data analysis
+* PCA
+* Hypothesis testing
+* Logistic regression (and MLE)
+* kNN
+* Cross-validation
+* Performance and evaluation of kNN
+
+Delproblemer i Bjarkes og deres pipeline:
+1. Gather data and feature selection
+2. Grouping character into roles
+    1. Data preprocessing
+    2. Clustering (gap statistics)
+    3. Exploratory data analysis
+3. Live analysis of win probability
+    1. Exploratory data analysis
+    2. PCA
+    3. Hypothesis testing
+    4. Logistic regression
+    5. MLE
+    6. kNN
+    7. Cross-validation
+    8. Performance evaluation
+4. Assessment of player performance using regression-analysis
+    1. Data preprocessing
+    2. Outlier detection
+    3. Linear regression
+    4. MLE
+    5. Performance and evaluation
