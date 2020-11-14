@@ -1,14 +1,8 @@
-* Tool for evaluating hearthstone action (when i did action a, the model tells me, that my win probability increased by x%)
 * Team sport win prediction (can be used by a team to see, how big of an impact a new player has)
-* Improving the probability of a team winning a match
-* Optimizing expected payback of sports betting
-* Emotion detection based on face and audio
-* Optimizing the expected number of app downloads
-* Evaluating chess moves
-	* Split the game into early, mid and late game
-* Minimizing the impact of COVID (using data science and machine learning to predict who should be more careful)
-	* Looking at which types of people have the highest risk
-	* Looking at which countries are having the most trouble with COVID
+* Player or team evaluation
+* Identifying areas of improvement in sport
+* Using DS and Machine learning for finding the optimal soccer team (or another sport)
+* Play the manager of a sports team and use DS and ML to improving the team (both tactics and player picks. For instance in CSGO; I could pick Astralis as my team, then I will use DS and ML to decide which maps to pick, which team members to (potentially) swap for other players...)
 
 Inspiration:
 * https://github.com/leetemil/Bsc-Thesis/blob/master/Bsc%20Thesis.pdf
@@ -16,3 +10,7 @@ Inspiration:
 * https://github.com/Pjuske/Bachelors-Thesis/blob/master/Iversen-Truong-BachelorsThesis.pdf
 * https://github.com/Mystiking/bachelor-BA17
 * http://www.arxiv-sanity.com/
+
+Other:
+* https://www.kaggle.com/mateusdmachado/csgo-professional-matches?select=economy.csv
+* https://www.youtube.com/watch?v=dlZWB2D-NaQ&list=PL2zq7klxX5ATB60CpT2Ls3pbsBL-Z2IWq&index=2&ab_channel=KenJee
