@@ -1,0 +1,11 @@
+* Tool for evaluating hearthstone action (when i did action a, the model tells me, that my win probability increased by x%)
+* Team sport win prediction (can be used by a team to see, how big of an impact a new player has)
+* Optimizing expected payback of sports betting
+
+Inspiration:
+* https://github.com/leetemil/Bsc-Thesis/blob/master/Bsc%20Thesis.pdf
+* https://github.com/shmulvad/Caching-Strategies-for-Image-Processing/blob/master/thesis.pdf
+* https://github.com/Pjuske/Bachelors-Thesis/blob/master/Iversen-Truong-BachelorsThesis.pdf
+* https://github.com/Mystiking/bachelor-BA17
+* http://www.arxiv-sanity.com/
+* https://www.kaggle.com/c/titanic/discussion/5105 (godt eksempel på data science project udførelse)
