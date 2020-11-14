@@ -1,6 +1,14 @@
 * Tool for evaluating hearthstone action (when i did action a, the model tells me, that my win probability increased by x%)
 * Team sport win prediction (can be used by a team to see, how big of an impact a new player has)
+* Improving the probability of a team winning a match
 * Optimizing expected payback of sports betting
+* Emotion detection based on face and audio
+* Optimizing the expected number of app downloads
+* Evaluating chess moves
+	* Split the game into early, mid and late game
+* Minimizing the impact of COVID (using data science and machine learning to predict who should be more careful)
+	* Looking at which types of people have the highest risk
+	* Looking at which countries are having the most trouble with COVID
 
 Inspiration:
 * https://github.com/leetemil/Bsc-Thesis/blob/master/Bsc%20Thesis.pdf
