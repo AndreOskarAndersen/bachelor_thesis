@@ -1,0 +1,11 @@
+* Kig på sammenhængen mellem et holds økonomi og deres wins
+* Kig på Time series (eventuelt anvend LST RNN til prediction)
+* Team performance
+* Strategy
+* Player Performance
+* Item performance
+* Prediction af holdets sandsynlighed for at vinde, hvis de "ofrer" en vilkårlig medspiller for en modstander
+
+
+https://www.reddit.com/r/GlobalOffensive/comments/6tom6c/a_look_at_advanced_statistics_in_csgo/
+https://www.reddit.com/r/GlobalOffensive/comments/72fkl7/mm_analytics_some_pistol_round_statistics_and/
