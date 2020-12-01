@@ -4,6 +4,7 @@
 * Using DS and Machine learning for finding the optimal soccer team (or another sport)
 * Play the coach of a sports team and use DS and ML to improving the team (both tactics and player picks. For instance in CSGO; I could pick Astralis as my team, then I will use DS and ML to decide which maps to pick, which team members to (potentially) swap for other players...)
 * Vil gerne have et projekt, hvor jeg kigger på noget data, laver noget dataanalyse, drager nogle konklusioner baseret på dataanalysen og bruger disse konklusioner til at løse et problem (lidt ligesom vi gjorde i projektet i DS)
+* Text summarization using ML
 
 
 Inspiration:
