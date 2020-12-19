@@ -3,7 +3,7 @@
 * https://cocodataset.org/#home
 * 2D articulated human pose estimation og hvad lærer modellen? ("Hvad lærer modellen" skal være lidt ekstra - altså, krøllen på halen)
 * skriv projektbeskrivelse (1. problem/motivation, 2. Dataset, 3. Projektplan/tidsplan, 4. projektspecifikke læringsmål)
-* newel og parpal papers (ikke de rigtige navne, men noget lignende)
+* Newell og Papendreou papers (ikke de rigtige navne, men noget lignende)
 * Brug scholar.google.com til at kigge frem i tiden
 * Kig på stacked hourglass
 * Survey er papirer der sammenligner metoder
