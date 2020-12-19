@@ -1,0 +1,11 @@
+1. meeting
+* https://github.com/tensorflow/tfjs-models/tree/master/posenet
+* https://cocodataset.org/#home
+* 2D articulated human pose estimation og hvad lærer modellen? ("Hvad lærer modellen" skal være lidt ekstra - altså, krøllen på halen)
+* skriv projektbeskrivelse (1. problem/motivation, 2. Dataset, 3. Projektplan/tidsplan, 4. projektspecifikke læringsmål)
+* newel og parpal papers (ikke de rigtige navne, men noget lignende)
+* Brug scholar.google.com til at kigge frem i tiden
+* Kig på stacked hourglass
+* Survey er papirer der sammenligner metoder
+* Autoencoder med clustering og pca på midter lag (tror det hed bottleneck) kan bruges til at finde ud af hvad et et CNN lærer
+* Kig på Michelles master thesis om pose estimation (tror det var noget med ballet)
