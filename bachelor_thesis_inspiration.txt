@@ -4,3 +4,4 @@
 * https://github.com/Pjuske/Masters-Thesis/blob/master/Masters%20Thesis%20-%20Bjarke%20Kingo%20Iversen%20%26%20Susanne%20Truong.pdf
 * https://github.com/Mystiking/bachelor-BA17
 * http://www.arxiv-sanity.com/
+* http://publications.lib.chalmers.se/records/fulltext/253624/253624.pdf
