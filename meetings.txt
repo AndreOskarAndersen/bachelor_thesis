@@ -6,6 +6,7 @@
 * Survey er papirer der sammenligner metoder
 * Autoencoder med clustering og pca på midter lag (tror det hed bottleneck) kan bruges til at finde ud af hvad et et CNN lærer
 * https://www.dropbox.com/sh/xden54w9z4imfld/AACVStkQSm-NV4EVIV65jwBBa?dl=0
+
 * Kig på stacked hourglass
 * Læs om autoencoder
 * Skriv projektbeskrivelse (1. problem/motivation, 2. Dataset, 3. Projektplan/tidsplan, 4. projektspecifikke læringsmål)
@@ -13,9 +14,5 @@
 * Kig på Michelles master thesis om pose estimation (tror det var noget med ballet)
 
 Forberedelse til møde 2:
-* Explainable ai?
-* Er det rigtigt forstået, at stacked hourglass model kun virker på billeder med én person, hvorimod coco indeholder billeder med flere personer?
-	- Alternativt: Part Affinity Fields
-* Title: Single-human 2d articulated pose estimation?
-* Skal jeg lave en synopsis? (Titel, formål, baggrund/motivation, fremgangsmåde/metode, referencer til litteratur, ønske om opnåelse og lære af projektarbejdet)
 * Anvendelse af google collab pro (eller lignende)?
+* Lave multi-person istedet for single-person? (Eks. https://openaccess.thecvf.com/content_cvpr_2017/papers/Papandreou_Towards_Accurate_Multi-Person_CVPR_2017_paper.pdf)

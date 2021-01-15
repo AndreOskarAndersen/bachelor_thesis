@@ -1,0 +1,31 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+
+\title{MAD instruktorat}
+\author{André O. Andersen}
+
+\begin{document}
+
+\maketitle
+
+\section{Newell et al. - Stacked Hourglass Networks for Human Pose Estimation}
+\begin{itemize}
+    \item We introduce a novel "stacked hourglass" network design for predicting human pose. We refer to the design as an hourglass bsed on our visualization of the steps of pooling and subsequent upsamling used to get the final output of the network. The hourglass network pools down to a very low resolution, then upsamples and combines features across multiple resolutions.
+    \item We expand on a single hourglass by consecutively placing multiple hourglass modules together end-to-end. This allows for repeated bottom-up, top-down inference across scales. In conjunction with the use of intermediate supervision, repeated bidirectional inference is critical to the network's final performance. 
+    \item Our hourglass module before stacking is closely connected to fully convolutional networks. Our hourglass module differs from these designs mainly in its more symmetric distribution of capacity between bottom-up processing (from high resoltuions to low resolutions) and top-down processing (from low resolutions to high resolutions)
+    \item The hourglass is set up as follows: Convolutional and max pooling layers are used to process features down to a very low resolution. At each max pooling step, the network branches off and appies more convolutions at the original pre-pooled resolution. After reaching the lowest resolution, the network begins the top-down sequence of upsamping and combination of features across scales. To bring together information across two adjacent resolutions, we do nearest neighbor upsampling of the lower resolution followed by an elementwise addition of the two sets of features. The topology of the hourglass is symmetric, so for every layer present on the way down there is a corresponding layer going up. After reaching the output resolution of the network, two consecutive rounds of $1x1$ convolutions are applied to produce the final network predictions. The output of the network is a set of heatmaps where for a given heatmap the network predicts the probability of a joint's presence at each and every pixel.
+    \item Operating at the full input resolution of $256x256$ requires a significant amount of GPU memory, so the highest resolution of the hourglass (and thus the final output resolution) is $64x64$, This does not affect the network's ability to produce precise joint predictions. The full network starts with a $7x7$ convolutional layer with stride 2, followed by a residual module and a round of max pooling to bring the resolution down from $256$ to $64$. 
+    \item We take our network architecture further by stacking multiple hourglasses end-to-end, feeding the output of one as input into the next. This provides the network with a mechanism for repeated bottom-up, top-down inference allowing for reevaluation of initial estimates and features across the whole image.
+    \item There are often multiple people visible in a given input image, but without a graphical modle or other postprocessing step the image must convey all necessary information for the network to determine which person deserves the annotation. We deal with this by training the network to exclusively annotate the person in the direct center.
+\end{itemize}
+
+\section{Papandreou et al. - PersonLab: Person pose estimation abd instance segmentation with a bottom-up, part-based, geometric embedding model}
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\end{document}

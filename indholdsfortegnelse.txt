@@ -2,7 +2,7 @@
 
 2. Introduction
 2.1. Problem Statement
-2.1.1 Different types of pose estimation (bounding box vs skeleton, 2D vs 3D)
+2.1.1 Different types of pose estimation (bounding box vs skeleton, 2D vs 3D etc.)
 2.2 Real world applications
 2.2. Terminology/Notation
 
@@ -10,16 +10,13 @@
 3.1 Intro to machine learning
 3.1.1 Supervised learning
 3.1.2 Unsupervised learning
-3.1.3 Reinforcement learning
-3.2 Explaining evaluation metrics for supervised learning
-3.2.1 Regression
-3.3 Explaining neural networks
-3.3.1 Artificial neural networks (regular neural networks)
+3.2 Evaluation metrics for supervised learning
+3.3 Neural networks
+3.3.1 Artificial neural networks
 3.3.2 Convolutional neural networks
 3.3.3 Hourglass neural networks
-3.3.3.1 Hourglass neural networks
-3.3.3.2 Stacked hourglass
-3.3.4 Autoencodes
+3.3.4 Stacked hourglass
+3.3.5 Autoencodes
 
 4. The dataset
 4.1 Gathering the data
@@ -30,7 +27,7 @@
 
 5. Human pose estimation
 5.1 Training details
-5.2 Reasoning for using the hourglass model
+5.2 Reasoning for using the stacked hourglass model
 5.3 Describing the model setups (how many nodes/layers/which activation functions)
 5.4 Validation of different model setups
 
@@ -38,7 +35,7 @@
 6.1 Motivation
 6.2 Using the autoencoder and clustering
 6.3 How can we use this information to improve hour model?
-(6.4 New improved model)
+6.4 New improved model
 
 7. Discussion
 7.1 Choice of dataset
