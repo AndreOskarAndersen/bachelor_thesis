@@ -1,5 +1,9 @@
 # Title
-Exploring single-human 2d articulated pose estimation using stacked hourglass networks
+ 1. Explaining/Interpreting single-human 2D articulated pose estimation
+ 2. Single-human 2D articulated pose estimation with interpretation of the model/blackbox
+ 3. Interpreting the black boxbox of songle-human 2d articulated human pose
+ 4. Estimating the pose of a human with explainable artificial intelligence
+ 5. Single-human 2D articulated pose estimation using explainable artificial intelligence
 
 # Problem
 The task of this project is to create a model, which does 2D estimation of the pose of a single articulated human body in an image. This will be done firstly, by collecting, cleaning and explore a suitable dataset. Next, multiple models will be created and evaluated to find a optimal solution to the task. Lastly, the project will explore and evaluate what the final model has learned and use this to improve the understanding of the model.
