@@ -15,7 +15,7 @@ Human pose estimation is widely used in the world of technology today, where hug
 Computer science is the study of computer systems and how they can be used. This project will use the power of a computer system to store, explore and analyse data, hence why the project presents an instance of how computer systems can be used on data.
 
 # The dataset
-This project will make use of the 2017 COCO-dataset. The dataset contains pictures of people during various tasks, which have all been labeled with keypoints. The dataset is split into training, validation and a testing sets, however, the test set does not contain keypoint annotations, hence will not be used for this thesis. The training set is about 18 GB and contains about 118.000 images, where the validation set is about 1 GB and contains about 5.000 images.
+This project will make use of the 2017 COCO-keypoints dataset. The dataset contains pictures of people during various tasks, which have all been labeled with keypoints. The dataset is split into training, validation and a testing sets, however, the test set does not contain keypoint annotations, hence will not be used for this thesis. The training set is about 18 GB and contains about 118.000 images, where the validation set is about 1 GB and contains about 5.000 images.
 
 # Schedule
 Week 5 (1/2 - 7/2):
