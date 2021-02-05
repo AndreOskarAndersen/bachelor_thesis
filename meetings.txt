@@ -20,3 +20,14 @@ Forberedelse til møde 2:
 * Holder man ferie?
 * Gode kilder på preprocessing af billeder som data
 * Hvilket sprog samt bibliotek?
+
+
+2. meeting:
+* Behøver ikke være verdens bedste model - det er vigtigere den kan skildes ad
+* Måske både giv billede og skelet som input/output til autoencoder
+* SHG: plus er concat, box er convolution (+ max pooling)
+* EVERYTHING YOU NEED TO LEARN ABOUT DEEP LEARNING FOR COMPUTER VISION (læs frem til autoencover (og måske inklusiv))
+* scikit image (vær opmærksom på bgr istedet for rgb)
+* Kig på andre modellen inden SHG inden jeg låser mig fast
+* Skriv noget ned om COCO når jeg begynder at kigge på det, som skal skrives ind i rapporten.
+* Skriv noget ned om de artikler jeg har læst om, som så smides ind i indledningen. Skriv den sammenhængende valg af metode. "Der findes de her artikler ..., jeg har valgt at tage udgangspunkt i denne her artikel fordi...". Måske endda skriv dette allerede nu
