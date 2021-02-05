@@ -14,5 +14,9 @@
 * Kig på Michelles master thesis om pose estimation (tror det var noget med ballet)
 
 Forberedelse til møde 2:
-* Anvendelse af google collab pro (eller lignende)?
-* Lave multi-person istedet for single-person? (Eks. https://openaccess.thecvf.com/content_cvpr_2017/papers/Papandreou_Towards_Accurate_Multi-Person_CVPR_2017_paper.pdf)
+* Anvendelse af google collab (eller lignende)?
+* Hvilken model skal bruges? Er ret glad for stacked hour glass
+* Hvad skal jeg gøre med beskrivelsen af datasættet, projektets forbindelse til datalogi osv...
+* Holder man ferie?
+* Gode kilder på preprocessing af billeder som data
+* Hvilket sprog samt bibliotek?

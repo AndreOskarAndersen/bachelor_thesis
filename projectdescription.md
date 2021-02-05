@@ -37,7 +37,8 @@ Week 9 (1/3 - 7/3):
  * Validating models
 
 Week 10 (8/3 - 14/3):
- * Write section 4 (the dataset) and section 5 (Human pose estimation)
+ * Create models
+ * Validating models
 
 Week 11 (15/3 - 21/3):
  * What did the final model learn (XAI)
@@ -46,24 +47,22 @@ Week 12 (22/3 - 28/3)
  * What did the final model learn (XAI)
 
 Week 13 (29/3 - 4/4):
- * Easter holidays(?)
- * Write section 6 (A look into what the models learned)
+ * What did the final model learn (XAI)
 
 Week 14 (5/4 - 11/4)
- * Write section 3 (Theory)
+ * What did the final model learn (XAI)
 
 Week 15 (12/4 - 18/4)
- * Write section 3 (Theory)
+ * What did the final model learn (XAI)
 
 Week 16 (19/4 - 25/4):
- * Planned study break(?)
- * Write section 7 (Discussion)
+ * What did the final model learn (XAI)
 
 Week 17 (26/4 - 2/5):
- * Write section 7 (Discussion)
+ * What did the final model learn (XAI)
 
 Week 18 (3/5 - 9/5):
- * Write section 1 (abstract), section 2 (Introduction) and section 8 (Conclusion)
+ * What did the final model learn (XAI)
 
 Week 19 (10/5 - 16/5)
  * Improve model?
