@@ -22,11 +22,10 @@ Week 5 (1/2 - 7/2):
  * 4/2-21: Contract upload
 
 Week 6 (8/2 - 14/2):
- * Collect, explore and clean data
+ * Collect, explore, clean data and other prework
 
 Week 7 (15/2 - 21/2):
- * Creating models
- * Validating models
+ * Collect, explore, clean data and other prework
 
 Week 8 (22/2 - 28/2):
  * Create models
@@ -41,13 +40,16 @@ Week 10 (8/3 - 14/3):
  * Validating models
 
 Week 11 (15/3 - 21/3):
- * What did the final model learn (XAI)
+ * Create models
+ * Validating models
 
 Week 12 (22/3 - 28/3)
- * What did the final model learn (XAI)
+ * Create models
+ * Validating models
 
 Week 13 (29/3 - 4/4):
- * What did the final model learn (XAI)
+ * Create models
+ * Validating models
 
 Week 14 (5/4 - 11/4)
  * What did the final model learn (XAI)

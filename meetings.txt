@@ -21,13 +21,22 @@ Forberedelse til møde 2:
 * Gode kilder på preprocessing af billeder som data
 * Hvilket sprog samt bibliotek?
 
-
 2. meeting:
 * Behøver ikke være verdens bedste model - det er vigtigere den kan skildes ad
 * Måske både giv billede og skelet som input/output til autoencoder
-* SHG: plus er concat, box er convolution (+ max pooling)
+* Stacked hour glass: plus er concat, box er convolution (+ max pooling)
 * EVERYTHING YOU NEED TO LEARN ABOUT DEEP LEARNING FOR COMPUTER VISION (læs frem til autoencover (og måske inklusiv))
 * scikit image (vær opmærksom på bgr istedet for rgb)
-* Kig på andre modellen inden SHG inden jeg låser mig fast
-* Skriv noget ned om COCO når jeg begynder at kigge på det, som skal skrives ind i rapporten.
+* Kig på andre modellen inden Stacked hour glass inden jeg låser mig fast
+* Skriv noget ned om COCO når jeg begynder at kigge på det, som så skal skrives ind i rapporten.
 * Skriv noget ned om de artikler jeg har læst om, som så smides ind i indledningen. Skriv den sammenhængende valg af metode. "Der findes de her artikler ..., jeg har valgt at tage udgangspunkt i denne her artikel fordi...". Måske endda skriv dette allerede nu
+
+Forberedelse til møde 3:
+* For at gøre brug af SHG (eller en anden single-human model) skal der kun være én person i hvert billede - i COCO er der flere, hvordan gør jeg dette? Skal personen være i midten af billedet? Jeg har croppet billedet, så billedet tilpasses efter keypointsne
+* Keypoints'ne består af 3 punkter: x, y, v, hvor v viser om keypointet er visible. Skal v også bruges til at træne modelen?
+* Flere af de artikler jeg har læst flipper, roterer, rescaler, tilfører støj til deres billeder, burder jeg også gøre det?
+* Hver kropsdel er ikke en enkel pixel i virkeligheden, men det er det i datasættet. Skal jeg tilføje en radius rundt om den "rigtige" pixel, som så fungerer som et "korrekt område"?
+* Hvis en artikel har fundet en måde der bygger videre på SHG og forbedrer det, er det noget jeg burde overveje at gøre?
+    * Ved godt det ikke behøver være verdens bedste model, men kunne det ikke være fedt at vise i mit projekt, at jeg har læst videre på den oprindelige idet. "Newell gør det på denne her måde, men det har vist sig at være bedere hvis man gør det på denne her måde..." - eller måske kan dette måske bruges når jeg skal forbedre min model efter XAI?
+* "Related work"-afsnit i projekt?
+* Hvor meget inspiration må jeg tage fra Camillas rapport?
