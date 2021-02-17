@@ -1,0 +1,71 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, hmargin={1in, 1in}, vmargin={1in, 1in}]{geometry}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{wallpaper}
+\usepackage{palatino}
+\usepackage{subfiles}
+\usepackage{hyperref}
+\usepackage{biblatex}
+\usepackage[capposition=top]{floatrow}
+\usepackage{float}
+\addbibresource{./bibliography.bib}
+\bibliography{./bibliography.bib}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    citecolor=green
+}
+
+
+\begin{document}
+
+% ======================= FRONT PAGE =================================
+\thispagestyle{empty}
+\ULCornerWallPaper{1}{ku-coverpage/ku-farve.pdf}
+\ULCornerWallPaper{1}{ku-coverpage/nat-en.pdf}
+
+\vspace*{2 cm}
+\noindent \textbf{\huge Bachelor Thesis} \\
+\vspace*{1 cm} \\
+
+\begin{center}
+    \noindent \textbf{\Huge 2D Articulated Human Pose Estimation} \\
+    \vspace*{0.5 cm}
+    \noindent {\LARGE Using Explainable Artificial Intelligence} \\
+\end{center}
+
+\vspace{0.5 cm}
+
+\begin{center}
+    \noindent {\Large André Oskar Andersen} \\
+    \noindent \texttt{\large wpr684@alumni.ku.dk} \\
+    \vspace{0.5 cm}
+    \noindent \today
+\end{center}
+
+\vspace{12 cm}
+\noindent \textbf{\large Supervisor} \\
+\noindent Kim Steenstrup Pedersen \texttt{kimstp@di.ku.dk}
+
+\newpage
+\ClearWallPaper
+
+% ======================= TABLE OF CONTENT =================================
+\tableofcontents
+\newpage
+
+% ======================= THE DATASET =================================
+\subfile{dataset.tex}
+\newpage
+
+\printbibliography
+
+\newpage
+
+\end{document}

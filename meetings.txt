@@ -40,3 +40,11 @@ Forberedelse til møde 3:
     * Ved godt det ikke behøver være verdens bedste model, men kunne det ikke være fedt at vise i mit projekt, at jeg har læst videre på den oprindelige idet. "Newell gør det på denne her måde, men det har vist sig at være bedere hvis man gør det på denne her måde..." - eller måske kan dette måske bruges når jeg skal forbedre min model efter XAI?
 * "Related work"-afsnit i projekt?
 * Hvor meget inspiration må jeg tage fra Camillas rapport?
+
+Forberedelse til møde 4:
+* Når jeg laver referencer, skal jeg så skrive hele navnet og alle navne eller et "T. Lin et. al" fint?
+* Hvorfor sjove farver i rapport?
+* Skal jeg referere til COCO hjemmesiden eller artiklen fra google scholar?
+* Bedre måde at gemme preprocessed billeder på end png?
+(https://stackoverflow.com/a/41425878/12905157)
+* Kan jeg skrive, at heatmaps fungerer som en "sandsynlighed" for hvor et led er?
