@@ -16,7 +16,6 @@
 3.3.2 Convolutional neural networks
 3.3.3 Hourglass neural networks
 3.3.4 Stacked hourglass
-3.3.5 Autoencodes
 
 4. The dataset
 4.1 Gathering the data

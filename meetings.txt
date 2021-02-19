@@ -42,9 +42,23 @@ Forberedelse til møde 3:
 * Hvor meget inspiration må jeg tage fra Camillas rapport?
 
 Forberedelse til møde 4:
-* Når jeg laver referencer, skal jeg så skrive hele navnet og alle navne eller et "T. Lin et. al" fint?
-* Hvorfor sjove farver i rapport?
+* Kontrakt er blevet godkendt
+
+* Når jeg laver referencer til en artikle e.l., skal jeg så skrive hele navnet og alle navne eller et "T. Lin et. al" fint?
 * Skal jeg referere til COCO hjemmesiden eller artiklen fra google scholar?
+* Skal jeg skrive sidetal/sektion ned, når jeg laver referencer til artiker?
+* Når jeg skriver at jeg bruger eksempelvis pytorch, skal jeg så referere til det? eller må jeg antage at læserne kender til det?
+
+* Hvorfor sjove farver i rapport?
+* Kan jeg skrive, at heatmaps fungerer som en "sandsynlighed" for hvor et led er?
+* Skal jeg skrive hvordan man får dataen? eller er det fint at skrive, at jeg bruger COCO og så må læserne selv finde ud af hvordan man får det?
+
+* Jeg udvider pt hver bounding box med 50 px. Burde jeg gøre, så det istedet afhænger af størrelsen af bounding boxen?
 * Bedre måde at gemme preprocessed billeder på end png?
 (https://stackoverflow.com/a/41425878/12905157)
-* Kan jeg skrive, at heatmaps fungerer som en "sandsynlighed" for hvor et led er?
+* Skæv fordeling af validation og testing? (testing er ca. 5 gange så stort som validation)
+
+
+* Hvilke activation function ville være passende?
+* Hvad menes der med "After reaching the output resolution of the network, two consecutive rounds of 1x1 convolutions are applied to produce the final network predictions."
+* For hver branch er der kun én convolution eller har de bare kun tegnet én?
