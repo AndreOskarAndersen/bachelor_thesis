@@ -43,22 +43,33 @@ Forberedelse til møde 3:
 
 Forberedelse til møde 4:
 * Kontrakt er blevet godkendt
-
-* Når jeg laver referencer til en artikle e.l., skal jeg så skrive hele navnet og alle navne eller et "T. Lin et. al" fint?
+* Når jeg laver referencer til en artikle e.l., skal jeg så skrive hele navnet og alle navne eller et "Newell et. al" fint?
 * Skal jeg referere til COCO hjemmesiden eller artiklen fra google scholar?
 * Skal jeg skrive sidetal/sektion ned, når jeg laver referencer til artiker?
 * Når jeg skriver at jeg bruger eksempelvis pytorch, skal jeg så referere til det? eller må jeg antage at læserne kender til det?
-
 * Hvorfor sjove farver i rapport?
 * Kan jeg skrive, at heatmaps fungerer som en "sandsynlighed" for hvor et led er?
 * Skal jeg skrive hvordan man får dataen? eller er det fint at skrive, at jeg bruger COCO og så må læserne selv finde ud af hvordan man får det?
-
 * Jeg udvider pt hver bounding box med 50 px. Burde jeg gøre, så det istedet afhænger af størrelsen af bounding boxen?
 * Bedre måde at gemme preprocessed billeder på end png?
 (https://stackoverflow.com/a/41425878/12905157)
 * Skæv fordeling af validation og testing? (testing er ca. 5 gange så stort som validation)
-
-
 * Hvilke activation function ville være passende?
 * Hvad menes der med "After reaching the output resolution of the network, two consecutive rounds of 1x1 convolutions are applied to produce the final network predictions."
 * For hver branch er der kun én convolution eller har de bare kun tegnet én?
+
+Forberedelse til møde 5:
+* Jeg havde tænkt mig, at gøre forskel på heatmaps hvor et led er synligt og hvor ledet ikke er synligt, men det gør Newell ikke - skal jeg så også droppe det?
+* SHG, fig 4: betyder 128x1x1 virkelig 128 convolutions af størrelse 1x1?
+* Newell bruger 8 hourglasses, men Camilla bruger kun 2?
+* Er "convolution", "kernel" og "filter" det samme? - Det lille gitter med tal.
+* De skriver "Filters greater than 3x3 are never used" - dette gælder både for maxpooling og convolutions?
+* Er en "feature" én pixel?
+* Er i tvivl om kernel size ved maxpooling, da de ikke skriver dette. Istedet skriver de bare, at netværket når sin laveste resolution ved 4x4 pixels
+* Sker prediction ved den blå boks eller ved addition? Er den blå boks en convolution (det ligner det ved camillas - de skriver også 
+* Skal blokkende i Fig. 4 højre forstås som convolutions eller som residual modules?
+* Skal der altid en activation efter en convolution?
+* Residuals downsampler også en lille smule - er det meningen eller skal jeg justere dem, så de ikke gør?
+* Nogle komponenter passer ikke sammen med den information der er givet. Kan det passe at noget information (padding, stride, kernel size) ikke er givet så man skal selv justere på dette indtil at komponenterne passer sammen?
+* Er det meningen, at hvert hourglass kun skal spytte 17 heatmaps ud? eller er det meningen af det først er til sidst at de 17 heatmaps laves
+* Maxpooling på kernel_size = 60 tager meget lang tid
