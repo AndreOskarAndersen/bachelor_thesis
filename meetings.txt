@@ -64,7 +64,7 @@ Forberedelse til møde 5:
 * Newell bruger 8 hourglasses, men Camilla bruger kun 2?
 * Er "convolution", "kernel" og "filter" det samme? - Det lille gitter med tal.
 * De skriver "Filters greater than 3x3 are never used" - dette gælder både for maxpooling og convolutions?
-* Er en "feature" én pixel?
+* Er én "feature" én pixel?
 * Er i tvivl om kernel size ved maxpooling, da de ikke skriver dette. Istedet skriver de bare, at netværket når sin laveste resolution ved 4x4 pixels
 * Sker prediction ved den blå boks eller ved addition? Er den blå boks en convolution (det ligner det ved camillas - de skriver også 
 * Skal blokkende i Fig. 4 højre forstås som convolutions eller som residual modules?
@@ -73,3 +73,9 @@ Forberedelse til møde 5:
 * Nogle komponenter passer ikke sammen med den information der er givet. Kan det passe at noget information (padding, stride, kernel size) ikke er givet så man skal selv justere på dette indtil at komponenterne passer sammen?
 * Er det meningen, at hvert hourglass kun skal spytte 17 heatmaps ud? eller er det meningen af det først er til sidst at de 17 heatmaps laves
 * Maxpooling på kernel_size = 60 tager meget lang tid
+* Hvorfor har output egentlig en size på 64x64?
+* I tvivl om hvor activation functions skal være. Har bare fulgt Camillas
+* Hvordan ved jeg hvilke heatmaps der svarer til de rigtige? (ved beregning as loss)
+* Ikke helt sikker på hvor lossen skal anvendes efter den sidste hourglass
+* Med 2 hourglasses har jeg cirka 24 mio parametrer - lyder det ikke lidt voldsomt?
+* Laver jeg backpropagation rigtigt? (samler loss for hvert hourglass i en liste, laver forward prop, kører så over listen og laver backprop., på hver loss)

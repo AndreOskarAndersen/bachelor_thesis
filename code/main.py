@@ -2,6 +2,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.cuda
+import torch.optim as optim
+torch.autograd.set_detect_anomaly(True)
 
 class Residual(nn.Module):
     def __init__(self, in_channels = 256):
@@ -101,21 +104,27 @@ class SHG(nn.Module):
         self.post_conv_1 = []
         self.post_conv_2 = []
         self.post_blue_box_conv = []
+        self.blue_box = []
         self.input_branch = None # Clone of the input to hourglass, used for branch (see intermediate supervision process)
         
         # Hourglasses
         self.hourglasses = nn.ModuleList([Hourglass(num_layers=num_layers, num_bottlenecks=num_bottlenecks) for _ in range(self.num_hourglasses)])
         
-        for i in range(self.num_hourglasses - 1):
+        for _ in range(self.num_hourglasses - 1):
             self.post_conv_1.append(nn.Conv2d(256, 17, kernel_size = 1))
             self.post_conv_2.append(nn.Conv2d(17, 256, kernel_size = 1))
             self.post_blue_box_conv.append(nn.Conv2d(17, 256, kernel_size = 1))
-            
+          
         self.post_conv_1 = nn.ModuleList(self.post_conv_1)
         self.post_conv_2 = nn.ModuleList(self.post_conv_2)
         self.post_blue_box_conv = nn.ModuleList(self.post_blue_box_conv)
             
-    def forward(self, x):
+    def forward(self, x, print_loss = False, true_heatmaps = None, criterion = None):
+        self.loss = []
+        self.print_loss = print_loss
+        self.true_heatmaps = true_heatmaps
+        self.criterion = criterion
+        """
         x = self.pre_conv1(x)
         x = self.pre_residual1(x)
         x = self.pre_max_pool(x)
@@ -126,19 +135,87 @@ class SHG(nn.Module):
             self.input_branch = torch.clone(x)
             x = self.hourglasses[i](x)
             x = self.post_conv_1[i](x)
-            blue_box = torch.clone(x)
+            self.blue_box.append(torch.clone(x))
             x = self.post_conv_2[i](x)
-            x_blue_box_conv = self.post_blue_box_conv[i](blue_box)
-            x = self.input_branch + x + x_blue_box_conv
+            x = self.input_branch + x + self.post_blue_box_conv[i](self.blue_box[i])
             
+            # loss
+            if (self.true_heatmaps is not None and self.criterion is not None):
+                self.loss.append(self.criterion(self.blue_box[-1], self.true_heatmaps))
+                if (self.print_loss):
+                    print("loss at hourglass {}: {}".format(i, self.loss[-1]))
+                    
         x = self.hourglasses[-1](x)
         x = nn.Conv2d(256, 17, kernel_size = 1)(x)
         x = nn.Conv2d(17, 17, kernel_size = 1)(x)
+        
+        # loss for last layer
+        if (self.true_heatmaps is not None and self.criterion is not None):
+            self.loss.append(self.criterion(x, self.true_heatmaps))
+            if (self.print_loss):
+                print("loss at hourglass {}: {}".format(self.num_hourglasses - 1, self.loss[-1]))
+        
         return x
+        """
+                    
+        pre_conv1 = self.pre_conv1(x)
+        pre_residual1 = self.pre_residual1(pre_conv1)
+        pre_max_pool = self.pre_max_pool(pre_residual1)
+        pre_residual2 = self.pre_residual2(pre_max_pool)
+        pre_residual3 = self.pre_residual3(pre_residual2)
+        inputs = [pre_residual3]
+        hourglass_res = []
+        post_conv_1_res = []
+        post_conv_2_res = []
         
+        for i in range(self.num_hourglasses - 1):
+            hourglass_res.append(self.hourglasses[i](inputs[-1]))
+            post_conv_1_res.append(self.post_conv_1[i](hourglass_res[-1]))
+            post_conv_2_res.append(self.post_conv_2[i](post_conv_1_res[-1]))
+            inputs.append(inputs[-1] + post_conv_2_res[-1] + self.post_blue_box_conv[i](post_conv_1_res[-1]))
+            
+            # loss
+            if (self.true_heatmaps is not None and self.criterion is not None):
+                self.loss.append(self.criterion(post_conv_1_res[-1], self.true_heatmaps))
+                if (self.print_loss):
+                    print("loss at hourglass {}: {}".format(i, self.loss[-1]))
+            
+        hourglass_res.append(torch.clone(self.hourglasses[-1](inputs[-1])))
+        out_1 = nn.Conv2d(256, 17, kernel_size = 1)(hourglass_res[-1])
+        out_2 = nn.Conv2d(17, 17, kernel_size = 1)(out_1)
         
-#device = torch.device("cuda" if torch.cuda.available() else "cpu")
-        
-model = SHG()
-x = torch.randn(64, 3, 256, 256)
-print(model(x).shape)
+        # loss for last layer
+        if (self.true_heatmaps is not None and self.criterion is not None):
+            self.loss.append(self.criterion(out_2, self.true_heatmaps))
+            if (self.print_loss):
+                print("loss at hourglass {}: {}".format(self.num_hourglasses - 1, self.loss[-1]))
+
+        return out_2
+
+USE_GPU = False
+LEARNING_RATE = 2.5e-4
+NUM_EPOCHS = 10
+
+if USE_GPU:
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            
+    model = SHG().to(device)
+    x = torch.randn(64, 3, 256, 256).cuda()
+    print(model(x).shape)
+else:
+    model = SHG()
+    X = torch.randn(100, 3, 256, 256)
+    heatmaps = torch.randn(100, 17, 64, 64)
+    criterion = nn.MSELoss()
+    optimizer = optim.RMSprop(model.parameters(), lr = LEARNING_RATE)
+    
+    for epoch in range(NUM_EPOCHS):
+        for x, heatmap in zip(X, heatmaps):
+            x = torch.reshape(x, (1, x.shape[0], x.shape[1], x.shape[2]))
+            heatmap = torch.reshape(heatmap, (1, heatmap.shape[0], heatmap.shape[1], heatmap.shape[2]))
+            model(x, true_heatmaps = heatmap, criterion = criterion)
+            
+            for loss in reversed(model.loss):
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
