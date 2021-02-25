@@ -50,11 +50,12 @@ class Hourglass(nn.Module):
         self.branch_cov = []
         self.bottlenecks = []
         
-        for _ in range(self.num_layers):
+        for i in range(self.num_layers):
             self.encoder_max_poolings.append(nn.MaxPool2d(2, stride = 2))
             self.encoder_residuals.append(Residual())
             self.decoder_upsamplings.append(nn.Upsample(scale_factor = 2))
-            self.decoder_residuals.append(Residual())
+            if (i != self.num_layers - 1): # Last layer does not end on residual
+                self.decoder_residuals.append(Residual())
             self.branch_cov.append(Residual())
             
         self.encoder_max_poolings = nn.ModuleList(self.encoder_max_poolings)
@@ -124,7 +125,7 @@ class SHG(nn.Module):
         self.print_loss = print_loss
         self.true_heatmaps = true_heatmaps
         self.criterion = criterion
-        """
+        
         x = self.pre_conv1(x)
         x = self.pre_residual1(x)
         x = self.pre_max_pool(x)
@@ -134,7 +135,7 @@ class SHG(nn.Module):
         for i in range(self.num_hourglasses - 1):
             self.input_branch = torch.clone(x)
             x = self.hourglasses[i](x)
-            x = self.post_conv_1[i](x)
+            x = self.post_conv_1[i](x) # VIRKER IKKE; one of the variables needed for gradient computation has been modified by an inplace operation.
             self.blue_box.append(torch.clone(x))
             x = self.post_conv_2[i](x)
             x = self.input_branch + x + self.post_blue_box_conv[i](self.blue_box[i])
@@ -191,6 +192,7 @@ class SHG(nn.Module):
                 print("loss at hourglass {}: {}".format(self.num_hourglasses - 1, self.loss[-1]))
 
         return out_2
+        """
 
 USE_GPU = False
 LEARNING_RATE = 2.5e-4
@@ -217,5 +219,5 @@ else:
             
             for loss in reversed(model.loss):
                 optimizer.zero_grad()
-                loss.backward()
+                loss.backward(retain_graph = True)
                 optimizer.step()
