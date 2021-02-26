@@ -120,12 +120,7 @@ class SHG(nn.Module):
         self.post_conv_2 = nn.ModuleList(self.post_conv_2)
         self.post_blue_box_conv = nn.ModuleList(self.post_blue_box_conv)
             
-    def forward(self, x, print_loss = False, true_heatmaps = None, criterion = None):
-        self.loss = []
-        self.print_loss = print_loss
-        self.true_heatmaps = true_heatmaps
-        self.criterion = criterion
-        
+    def forward(self, x):        
         x = self.pre_conv1(x)
         x = self.pre_residual1(x)
         x = self.pre_max_pool(x)
@@ -134,65 +129,18 @@ class SHG(nn.Module):
         
         for i in range(self.num_hourglasses - 1):
             self.input_branch = torch.clone(x)
-            x = self.hourglasses[i](x)
-            x = self.post_conv_1[i](x) # VIRKER IKKE; one of the variables needed for gradient computation has been modified by an inplace operation.
+            x = self.hourglasses[i](x) # VIRKER IKKE; one of the variables needed for gradient computation has been modified by an inplace operation.
+            x = self.post_conv_1[i](x) 
             self.blue_box.append(torch.clone(x))
             x = self.post_conv_2[i](x)
             x = self.input_branch + x + self.post_blue_box_conv[i](self.blue_box[i])
-            
-            # loss
-            if (self.true_heatmaps is not None and self.criterion is not None):
-                self.loss.append(self.criterion(self.blue_box[-1], self.true_heatmaps))
-                if (self.print_loss):
-                    print("loss at hourglass {}: {}".format(i, self.loss[-1]))
                     
         x = self.hourglasses[-1](x)
         x = nn.Conv2d(256, 17, kernel_size = 1)(x)
         x = nn.Conv2d(17, 17, kernel_size = 1)(x)
-        
-        # loss for last layer
-        if (self.true_heatmaps is not None and self.criterion is not None):
-            self.loss.append(self.criterion(x, self.true_heatmaps))
-            if (self.print_loss):
-                print("loss at hourglass {}: {}".format(self.num_hourglasses - 1, self.loss[-1]))
+        self.blue_box.append(x)
         
         return x
-        """
-                    
-        pre_conv1 = self.pre_conv1(x)
-        pre_residual1 = self.pre_residual1(pre_conv1)
-        pre_max_pool = self.pre_max_pool(pre_residual1)
-        pre_residual2 = self.pre_residual2(pre_max_pool)
-        pre_residual3 = self.pre_residual3(pre_residual2)
-        inputs = [pre_residual3]
-        hourglass_res = []
-        post_conv_1_res = []
-        post_conv_2_res = []
-        
-        for i in range(self.num_hourglasses - 1):
-            hourglass_res.append(self.hourglasses[i](inputs[-1]))
-            post_conv_1_res.append(self.post_conv_1[i](hourglass_res[-1]))
-            post_conv_2_res.append(self.post_conv_2[i](post_conv_1_res[-1]))
-            inputs.append(inputs[-1] + post_conv_2_res[-1] + self.post_blue_box_conv[i](post_conv_1_res[-1]))
-            
-            # loss
-            if (self.true_heatmaps is not None and self.criterion is not None):
-                self.loss.append(self.criterion(post_conv_1_res[-1], self.true_heatmaps))
-                if (self.print_loss):
-                    print("loss at hourglass {}: {}".format(i, self.loss[-1]))
-            
-        hourglass_res.append(torch.clone(self.hourglasses[-1](inputs[-1])))
-        out_1 = nn.Conv2d(256, 17, kernel_size = 1)(hourglass_res[-1])
-        out_2 = nn.Conv2d(17, 17, kernel_size = 1)(out_1)
-        
-        # loss for last layer
-        if (self.true_heatmaps is not None and self.criterion is not None):
-            self.loss.append(self.criterion(out_2, self.true_heatmaps))
-            if (self.print_loss):
-                print("loss at hourglass {}: {}".format(self.num_hourglasses - 1, self.loss[-1]))
-
-        return out_2
-        """
 
 USE_GPU = False
 LEARNING_RATE = 2.5e-4
@@ -207,17 +155,24 @@ if USE_GPU:
 else:
     model = SHG()
     X = torch.randn(100, 3, 256, 256)
-    heatmaps = torch.randn(100, 17, 64, 64)
+    all_heatmaps = torch.randn(100, 17, 64, 64)
     criterion = nn.MSELoss()
     optimizer = optim.RMSprop(model.parameters(), lr = LEARNING_RATE)
     
     for epoch in range(NUM_EPOCHS):
-        for x, heatmap in zip(X, heatmaps):
+        for x, heatmaps in zip(X, all_heatmaps):
             x = torch.reshape(x, (1, x.shape[0], x.shape[1], x.shape[2]))
-            heatmap = torch.reshape(heatmap, (1, heatmap.shape[0], heatmap.shape[1], heatmap.shape[2]))
-            model(x, true_heatmaps = heatmap, criterion = criterion)
+            heatmaps = torch.reshape(heatmaps, (1, heatmaps.shape[0], heatmaps.shape[1], heatmaps.shape[2]))
             
-            for loss in reversed(model.loss):
+            model(x)
+            
+            losses = []
+            for i in range(model.num_hourglasses):
+                losses.append(criterion(model.blue_box[i], heatmaps))
+                
+            losses = torch.stack(losses)
+            
+            for loss in reversed(losses):
                 optimizer.zero_grad()
-                loss.backward(retain_graph = True)
+                loss.backward() # Trying to backward through the graph a second time, but the saved intermediate results have already been freed. Specify retain_graph = True
                 optimizer.step()
