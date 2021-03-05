@@ -59,23 +59,30 @@ Forberedelse til møde 4:
 * For hver branch er der kun én convolution eller har de bare kun tegnet én?
 
 Forberedelse til møde 5:
-* Jeg havde tænkt mig, at gøre forskel på heatmaps hvor et led er synligt og hvor ledet ikke er synligt, men det gør Newell ikke - skal jeg så også droppe det?
-* SHG, fig 4: betyder 128x1x1 virkelig 128 convolutions af størrelse 1x1?
-* Newell bruger 8 hourglasses, men Camilla bruger kun 2?
-* Er "convolution", "kernel" og "filter" det samme? - Det lille gitter med tal.
-* De skriver "Filters greater than 3x3 are never used" - dette gælder både for maxpooling og convolutions?
-* Er én "feature" én pixel?
-* Er i tvivl om kernel size ved maxpooling, da de ikke skriver dette. Istedet skriver de bare, at netværket når sin laveste resolution ved 4x4 pixels
-* Sker prediction ved den blå boks eller ved addition? Er den blå boks en convolution (det ligner det ved camillas - de skriver også 
-* Skal blokkende i Fig. 4 højre forstås som convolutions eller som residual modules?
-* Skal der altid en activation efter en convolution?
-* Residuals downsampler også en lille smule - er det meningen eller skal jeg justere dem, så de ikke gør?
-* Nogle komponenter passer ikke sammen med den information der er givet. Kan det passe at noget information (padding, stride, kernel size) ikke er givet så man skal selv justere på dette indtil at komponenterne passer sammen?
-* Er det meningen, at hvert hourglass kun skal spytte 17 heatmaps ud? eller er det meningen af det først er til sidst at de 17 heatmaps laves
-* Maxpooling på kernel_size = 60 tager meget lang tid
-* Hvorfor har output egentlig en size på 64x64?
-* I tvivl om hvor activation functions skal være. Har bare fulgt Camillas
-* Hvordan ved jeg hvilke heatmaps der svarer til de rigtige? (ved beregning as loss)
-* Ikke helt sikker på hvor lossen skal anvendes efter den sidste hourglass
-* Med 2 hourglasses har jeg cirka 24 mio parametrer - lyder det ikke lidt voldsomt?
 * Laver jeg backpropagation rigtigt? (samler loss for hvert hourglass i en liste, laver forward prop, kører så over listen og laver backprop., på hver loss)
+* Ret langsom: 4 sek pr. feedforward - Newell bruger til sammenligning 75 ms
+* Maxpooling på kernel_size = 60 tager meget lang tid
+
+* SHG, fig 4: betyder 128x1x1 virkelig 128 convolutions af størrelse 1x1?
+* De skriver "Filters greater than 3x3 are never used" - dette gælder både for maxpooling og convolutions?
+* Er den blå boks en convolution (det ligner det ved camillas) 
+
+* Hvordan ved jeg hvilke heatmaps der svarer til de rigtige? (ved beregning as loss)
+* Jeg havde tænkt mig, at gøre forskel på heatmaps hvor et led er synligt og hvor ledet ikke er synligt, men det gør Newell ikke - skal jeg så også droppe det?
+* Newell bruger 8 hourglasses, men Camilla bruger kun 2?
+* Skal der altid en activation efter en convolution? - I tvivl om hvor activation functions skal være. Har bare fulgt Camillas
+* Residuals/convolutions downsampler også en lille smule - er det meningen eller skal jeg justere dem, så de ikke gør?
+* Nogle komponenter passer ikke sammen med den information der er givet. Kan det passe at noget information (padding, stride, kernel size) ikke er givet så man skal selv justere på dette indtil at komponenterne passer sammen?
+* Hvorfor har output egentlig en size på 64x64?
+* Hvordan laver jeg disse heatmaps på 64x64 (skal jeg bare downsample dem på 256x256)?
+
+* Er én "feature" én pixel?
+* Er "convolution", "kernel" og "filter" det samme? - Det lille gitter med tal.
+
+Forberedelse til møde 6:
+* Man kan ikke altid gøre, så en person er i midten af det cropped billede. Skal jeg bare discarde disse personer eller skal jeg beholde dem?
+* Hvorfor er det en god ide at trække den gennemsnitlige RGB fra alle billeder?
+* Lærer modellen bare af sig selv, at den skal fokusere på personen i midten af billedet?
+* Hvor mange epochs?
+* Skal jeg også referere til hvor jeg har noget viden fra?
+* Hvorfor bruges MSE?
