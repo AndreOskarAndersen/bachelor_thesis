@@ -80,9 +80,12 @@ Forberedelse til møde 5:
 * Er "convolution", "kernel" og "filter" det samme? - Det lille gitter med tal.
 
 Forberedelse til møde 6:
-* Man kan ikke altid gøre, så en person er i midten af det cropped billede. Skal jeg bare discarde disse personer eller skal jeg beholde dem?
-* Hvorfor er det en god ide at trække den gennemsnitlige RGB fra alle billeder?
-* Lærer modellen bare af sig selv, at den skal fokusere på personen i midten af billedet?
-* Hvor mange epochs?
-* Skal jeg også referere til hvor jeg har noget viden fra?
-* Hvorfor bruges MSE?
+1. Man kan ikke altid gøre, så en person er i midten af det cropped billede. Skal jeg bare discarde disse personer eller skal jeg beholde dem?
+2. Lærer modellen bare af sig selv, at den skal fokusere på personen i midten af billedet?
+3. Hvorfor er det en god ide at trække den gennemsnitlige RGB fra alle billeder?
+4. Skal jeg også referere til hvor jeg har noget viden fra?
+5. Hvor mange epochs? (Newell bruger 4000 * 20 = 80.000 - fig. 8)
+6. Kan jeg validere modellen efter hver x'te epoch, så jeg får en flot graf som i Fig. 8. eller kommer det til at tage for lang tid?
+7. "Evaluation is done using the standard Percentage of Correct Keypoints (PCK) metric which reports the percentage of detections that fall within a normalized distance of the ground truth." - er det bare, at hvis predictionen ligger inden for en bestemt radius af groundtruth, så er den "korrekt" eller hvordan?
+8. "For generating final test predictions we run both the original input and a flipped version of the image through the network and average the heatmaps together (accounting for a 1% average improvement on validation)." - Burde jeg også gøre dette?
+9. "To improve performance at high precision thresholds the prediction is offset by a quarter of a pixel in the direction of its next highest neighbor before transforming back to the original coordinate space of the image. " - forstår jeg ikke helt
