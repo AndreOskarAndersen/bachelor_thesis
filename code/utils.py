@@ -1,8 +1,10 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import skimage
 import skimage.filters
 import skimage.transform
 import skimage.draw
+from tqdm.notebook import tqdm
 
 def create_heatmaps(keypoints, input_shape = (256, 256), output_shape = (64, 64)):
     """ GIVEN ONE OF THE ROWS IN THE CSV, CREATES THE 17 CORRESPONDING HEATMAPSS """
@@ -93,3 +95,20 @@ def draw_segmentation_extremes(I, segmentation, r, g, b, radius):
 def grey_to_rgb(img):
     """ Transforms the img from grey-scale to rgb """
     return np.stack((img,)*3, axis = -1)
+  
+def get_mean_rgb(dir_path, img_names):
+  """ returns the average rgb vector """
+  N = len(img_names)
+  average_rgb = 0
+  
+  for img_name in tqdm(img_names):
+    img = plt.imread(dir_path + img_name)
+    
+    if (len(img.shape) == 2):
+      rgb_img = np.stack((img,)*3, axis = -1).reshape((-1, 3))
+      average_rgb += np.mean(rgb_img.reshape((-1, 3)), axis = 0)/N
+      
+    else:
+      average_rgb += np.mean(img.reshape((-1, 3)), axis = 0)/N
+      
+  return average_rgb
