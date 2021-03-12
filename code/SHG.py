@@ -39,7 +39,6 @@ class Hourglass(nn.Module):
         self.encoder_residuals = [] # downsampling
         self.decoder_upsamplings = [] # upsampling
         self.decoder_residuals = [] # upsampling
-        self.branch = []
         self.branch_cov = []
         self.bottlenecks = []
         
@@ -59,6 +58,7 @@ class Hourglass(nn.Module):
         self.bottlenecks = nn.ModuleList([Residual() for _ in range(self.num_bottlenecks)])
         
     def forward(self, x):
+        self.branch = []
         
         # Encoding
         for i in range(self.num_layers):
@@ -110,6 +110,9 @@ class SHG(nn.Module):
         self.post_conv_1 = nn.ModuleList(self.post_conv_1)
         self.post_conv_2 = nn.ModuleList(self.post_conv_2)
         self.post_pred_conv = nn.ModuleList(self.post_pred_conv)
+        
+        self.last_conv_1 = nn.Conv2d(256, 17, kernel_size = 1)
+        self.last_conv_2 = nn.Conv2d(17, 17, kernel_size = 1)
             
     def forward(self, x):
         self.pred = []
@@ -131,13 +134,14 @@ class SHG(nn.Module):
             x = self.input_branch + x + relu(self.post_pred_conv[i](self.pred[i]))
                     
         x = self.hourglasses[-1](x)
-        x = nn.Conv2d(256, 17, kernel_size = 1)(x)
+
+        x = self.last_conv_1(x)
         x = relu(x)
-        x = nn.Conv2d(17, 17, kernel_size = 1)(x)
+        x = self.last_conv_2(x)
         x = relu(x)
         self.pred.append(x)
 
-        for i in range(len(self.pred)):
-          self.pred[i] = self.pred[i].data.numpy()
+        #for i in range(len(self.pred)):
+        #  self.pred[i] = self.pred[i].cpu().detach().numpy()
         
-        return x
+        return self.pred[-1]
