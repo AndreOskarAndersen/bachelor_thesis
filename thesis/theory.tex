@@ -4,30 +4,48 @@
 \begin{document}
 
 \section{Machine Learning Theory}
-Throughout this section, the theory of machine learning that will be used in this thesis is described and explained.
+Throughout this section the theory of machine learning that will be used in this thesis is described and explained.
 
 \subsection{Motivation}
 It can be difficult for humans to recognize certain patterns and trends in data. This becomes more difficult the greater the quantity of the data is, which is becomming more and more common with the rapidly growing topic of \textit{Big Data}. For this reason, computers are often used instead of humans to recognize patterns and trends in the data by analyzing the data, which is what is called \textit{Machine Learning}. In this thesis, we will use machine learning in section \textbf{MANGLER REFERENCE} to develop a model to estimate the 2D pose of a single human in an image. Later, in section \textbf{MANGLER REFERENCE}, we will use machine learning to improve our understanding of the model.
 
 \subsection{Machine Learning Paradigms}
-Machine learning usually consists of the three following paradigms
+Machine learning is usally split into the following three paradigms
 \begin{itemize}
-    \item \textit{Supervised learning} where the data consists of features and labels. By analyizing the data the algorithm learns to predict the labels given the features \cite{ESL}.
+    \item \textit{Supervised learning} where the data consists of features and labels. By analyizing the data the algorithm learns to predict the labels given the features \cite{ESL}. Supervised learning is further split into \textit{classification} and \textit{regression}. If the value of each label is limited, then the task is a classification task. If the value of each label is not limited, then the task is a regression task. 
     \item \textit{Unsupervised learning} where the data only consists of features. The algorithm then learns properties of the data, without any provided labels \cite{ESL}.
     \item \textit{Reinforcement learning} where the algorithm learns to perform the action in a given environment that yields the highest reward \cite{PRML}.
 \end{itemize}
 In this thesis we will make use of supervised learning when developing our model for pose estimation. Later, unsupervised learning is used when we explore our developed model.
 
 \subsection{Evaluation of Machine Learning Models}
+When developing a machine learning model it is important to know how trustworthy the developed model is. This is usually done by testing how good the model is at generalizing unseen data, which is done by making use of \textit{evaluation metrics}.
+
 \subsubsection{Splitting the dataset}
-\subsubsection{Evaluation Metrics for Supervised Machine Learning}
+When developing a machine learning model, the data needs to both create the model, but also to evaluate the model. For the evaluation of the model, one of the two following techniques is usually used
+
+\begin{enumerate}
+    \item \textit{Cross validation} where the data is split into $K$ random non-overlapping chunks of equal size. The model is then trained for $K$ rounds on $K - 1$ of the chunks, where the last chunk is used for evaluating the model. After each round the parameters of the model is reset to ensure one round does not affect another round. After the $K$ rounds the average loss of the $K$ rounds is the loss of the model \cite{MAD_book}.
+    \item \textit{Train-validation-test} where the data is split into $3$ random non-overlapping chunks. The training dataset is then used for training the model and the validation dataset is used for evaluating the model as it is being developed - this often means, that the \textit{hyperparameters}, the paramters that are not possible to fit from the data, are being tweaked to yield the best validation loss. Lastly, the testing dataset is used as a final evaluation of the model to yield an unbiased evaluation of the model. Once the testing dataset has been used it can no longer be used for evaluating the data, as this ensure an unbiased evaluation \cite{MAD_L3}.
+\end{enumerate}
+Throughout this thesis the train-validation-test technique will be used over cross validation for evaluating the developed models, as cross validation is better suited for smaller datasets, as the runtime is much greater than the runtime of the train-validation-test technique.
+
+\subsubsection{Evaluation Metrics for Supervised Machine Learning (Loss Functions)}
+When we have trained a model, we need to somehow evaluate how well the model performs on unseen data. This is usually done by making use of evaluation metrics or \textit{loss functions}. There are many different loss functions, each with their own advantages and disadvantages. One of the most common loss functions for regression is the \textit{Mean Squared Error (MSE)}, defined as
+$$MSE = \frac{1}{n} \sum_{i = 1} ^n \left( y_i - \hat{y}_i \right)^2$$
+where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the estimated value of the $i$th observation. Thus, $MSE$ measures the average squared difference between the true observation and the estimated observation. The aim of a model is thus to make the $MSE$ as small as possible \cite{ISL}.
 
 \subsection{Neural Networks}
-\subsection{Convolutional Neural Networks}
-\subsection{Stacked Hourglass}
-\subsubsection{The Residual Modules}
-\subsubsection{The Hourglass}
-\subsubsection{The Stacked Hourglass}
+\subsubsection{Termonology}
+\textbf{Epoch} \\
+\textbf{Mini-batch} \\
+\textbf{Activation function} \\
+\textbf{Optimizer}
+\subsubsection{Convolutional Neural Networks}
+\subsubsection{Stacked Hourglass}
+\textbf{The Residual Modules}\\
+\textbf{The Hourglass}\\
+\textbf{The Stacked Hourglass}
 
 \subsection{Principal Components Analysis and K-means Clustering}
 \subsubsection{Principal Components Analysis (PCA)}
