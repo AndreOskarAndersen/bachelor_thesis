@@ -94,23 +94,31 @@ class SHG(nn.Module):
         self.pre_residual3 = Residual()
         
         # After each hourglass
+        self.post_res = []
         self.post_conv_1 = []
         self.post_conv_2 = []
+        self.pre_pred_conv = []
         self.post_pred_conv = []
         self.input_branch = None # Clone of the input to hourglass, used for branch (see intermediate supervision process)
+        self.pred_branch = None
         
         # Hourglasses
         self.hourglasses = nn.ModuleList([Hourglass(num_layers=num_layers, num_bottlenecks=num_bottlenecks) for _ in range(self.num_hourglasses)])
         
         for _ in range(self.num_hourglasses - 1):
-            self.post_conv_1.append(nn.Conv2d(256, 17, kernel_size = 1))
-            self.post_conv_2.append(nn.Conv2d(17, 256, kernel_size = 1))
+            self.post_res.append(Residual())
+            self.post_conv_1.append(nn.Conv2d(256, 256, kernel_size = 1))
+            self.post_conv_2.append(nn.Conv2d(256, 256, kernel_size = 1))
+            self.pre_pred_conv.append(nn.Conv2d(256, 17, kernel_size = 1))
             self.post_pred_conv.append(nn.Conv2d(17, 256, kernel_size = 1))
           
+        self.post_res = nn.ModuleList(self.post_res)
         self.post_conv_1 = nn.ModuleList(self.post_conv_1)
         self.post_conv_2 = nn.ModuleList(self.post_conv_2)
+        self.pre_pred_conv = nn.ModuleList(self.pre_pred_conv)
         self.post_pred_conv = nn.ModuleList(self.post_pred_conv)
         
+        self.last_res = Residual()
         self.last_conv_1 = nn.Conv2d(256, 17, kernel_size = 1)
         self.last_conv_2 = nn.Conv2d(17, 17, kernel_size = 1)
             
@@ -123,18 +131,35 @@ class SHG(nn.Module):
         x = self.pre_residual2(x)
         x = self.pre_residual3(x)
         
-        for i in range(self.num_hourglasses - 1):
-            self.input_branch = torch.clone(x)
+        """for i in range(self.num_hourglasses - 1):
+            self.input_branch = x
             x = self.hourglasses[i](x)
             x = self.post_conv_1[i](x) 
             x = relu(x)
-            self.pred.append(torch.clone(x))
+            self.pred.append(x)
             x = self.post_conv_2[i](x)
             x = relu(x)
-            x = self.input_branch + x + relu(self.post_pred_conv[i](self.pred[i]))
-                    
+            x = self.input_branch + x + relu(self.post_pred_conv[i](self.pred[i]))"""
+            
+        for i in range(self.num_hourglasses - 1):
+            self.input_branch = x
+            x = self.hourglasses[i](x)
+            x = self.post_res[i](x)
+            x = self.post_conv_1[i](x)
+            x = relu(x)
+            self.pred_branch = x
+            self.pred_branch = self.pre_pred_conv[i](self.pred_branch)
+            self.pred_branch  = relu(self.pred_branch)
+            self.pred.append(self.pred_branch)
+            self.pred_branch = self.post_pred_conv[i](self.pred_branch)
+            self.pred_branch  = relu(self.pred_branch)
+            x = self.post_conv_2[i](x)
+            x = relu(x)
+            x = x + self.input_branch + self.pred_branch
+                  
         x = self.hourglasses[-1](x)
-
+        
+        x = self.last_res(x)
         x = self.last_conv_1(x)
         x = relu(x)
         x = self.last_conv_2(x)
