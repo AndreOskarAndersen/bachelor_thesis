@@ -11,21 +11,29 @@ class Residual(nn.Module):
     def __init__(self, in_channels = 256):
         super(Residual, self).__init__()
         self.conv1 = nn.Conv2d(in_channels = in_channels, out_channels = 128, kernel_size = 1)
+        self.bn1 = nn.BatchNorm2d(128)
         self.conv2 = nn.Conv2d(in_channels = 128, out_channels = 128, kernel_size = 3, padding = 1)
+        self.bn2 = nn.BatchNorm2d(128)
         self.conv3 = nn.Conv2d(in_channels = 128, out_channels = 256, kernel_size = 1)
+        self.bn3 = nn.BatchNorm2d(256)
         self.branch_cov = nn.Conv2d(in_channels = in_channels, out_channels = 256, kernel_size = 3, padding = 1)
+        self.bn_branch = nn.BatchNorm2d(256)
         
     def forward(self, x):
         branch = self.branch_cov(x)
+        branch = self.bn_branch(x)
 
         x = self.conv1(x)
         x = relu(x)
+        x = self.bn1(x)
         
         x = self.conv2(x)
         x = relu(x)
+        x = self.bn2(x)
         
         x = self.conv3(x)
         x = relu(x)
+        x = self.bn3(x)
         
         return x + branch
 
@@ -88,6 +96,7 @@ class SHG(nn.Module):
         
         # Before the first hourglass
         self.pre_conv1 = nn.Conv2d(3, 256, stride=2, kernel_size = 7, padding = 3)
+        self.bn_pre = nn.BatchNorm2d(256)
         self.pre_residual1 = Residual()
         self.pre_max_pool = nn.MaxPool2d(kernel_size = 2, stride = 2)
         self.pre_residual2 = Residual()
@@ -118,28 +127,21 @@ class SHG(nn.Module):
         self.pre_pred_conv = nn.ModuleList(self.pre_pred_conv)
         self.post_pred_conv = nn.ModuleList(self.post_pred_conv)
         
+        # Before the last output
         self.last_res = Residual()
         self.last_conv_1 = nn.Conv2d(256, 17, kernel_size = 1)
+        self.bn_last = nn.BatchNorm2d(17)
         self.last_conv_2 = nn.Conv2d(17, 17, kernel_size = 1)
             
     def forward(self, x):
         self.pred = []
         x = self.pre_conv1(x)
         x = relu(x)
+        x = self.bn_pre(x)
         x = self.pre_residual1(x)
         x = self.pre_max_pool(x)
         x = self.pre_residual2(x)
         x = self.pre_residual3(x)
-        
-        """for i in range(self.num_hourglasses - 1):
-            self.input_branch = x
-            x = self.hourglasses[i](x)
-            x = self.post_conv_1[i](x) 
-            x = relu(x)
-            self.pred.append(x)
-            x = self.post_conv_2[i](x)
-            x = relu(x)
-            x = self.input_branch + x + relu(self.post_pred_conv[i](self.pred[i]))"""
             
         for i in range(self.num_hourglasses - 1):
             self.input_branch = x
@@ -162,11 +164,8 @@ class SHG(nn.Module):
         x = self.last_res(x)
         x = self.last_conv_1(x)
         x = relu(x)
+        x = self.bn_last(x)
         x = self.last_conv_2(x)
-        x = relu(x)
         self.pred.append(x)
-
-        #for i in range(len(self.pred)):
-        #  self.pred[i] = self.pred[i].cpu().detach().numpy()
         
         return self.pred[-1]
