@@ -32,8 +32,7 @@ for i in range(17):
 
 train_labels = pd.read_csv(TRAIN_LABELS_PATH, delimiter = ",", names = HEADER)
 #test_labels = pd.read_csv(TEST_LABELS_PATH, delimiter = ",", names = HEADER)
-val_labels = pd.read_csv(VAL_LABELS_PATH, delimiter = ",", index_col=0, header = None).T
-val_labels.columns = HEADER
+val_labels = pd.read_csv(VAL_LABELS_PATH, delimiter = ",", names = HEADER)
 
 TRAIN_IMGS_PATH = "D:/bsc_data/train/image/"
 #TEST_IMGS_PATH = "D:/bsc_data/test/image/"
@@ -50,7 +49,7 @@ LEARNING_RATE = 2.5e-4
 NUM_EPOCHS = 100
 MINI_BATCH_SIZE = 16
 MINI_BATCHES = np.array_split(train_imgs, len(train_imgs)/MINI_BATCH_SIZE)
-SAVED_MODEL_PATH = "D:/bsc_data/models/Wed_Mar_17_16-05-12_2021/epoch_0.pth"
+SAVED_MODEL_PATH = "D:/bsc_data/models/Fri_Mar_19_10-55-07_2021/epoch_7.pth"
 cur_model_path = None
 start_epoch = 0
 average_loss = []
@@ -61,9 +60,7 @@ except:
     average_rgb = get_mean_rgb(TRAIN_IMGS_PATH, train_imgs)
     np.savetxt("./average_rgb.npy", average_rgb)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-model = SHG(num_hourglasses=1).to(device)
+model = SHG(num_hourglasses=1)
 
 if SAVED_MODEL_PATH is not None:
     model.load_state_dict(torch.load(SAVED_MODEL_PATH))
@@ -78,18 +75,19 @@ if (cur_model_path is None):
     cur_model_path = "D:/bsc_data/models/" + time.asctime().replace(" ", "_").replace(":", "-")
     os.mkdir(cur_model_path)
     
-x = plt.imread(VAL_IMGS_PATH + val_imgs[0])
+instance = 2
 
-gt_kp = val_labels.loc[val_labels["ID"] == val_imgs[0][:-4]].to_numpy()[0][1:]
+x = plt.imread(TRAIN_IMGS_PATH + train_imgs[instance])
+
+gt_kp = train_labels.loc[train_labels["ID"] == train_imgs[instance][:-4]].to_numpy()[0][1:]
 
 model.eval()
-x_tensor = torch.from_numpy(x).permute((2, 0, 1)).to(device)
+x_tensor = torch.from_numpy(x).permute((2, 0, 1))
 x_tensor = x_tensor.reshape((1, x_tensor.shape[0], x_tensor.shape[1], x_tensor.shape[2]))
 pred = model(x_tensor).cpu().data.numpy()[0]
-print(pred.shape)
-print(np.max(pred))
-
+for p in pred:
+    print(np.max(p))
 img, pred_keypoints = draw_predicitions_and_gt(x, gt_kp, pred)
+
 plt.imshow(img)
 plt.show()
-print("hej")

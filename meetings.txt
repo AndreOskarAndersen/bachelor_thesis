@@ -89,3 +89,27 @@ Forberedelse til møde 6:
 7. "Evaluation is done using the standard Percentage of Correct Keypoints (PCK) metric which reports the percentage of detections that fall within a normalized distance of the ground truth." - er det bare, at hvis predictionen ligger inden for en bestemt radius af groundtruth, så er den "korrekt" eller hvordan?
 8. "For generating final test predictions we run both the original input and a flipped version of the image through the network and average the heatmaps together (accounting for a 1% average improvement on validation)." - Burde jeg også gøre dette?
 9. "To improve performance at high precision thresholds the prediction is offset by a quarter of a pixel in the direction of its next highest neighbor before transforming back to the original coordinate space of the image. " - forstår jeg ikke helt
+
+Forberedelse til møde 7:
+1. Idet jeg preprocesser min data på samme måde som Newell gør, skal jeg så refere til ham/skrive at jeg gør på samme måde?
+2. Hvis jeg skal refere til en bog online, skal jeg så refere til url'en hvor jeg har læst eller til selve bogen?
+3. Hvordan laver jeg referencer til en forelæsningsslide?
+4. Må jeg bruge youtube videoer som referencer?
+5. Hvis jeg i et afsnit heletiden bruger skiftevis til to forskellige materialer, er det så fint nok hvis jeg bare tilsidst refererer til de to, istedet for at gøre det hver gang jeg skifter min anvendelse?
+
+6. Mine inputbilleder ligger i range [0, 1] istedet for [0, 255]. Er det et problem nu hvor jeg kun gør brug af ReLu?
+
+7. Accuracy metrics?
+8. Er det rigtigt at bruge MSE også til validation? 
+9. Når man laver validation, så skal mini-batch størrelsen være 1, right?
+10. Når man laver validation så er det gennemsnittet af loss på validation sættet som fungerer som den samlede loss?
+11. Modellen lærer kun at predicte 0'er
+12. Mine probabilities for pixelsne er ofte negative og bare generelt meget lave
+13. Allerede efter bare én epoch er min validation loss virkelig lav (10^(-5))
+
+14. Skal jeg også trække gennemsnitlig RGB fra validation og test?
+15. Kan man kalde det at "centralisere rgb" når man trækker den gennemsnitlige rgb fra?
+
+16. Skal man clone ved branches?
+17. Activation er en convolution og ikke før en convolution?
+18. Er der bestemte steder for batch norms?

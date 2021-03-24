@@ -109,6 +109,7 @@ def grey_to_rgb(img):
   
 def get_mean_rgb(dir_path, img_names):
 	""" returns the average rgb vector """
+	imgs_names = os.listdir(dir_path)
 	N = len(img_names)
 	average_rgb = 0
 	

@@ -8,14 +8,14 @@
 \usepackage{subfiles}
 \usepackage{hyperref}
 \usepackage{biblatex}
-\usepackage[capposition=top]{floatrow}
+\usepackage{floatrow}
 \usepackage{float}
+\usepackage{caption}
 \usepackage{bm}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \addbibresource{./bibliography.bib}
 \bibliography{./bibliography.bib}
-
 
 \hypersetup{
     colorlinks=true,
@@ -24,7 +24,6 @@
     urlcolor=blue,
     citecolor=green
 }
-
 
 \begin{document}
 
@@ -63,11 +62,11 @@
 \tableofcontents
 \newpage
 
-% ========================== Machine Learning Theory =================
+% ========================== Machine Learning Theory =======================
 \subfile{theory.tex}
 \newpage
 
-% ======================= THE DATASET =================================
+% ======================= THE DATASET ======================================
 \subfile{dataset.tex}
 \newpage
 
