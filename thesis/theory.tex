@@ -4,6 +4,10 @@
 \usepackage{bm}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{algorithmicx}
+\usepackage[ruled]{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{varwidth}
 \begin{document}
 
 \section{Machine Learning Theory}
@@ -38,16 +42,82 @@ When we have trained a model, we need to somehow evaluate how well the model per
 $$MSE = \frac{1}{n} \sum_{i = 1} ^n \left( y_i - \hat{y}_i \right)^2$$
 where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the estimated value of the $i$th observation. Thus, $MSE$ measures the average squared difference between the true observation and the estimated observation. The aim of a model is thus to make the $MSE$ as small as possible \cite{ISL}.
 
-\subsection{Neural Networks}
-In recent years \textit{deep learning} and \textit{neural networks} have revolutionized the use of machine learning. In this thesis a neural network will be used for performing the human pose estimation.
+\subsection{Neural Networks} \label{subsec:NeuralNetworks}
+In recent years \textit{deep learning} and \textit{neural networks} have revolutionized the use of machine learning. In this thesis a neural network will be used for performing the human pose estimation. Throughout subsection \ref{subsec:NeuralNetworks} the theory and mathematics behind neural networks is described and explained.
 \subsubsection{The Mathematics Behind Neural Networks}
+\begin{algorithm}[h]
+    \caption{Estimates $\operatorname*{argmin}_{\bm{x}}$ of function $f$ \cite{d2l}}
+    \label{Algorithm:gradient_descent_alg}
+    \begin{algorithmic}[1]
+        \Require Learning rate $\eta$
+        \Require Starting position $\bm{x}$
+        \Procedure{$\mathbf{GradientDescent}$}{}
+        \While{stopping criterion not met}
+            \State Apply update: $\bm{x} \gets  \bm{x} - \eta \nabla f(\bm{x})$
+        \EndWhile
+        \State \textbf{return} $\bm{x}$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+\noindent \textbf{Overfitting and Regularization} \\
+% Lidt uenig med definitionen af overfitting - taget fra DeepLearning. Tænk på underfitting.
+The main goal of a machine learning model is to generalize well on unseen data. This can often be difficult, as the model simply "remembers" the training data instead of learning the patterns in the training data. In other words, the gap between the training error and the test error is too large, which is a concept called \textit{overfitting}. Certain techniques are designed to reduce the test error - these techniques are collectively called \textit{regurlization} \cite{DeepLearning}. 
+\\
+\\
+\textbf{Gradient Descent} \\
+The goal of a machine learning model when training is to minimize its loss. There are different methods to do so, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$, a starting position $\bm{x}$ and a function $f$ as input, where $f$ is the function to minimize and $\eta$. It then computes the gradient of $f$ with respect to $\bm{x}$, and subtracts the gradient times $\eta$ from $\bm{x}$. This is done untill a stopping condition is met, such as when the magnitude of the gradient $\left| \nabla f(\bm{x}) \right|$ is small or untill a maximum amount of iterations has been reached \cite{d2l}.
+\begin{figure}
+    \centering
+    \includegraphics[width = 8 cm]{entities/batch_methods.PNG}
+    \caption{Comparison of batch, mini-batch and stochastic gradient descent \cite{EML_optimization}}
+    \label{fig:batch_methods}
+\end{figure}
+\\
+\\
+\noindent \textbf{Online, Mini-batch and Batch methods} \\
+\noindent When gradient descent is used for in machine learning, computing $\nabla f(\bm{x})$ is usually done by averaging the gradient of each of the $n$ observations of the trainingset, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} (also known as \textit{stochastic gradient descent}) a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size \cite{d2l}. \\
+Choosing the right batch size can be difficult, however, there are a few guidelines which one can follow \cite{EML_optimization} \cite{d2l}
+\begin{enumerate}
+    \item Looking at Figure \ref{fig:batch_methods} we see, that batch gradient descent uses the fewest iterations, however, each iteration takes the longest to compute. On the other hand, in online gradient descent each iteration is the fastest to compute, however, it is also the method that uses the most iterations. Lastly, mini-batch gradient descent combines the two: it uses less iterations than online gradient descent, but more than batch gradient descent, and each iteration takes less time than in the case with batch gradient descent, but longer than in the case with online gradient descent.
+    \item A batch size that is of power of $2$ can offer in better runtime for some hardware. A power of $2$ batch size that is often used for larger models is $16$, however, they typically range between $32$ and $256$.
+    \item Smaller batch sizes can offer a regularizing effect, as it is difficult for the model to "remember" the complete dataset from batches that does not represent the whole dataset.
+\end{enumerate}
+\begin{algorithm}[h]
+    \caption{Estimates $\operatorname*{argmin}_{\bm{\theta}}$ of loss function $L$ \cite{DeepLearning}}
+    \label{Algorithm:RMSProp}
+    \begin{algorithmic}[1]
+        \Require Learning rate $\eta$
+        \Require Decay rate $\rho$
+        \Require Starting position $\bm{\theta}$
+        \Require Small constant $\delta$, usually $10^{-6}$
+        \Procedure{$\mathbf{RMSProp}$}{}
+        \State Initialize accumulation variables: $\bm{r} \gets 0$
+        \While{stopping criterion not met}
+            \State \begin{varwidth}[t]{\linewidth}
+            Sample a minibatch of $m$ observations from the training set $\{\bm{x}^{(1)}, ..., \bm{x}^{(m)}\}$ with corresponding targets $\bm{y}^{(i)}$
+            \end{varwidth}
+            \State Compute gradient: $\bm{g} \gets \frac{1}{m} \nabla_{\bm{\theta}} \sum_i L(f(\bm{x}^{(i)}; \bm{\theta}), \bm{y}^{(i)})$
+            \State Accumulate squared gradient: $\bm{r} \gets \rho \bm{r} + (1 - \rho) \bm{g} \odot \bm{g}$
+            \State Compute parameter update: $\Delta\theta = - \frac{\eta}{\sqrt{\delta + \bm{r}}} \odot \bm{g}$
+            \State Apply update: $\bm{\theta} \gets \bm{\theta} + \Delta \bm{\theta}$ 
+        \EndWhile
+        \State \textbf{return} $\bm{\theta}$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+\noindent \textbf{Optimization Algorithms} \\
+\noindent Online, mini-batch and batch gradient descent are all optimization algorithms used for estimating the minimum of a function. One problem of these algorithms is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \texttt{RMSProp}, which has been visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discard knowledge from the past, so that it can converge after finding a convex bowl. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average.
+\\
+\\
+\textbf{Batch Normalization} \\
+\textbf{Epoch} \\
 \begin{figure}[H]
     \centering
     \includegraphics[height = 5 cm]{entities/feed_forward_nn.jpg}
     \caption{Visualization of a feedforward neural network with a single hidden layer \cite{feedforward_nn}}
     \label{feedforward_nn}
 \end{figure}
-\textbf{The architecture} \\
+\noindent \textbf{The Architecture and Forwardpropagation} \\
 One of the most common types of neural networks are \textit{feedforward neural networks}, where the data flows unidirectionally through the network. Such a network is visualized in Figure \ref{feedforward_nn}. The network is built up of three types of components: the \textit{input layer}, the \textit{hidden layers} and the \textit{output layer}. Each layer is built up of \textit{units}, also called \textit{neurons} (which are visualized as circles in Figure \ref{feedforward_nn}), where each neuron has a \textit{bias} assigned to it, and is connected to one or two other layers through \textit{edges} (which are visualized as arrows in FIgure \ref{feedforward_nn}), where each edge has a \textit{weight} assigned to it. Hidden layers are connected to two other layers - one before the hidden layer and one after the hidden layer - where the input layer is only connected to the next layer in the network and the output layer is only connected to the previous layer in the network. \\
 We can define the network mathemaically by letting $h_n ^{(i)}$ denote the value of the $n$th node in the $i$th layer, $w_{m, n}$ denote the value of the weight of the edge connecting the $n$th node in the $i$th layer to the $m$th node in layer $i + 1$ and $b_n ^{(i)}$ denote the bias corresponding to the $n$th node in the $i$th layer. \\
 When data flows through the model it follows the following formula
@@ -93,21 +163,12 @@ $\bm{b}^{(i + 1)}$ is the values of the biases of layer $i + 1$ defined by
 and $g$ is an \textit{activation function}, that is typically applied element-wise \cite{DeepLearning} \cite{3b1b_1}. One often used activation function is the \textit{rectified linear activation function} (or \textit{ReLu} for short) defined by
 $$g(x) = \max\{0, x\}.$$
 The ReLu-function is very close to being linear, making the function keep many of the properties of linear functions that make them easy to optimize and generalizing, which are two great advantages of using the ReLu-function. Another great advantage of using the ReLu-function is stated by the \textit{universal approximation theorem} that states, that a feedforward network with a linear output layer and at least one hidden layer with the ReLu-function (or another activation function from a wide class of activation functions) can approximate any continuous function on a closed and bounded subset of $\mathbb{R}^n$, as long as the network has enough hidden neurons \cite{DeepLearning}. 
-\noindent \textbf{Gradient Descent} \\
 \noindent \textbf{Backpropagation} \\
 
-
-\subsubsection{Termonology}
-\textbf{Overfitting and Regularization} \\
-% Lidt uenig med definitionen af overfitting - taget fra DeepLearning. Tænk på underfitting.
-The main goal of a machine learning model is to generalize well on unseen data. This can often be difficult, as the model simply "remembers" the training data instead of learning the patterns in the training data. In other words, the gap between the training error and the test error is too large, which is a concept called \textit{overfitting}. Certain techniques are designed to reduce the test error - these techniques are collectively called \textit{regurlization} \cite{DeepLearning}. \\
-\textbf{Mini-batch} \\
-\textbf{Batch Normalization} \\
-\textbf{Epoch} \\
-\textbf{Optimizer} \\
 \subsubsection{Convolutional Neural Networks}
 \textbf{NN Upsampling} \\
-\textbf{Maxpooling}
+\textbf{Maxpooling} \\
+\textbf{Convolution}
 \subsubsection{Stacked Hourglass}
 \textbf{Reasoning behind using the Stached Hourglass} \\
 \textbf{The Residual Modules}\\

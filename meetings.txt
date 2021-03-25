@@ -113,3 +113,11 @@ Forberedelse til møde 7:
 16. Skal man clone ved branches?
 17. Activation er en convolution og ikke før en convolution?
 18. Er der bestemte steder for batch norms?
+
+Forberedelse til møde 8:
+1. Lavede gradient descent algoritme
+2. Laver formler om
+3. Hvad hvis jeg selv kommer op med noget?
+4. Kan man kalde det at "centralisere rgb" når man trækker den gennemsnitlige rgb fra?
+5. Har skrevet lidt om på universal approximation theorem
+6. pt. bruger jeg rmsprop uden momentum - tror du jeg burde prøve med?
