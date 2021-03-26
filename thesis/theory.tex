@@ -106,11 +106,23 @@ Choosing the right batch size can be difficult, however, there are a few guideli
     \end{algorithmic}
 \end{algorithm}
 \noindent \textbf{Optimization Algorithms} \\
-\noindent Online, mini-batch and batch gradient descent are all optimization algorithms used for estimating the minimum of a function. One problem of these algorithms is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \texttt{RMSProp}, which has been visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discard knowledge from the past, so that it can converge after finding a convex bowl. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average.
+\noindent Online, mini-batch and batch gradient descent are all optimization algorithms used for estimating the minimum of a function. One problem of these algorithms is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \texttt{RMSProp}, which has been visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discard knowledge from the past, so that it can converge after finding a convex bowl. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
 \\
 \\
 \textbf{Batch Normalization} \\
+\textit{Batch normalization} is a recent adaptive reparametrization method, which is applied to individual layers. Let $\bm{\mathcal{B}}$ be a minibatch of activations of the layer to normalize, where each row corresponds to the activations of a unique observation. To normalize $\bm{\mathcal{B}}$ we do
+$$\bm{\mathcal{B}} = \frac{\bm{\mathcal{B}} - \bm{\mu}}{\bm{\sigma}}$$
+where
+$$\bm{\mu} = \frac{1}{|\bm{\mathcal{B}}|} \sum_{\bm{x} \in \bm{\mathcal{B}}} \bm{x}$$
+and
+$$\bm{\sigma} = \sqrt{\delta + \frac{1}{|\bm{\mathcal{B}}|} \sum_{\bm{x} \in \bm{\mathcal{B}}}} \left(\bm{\mathcal{B}} - \bm{\mu} \right)^2$$
+where $\delta$ is positive number, close to $0$, which is used to avoid division by zero when normalizing $\bm{\mathcal{B}}$.
+% MANGLER AT FÆRDIGGØRE BATCH NORMALIZATION.
+\\
+\\
 \textbf{Epoch} \\
+An \textit{epoch} is an iteration through the whole dataset during fitting of the network. Multiple epochs are often needed to reach the minimum of the loss function \cite{d2l}.
+
 \begin{figure}[H]
     \centering
     \includegraphics[height = 5 cm]{entities/feed_forward_nn.jpg}
