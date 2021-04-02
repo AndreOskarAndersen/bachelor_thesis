@@ -10,30 +10,28 @@ from tqdm.notebook import tqdm
 class Residual(nn.Module):
     def __init__(self, in_channels = 256):
         super(Residual, self).__init__()
+        self.input_bn = nn.BatchNorm2d(in_channels)
         self.conv1 = nn.Conv2d(in_channels = in_channels, out_channels = 128, kernel_size = 1)
         self.bn1 = nn.BatchNorm2d(128)
         self.conv2 = nn.Conv2d(in_channels = 128, out_channels = 128, kernel_size = 3, padding = 1)
         self.bn2 = nn.BatchNorm2d(128)
         self.conv3 = nn.Conv2d(in_channels = 128, out_channels = 256, kernel_size = 1)
-        self.bn3 = nn.BatchNorm2d(256)
         self.branch_cov = nn.Conv2d(in_channels = in_channels, out_channels = 256, kernel_size = 3, padding = 1)
-        self.bn_branch = nn.BatchNorm2d(256)
         
     def forward(self, x):
         branch = self.branch_cov(x)
-        branch = self.bn_branch(x)
 
+        x = self.input_bn(x)
+        x = relu(x)
         x = self.conv1(x)
-        x = relu(x)
+        
         x = self.bn1(x)
-        
+        x = relu(x)
         x = self.conv2(x)
-        x = relu(x)
-        x = self.bn2(x)
         
-        x = self.conv3(x)
+        x = self.bn2(x)
         x = relu(x)
-        x = self.bn3(x)
+        x = self.conv3(x)
         
         return x + branch
 
@@ -67,6 +65,7 @@ class Hourglass(nn.Module):
         
     def forward(self, x):
         self.branch = []
+        bottleneck_res = []
         
         # Encoding
         for i in range(self.num_layers):
@@ -77,6 +76,7 @@ class Hourglass(nn.Module):
         # Bottleneck
         for i in range(self.num_bottlenecks):
             x = self.bottlenecks[i](x)
+            bottleneck_res.append(x)
             
         # Decode
         for i in range(self.num_layers - 1):
@@ -86,7 +86,7 @@ class Hourglass(nn.Module):
             
         x = self.decoder_upsamplings[-1](x) # Last layer does not end on residual
             
-        return x + self.branch[0]
+        return x + self.branch[0], bottleneck_res
 
 class SHG(nn.Module):
     def __init__(self, num_hourglasses = 2, num_layers = 4, num_bottlenecks = 2):
@@ -132,17 +132,25 @@ class SHG(nn.Module):
         self.last_conv_1 = nn.Conv2d(256, 17, kernel_size = 1)
         self.bn_last = nn.BatchNorm2d(17)
         self.last_conv_2 = nn.Conv2d(17, 17, kernel_size = 1)
+        
+        # Initialize weights
+        self.init_params()
+        
+    def init_params(self):
+        for p in self.parameters():
+            if (len(p.shape) > 1): # cannot init batchnorms. 
+                nn.init.xavier_normal_(p)
             
     def forward(self, x):
-        self.pred = []
         x = self.pre_conv1(x)
-        x = relu(x)
         x = self.bn_pre(x)
+        x = relu(x)
         x = self.pre_residual1(x)
         x = self.pre_max_pool(x)
         x = self.pre_residual2(x)
         x = self.pre_residual3(x)
             
+        # NOTE: The following for-loop is probably wrong, however, as I am only using 1 hourglass it has not effect
         for i in range(self.num_hourglasses - 1):
             self.input_branch = x
             x = self.hourglasses[i](x)
@@ -152,20 +160,18 @@ class SHG(nn.Module):
             self.pred_branch = x
             self.pred_branch = self.pre_pred_conv[i](self.pred_branch)
             self.pred_branch  = relu(self.pred_branch)
-            self.pred.append(self.pred_branch)
             self.pred_branch = self.post_pred_conv[i](self.pred_branch)
             self.pred_branch  = relu(self.pred_branch)
             x = self.post_conv_2[i](x)
             x = relu(x)
             x = x + self.input_branch + self.pred_branch
                   
-        x = self.hourglasses[-1](x)
+        x, bottleneck_res = self.hourglasses[-1](x)
         
         x = self.last_res(x)
         x = self.last_conv_1(x)
-        x = relu(x)
         x = self.bn_last(x)
+        x = relu(x)
         x = self.last_conv_2(x)
-        self.pred.append(x)
         
-        return self.pred[-1]
+        return x, bottleneck_res
