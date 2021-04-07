@@ -9,10 +9,10 @@ To perform the pose estimation, we need some data on which to train, validate an
     \centering
     \includegraphics[height = 4 cm]{./entities/coco_example.png}
     \RawCaption{\caption*{\footnotesize Notice how the image contains multiple people, each \\ with their own keypoints and amount of joints labeled}}
-    \caption{Example of an image from the COCO dataset with the keypoints drawn on \cite{COCOarticle}}
+    \caption{Example of an image from the COCO dataset with the keypoints drawn on \cite{COCO_article}}
     \label{fig:coco_example}
 \end{figure}
-The data needed for our model has to fit to our problem and has to be annotated, as our model will perform supervised learning. There are multiple datasets that fits these requirements. One of these datasets is the Common Objects in Context (COCO) dataset \cite{COCOarticle}, which we will be using. The dataset contains annotations for different purposes, however, for our pose-estimation-task, only the keypoint annotations of human bodies are needed. An example of such a picture with the keypoints labeled can be seen in Figure \ref{fig:coco_example}. \\
+The data needed for our model has to fit to our problem and has to be annotated, as our model will perform supervised learning. There are multiple datasets that fits these requirements. One of these datasets is the Common Objects in Context (COCO) dataset \cite{COCO_article}, which we will be using. The dataset contains annotations for different purposes, however, for our pose-estimation-task, only the keypoint annotations of human bodies are needed. An example of such a picture with the keypoints labeled can be seen in Figure \ref{fig:coco_example}. \\
 The annotation of each person consists of an array with a length of $51$, which annotates $17$ keypoints of a person. Thus, each joint corresponds to three sequential elements in the array, where the first and second indices corresponds to the $x$ and $y$-location of the joint in the image, and the third index is a flag, $v$, telling the visibility of the joint in the image. $v$ has three outcomes: if $v = 0$, the joint is not labeled, if $v = 1$, the joint is labeled but not visible, and if $v = 2$, the joint is visible and labeled. \\
 The creators of the dataset has already split the data into three parts: a part used for training the model, a part used for validating the model and a part used for testing the model. However, the part used for testing the model is unlabel, hence, it is unusable for our purpose, as our model will be doing supervised learning. As both the training dataset and the validation dataset will be used for training and tuning the model, we will need to create our own hold-out dataset for testing to provide an unbiased evaluation of the final model. \\
 The training and validation sets contains a total of about $123.000$ various images. As we only need the images that contain humans, we will be discarding the images without any humans, leaving us with a total of about $66.808$ images of humans doing various tasks, with a total of $149.813$ humans annotated with keypoints. Each image can contain multiple people, which we need to handle before training our model, as we will be focusing on single-human pose estimation. Besides this, each image also has different resolution and aspect ratio, which we also need to handle, as our model requires the images to have a fixed resolution. Lastly, we should also do some handling of the labels before training the model, as there could have been some inaccuracies, when the joints were labeled. This especially applies when $v = 1$, that is, when the joint is labeled but not visible, as there are more inaccuracies or uncertainty when labeling a non-visible joint than when labeling a visible joint.
@@ -43,7 +43,7 @@ To create the dataset which will be used for testing we take the training set, s
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth - 2 cm]{./entities/crop_img.PNG}
-    \caption{The results of processing the image from Figure \ref{fig:coco_example} with the corresponding labels \cite{COCOarticle}}
+    \caption{The results of processing the image from Figure \ref{fig:coco_example} with the corresponding labels \cite{COCO_article}}
     \label{fig:crop_img}
 \end{figure}
 % NOTE: MÅSKE EN BEDRE "INDLEDNING" TIL AFSNITTET (1.2.2)?

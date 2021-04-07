@@ -38,7 +38,7 @@ where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the es
 In recent years \textit{deep learning} and \textit{neural networks} have revolutionized the use of machine learning. In this thesis a neural network will be used for performing the human pose estimation. Throughout subsection \ref{subsec:NeuralNetworks} the theory and mathematics behind neural networks is described and explained.
 \subsubsection{The Mathematics Behind Neural Networks}
 \begin{algorithm}[h]
-    \caption{$\mathbf{GradientDescent}$ \cite{d2l}}
+    \caption{GradientDescent \cite{d2l}}
     \label{Algorithm:gradient_descent_alg}
     \begin{algorithmic}[1]
         \Require Learning rate $\eta$
@@ -69,11 +69,11 @@ The goal of a machine learning model when training is to minimize its loss. Ther
 Choosing the right batch size can be difficult, however, there are a few guidelines which one can follow \cite{EML_optimization} \cite{d2l}
 \begin{enumerate}
     \item Looking at Figure \ref{fig:batch_methods} we see, that batch gradient descent uses the fewest iterations, however, each iteration takes the longest to compute. On the other hand, in online gradient descent each iteration is the fastest to compute, however, it is also the method that uses the most iterations. Lastly, mini-batch gradient descent combines the two: it uses less iterations than online gradient descent, but more than batch gradient descent, and each iteration takes less time than in the case with batch gradient descent, but longer than in the case with online gradient descent.
-    \item A batch size that is of power of $2$ can offer in better runtime for some hardware. A power of $2$ batch size that is often used for larger models is $16$, however, they typically range between $32$ and $256$.
+    \item A batch size that is of power of $2$ can offer in better runtime for some hardware. A batch size that is often used for larger models is $16$, however, they typically range between $32$ and $256$.
     \item Smaller batch sizes can offer a regularizing effect, as it is difficult for the model to "remember" the complete dataset from batches that does not represent the whole dataset.
 \end{enumerate}
 \begin{algorithm}[h]
-    \caption{$\mathbf{RMSProp}$ \cite{DeepLearning}}
+    \caption{RMSProp \cite{DeepLearning}}
     \label{Algorithm:RMSProp}
     \begin{algorithmic}[1]
         \Require Learning rate $\eta$
@@ -94,7 +94,7 @@ Choosing the right batch size can be difficult, however, there are a few guideli
     \end{algorithmic}
 \end{algorithm}
 \noindent \textbf{Optimization Algorithms} \\
-\noindent Online, mini-batch and batch gradient descent are all optimization algorithms used for estimating the minimum of a function. One problem of these algorithms is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \texttt{RMSProp}, which has been visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discard knowledge from the past, so that it can converge after finding a convex bowl. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
+\noindent Online, mini-batch and batch gradient descent are all optimization algorithms used for estimating the minimum of a function. One problem of these algorithms is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \texttt{RMSProp}, which has been visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discards knowledge from the past, so that it can converge after finding a convex bowl. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
 \\
 \\
 \textbf{Batch Normalization} \\
@@ -163,11 +163,11 @@ $\bm{b}^{(i + 1)}$ is the values of the biases of layer $i + 1$ defined by
 \end{center}
 and $g$ is an \textit{activation function}, that is typically applied element-wise \cite{DeepLearning} \cite{3b1b_1}. One often used activation function is the \textit{rectified linear activation function} (or \textit{ReLU} for short) defined by
 $$g(x) = \max\{0, x\}.$$
-The ReLU-function is very close to being linear, making the function keep many of the properties of linear functions that make them easy to optimize and generalizing, which are two great advantages of using the ReLU-function. Another great advantage of using the ReLU-function is stated by the \textit{universal approximation theorem} that states, that a feedforward network with a linear output layer and at least one hidden layer with the ReLU-function (or another activation function from a wide class of activation functions) can approximate any continuous function on a closed and bounded subset of $\mathbb{R}^n$ (and actually some functions outside of this class), as long as the network has enough hidden neurons \cite{DeepLearning}. 
+The ReLU-function is very close to being linear, making the function keep many of the properties of linear functions that make them easy to optimize and generalizing, which are two great advantages of using the ReLU-function. Another great advantage of using the ReLU-function is stated by the \textit{universal approximation theorem} which states, that a feedforward network with a linear output layer and at least one hidden layer with the ReLU-function (or another activation function from a wide class of activation functions) can approximate any continuous function on a closed and bounded subset of $\mathbb{R}^n$ (and actually some functions outside of this class), as long as the network has enough hidden neurons \cite{DeepLearning}. 
 \\
 \\
 \noindent \textbf{Backpropagation} \\
-Backpropagation is an algorithm used to compute the gradient of each parameter in the network. It is used together with an optimization algorithm, such as \texttt{RMSProp}, to train the model by minimizing the training loss of the model. Backpropagation happens after data has flowed through the model from the input to the output, and works by computing the gradient of each parameter sequentially from the output to the input of the model. The procedure makes heavily use of the \textit{chain rule} from calculus, which states, that if we let $\bm{x} \in \mathbb{R}^m$, $\bm{y} \in \mathbb{R}^n$, $g$ be a function that maps from $\mathbb{R}^m$ to $\mathbb{R}^n$ and $f$ be a function that maps from $\mathbb{R}^n$ to $\mathbb{R}$, then, if we let $\bm{y} = g(\bm{x})$ and $z = f(\bm{y})$, we can then compute $\frac{\partial z}{\partial x_i}$ by
+Backpropagation is an algorithm used to compute the gradient of the network. It is used together with an optimization algorithm, such as \texttt{RMSProp}, to train the model by minimizing the training loss of the model. Backpropagation happens after data has flowed through the model from the input to the output, and works by computing the gradient of each parameter sequentially from the output to the input of the model. The procedure makes heavily use of the \textit{chain rule} from calculus, which states, that if we let $\bm{x} \in \mathbb{R}^m$, $\bm{y} \in \mathbb{R}^n$, $g$ be a function that maps from $\mathbb{R}^m$ to $\mathbb{R}^n$ and $f$ be a function that maps from $\mathbb{R}^n$ to $\mathbb{R}$, then, if we let $\bm{y} = g(\bm{x})$ and $z = f(\bm{y})$, we can then compute $\frac{\partial z}{\partial x_i}$ by
 $$\frac{\partial z}{\partial x_i} = \sum_j \frac{\partial z}{\partial y_j} \frac{y_j}{x_i}$$
 \cite{DeepLearning}. If we use this to find the gradient of each parameter, we will find, that the partial derivative for each weight is
 $$\frac{\partial L}{\partial w_{jk} ^{(i)}} = \frac{\partial z_j ^{(i)}}{\partial w_{jk} ^{(i)}} \frac{\partial a_j ^{(i)}}{\partial z_j ^{(i)}} \frac{\partial L}{\partial a_j ^{(L)}} = a_k ^{(i - 1)} g ^{\prime (i)} \left( z_j ^{(i)} \right) \frac{\partial L}{\partial a_j ^{(i)}}$$
@@ -175,13 +175,13 @@ and the partial derivative of each bias is
 $$\frac{\partial L}{\partial b^{(i)} _j} = \frac{\partial z^{(i)} _j}{\partial b^{(i)} _j} \frac{\partial a_j ^{(i)}}{\partial z^{(i)} _j} \frac{\partial L}{\partial a_j ^{(i)}} = g^{(i + 1)} \left( z_j ^{(i + 1)} \right) \frac{\partial L}{\partial a_j ^{(i)}}$$
 where for both cases
 $$ \frac{\partial L}{\partial a_j ^{(i)}} = \sum_{j = 0} ^{n_i - 1} w_{jk} ^{(i + 1)} g^{(i + 1)} \left( z_j ^{(i + 1)} \right) \frac{\partial L}{\partial a_j ^{(i + 1)}}.$$
-if $\bm{a}^{(i)}$ is the not the output-layer. Once the partial derivative of all weights and biases has been found, the gradient vector can be formed and an optimization method can be used to optimize the parameters of the model \cite{3b1b_4}.
+if $\bm{a}^{(i)}$ is not the output-layer. Once the partial derivative of all weights and biases has been found, the gradient vector can be formed and an optimization method can be used to optimize the parameters of the model \cite{3b1b_4}.
 
 
 \subsubsection{Convolutional Neural Networks}
+\textbf{Convolution} \\
 \textbf{NN Upsampling} \\
-\textbf{Maxpooling} \\
-\textbf{Convolution}
+\textbf{Maxpooling}
 \subsubsection{Stacked Hourglass}
 \textbf{Reasoning behind using the Stached Hourglass} \\
 \textbf{The Residual Modules}\\
