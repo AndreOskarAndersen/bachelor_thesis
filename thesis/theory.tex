@@ -1,13 +1,5 @@
-\documentclass[main.tex]{subfiles}
-\usepackage{floatrow}
-\usepackage{float}
-\usepackage{bm}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{algorithmicx}
-\usepackage[ruled]{algorithm}
-\usepackage[noend]{algpseudocode}
-\usepackage{varwidth}
+\documentclass[./main.tex]{subfiles}
+
 \begin{document}
 
 \section{Machine Learning Theory}
@@ -46,17 +38,15 @@ where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the es
 In recent years \textit{deep learning} and \textit{neural networks} have revolutionized the use of machine learning. In this thesis a neural network will be used for performing the human pose estimation. Throughout subsection \ref{subsec:NeuralNetworks} the theory and mathematics behind neural networks is described and explained.
 \subsubsection{The Mathematics Behind Neural Networks}
 \begin{algorithm}[h]
-    \caption{Estimates $\operatorname*{argmin}_{\bm{x}}$ of function $f$ \cite{d2l}}
+    \caption{$\mathbf{GradientDescent}$ \cite{d2l}}
     \label{Algorithm:gradient_descent_alg}
     \begin{algorithmic}[1]
         \Require Learning rate $\eta$
-        \Require Starting position $\bm{x}$
-        \Procedure{$\mathbf{GradientDescent}$}{}
+        \Require Starting position $\bm{\theta}$
         \While{stopping criterion not met}
-            \State Apply update: $\bm{x} \gets  \bm{x} - \eta \nabla f(\bm{x})$
+            \State Apply update: $\bm{\theta} \gets  \bm{\theta} - \eta \nabla f(\bm{\theta})$
         \EndWhile
-        \State \textbf{return} $\bm{x}$
-        \EndProcedure
+        \State \textbf{return} $\bm{\theta}$
     \end{algorithmic}
 \end{algorithm}
 \noindent \textbf{Overfitting and Regularization} \\
@@ -65,7 +55,7 @@ The main goal of a machine learning model is to generalize well on unseen data. 
 \\
 \\
 \textbf{Gradient Descent} \\
-The goal of a machine learning model when training is to minimize its loss. There are different methods to do so, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$, a starting position $\bm{x}$ and a function $f$ as input, where $f$ is the function to minimize and $\eta$. It then computes the gradient of $f$ with respect to $\bm{x}$, and subtracts the gradient times $\eta$ from $\bm{x}$. This is done untill a stopping condition is met, such as when the magnitude of the gradient $\left| \nabla f(\bm{x}) \right|$ is small or untill a maximum amount of iterations has been reached \cite{d2l}.
+The goal of a machine learning model when training is to minimize its loss. There are different methods to do so, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$, a starting position $\bm{\theta}$ and a function $f$ as input, where $f$ is the function to minimize. It then computes the gradient of $f$ with respect to $\bm{\theta}$, and subtracts the gradient times $\eta$ from $\bm{\theta}$. This is done untill a stopping condition is met, such as when the magnitude of the gradient $\left| \nabla f(\bm{\theta}) \right|$ is small or untill a maximum amount of iterations has been reached \cite{d2l}.
 \begin{figure}
     \centering
     \includegraphics[width = 8 cm]{entities/batch_methods.PNG}
@@ -75,7 +65,7 @@ The goal of a machine learning model when training is to minimize its loss. Ther
 \\
 \\
 \noindent \textbf{Online, Mini-batch and Batch methods} \\
-\noindent When gradient descent is used for in machine learning, computing $\nabla f(\bm{x})$ is usually done by averaging the gradient of each of the $n$ observations of the trainingset, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} (also known as \textit{stochastic gradient descent}) a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size \cite{d2l}. \\
+\noindent When gradient descent is used in machine learning, computing $\nabla f(\bm{x})$ is usually done by averaging the gradient of each of the $n$ observations of the trainingset, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} (also known as \textit{stochastic gradient descent}) a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size \cite{d2l}. \\
 Choosing the right batch size can be difficult, however, there are a few guidelines which one can follow \cite{EML_optimization} \cite{d2l}
 \begin{enumerate}
     \item Looking at Figure \ref{fig:batch_methods} we see, that batch gradient descent uses the fewest iterations, however, each iteration takes the longest to compute. On the other hand, in online gradient descent each iteration is the fastest to compute, however, it is also the method that uses the most iterations. Lastly, mini-batch gradient descent combines the two: it uses less iterations than online gradient descent, but more than batch gradient descent, and each iteration takes less time than in the case with batch gradient descent, but longer than in the case with online gradient descent.
@@ -83,15 +73,14 @@ Choosing the right batch size can be difficult, however, there are a few guideli
     \item Smaller batch sizes can offer a regularizing effect, as it is difficult for the model to "remember" the complete dataset from batches that does not represent the whole dataset.
 \end{enumerate}
 \begin{algorithm}[h]
-    \caption{Estimates $\operatorname*{argmin}_{\bm{\theta}}$ of loss function $L$ \cite{DeepLearning}}
+    \caption{$\mathbf{RMSProp}$ \cite{DeepLearning}}
     \label{Algorithm:RMSProp}
     \begin{algorithmic}[1]
         \Require Learning rate $\eta$
         \Require Decay rate $\rho$
         \Require Starting position $\bm{\theta}$
         \Require Small constant $\delta$, usually $10^{-6}$
-        \Procedure{$\mathbf{RMSProp}$}{}
-        \State Initialize accumulation variables: $\bm{r} \gets 0$
+        \State Initialize accumulation variables: $\bm{r} \gets \bm{0}$
         \While{stopping criterion not met}
             \State \begin{varwidth}[t]{\linewidth}
             Sample a minibatch of $m$ observations from the training set $\{\bm{x}^{(1)}, ..., \bm{x}^{(m)}\}$ with corresponding targets $\bm{y}^{(i)}$
@@ -102,7 +91,6 @@ Choosing the right batch size can be difficult, however, there are a few guideli
             \State Apply update: $\bm{\theta} \gets \bm{\theta} + \Delta \bm{\theta}$ 
         \EndWhile
         \State \textbf{return} $\bm{\theta}$
-        \EndProcedure
     \end{algorithmic}
 \end{algorithm}
 \noindent \textbf{Optimization Algorithms} \\
@@ -110,14 +98,13 @@ Choosing the right batch size can be difficult, however, there are a few guideli
 \\
 \\
 \textbf{Batch Normalization} \\
-\textit{Batch normalization} is a recent adaptive reparametrization method, which is applied to individual layers. Let $\bm{\mathcal{B}}$ be a minibatch of activations of the layer to normalize, where each row corresponds to the activations of a unique observation. To normalize $\bm{\mathcal{B}}$ we do
-$$\bm{\mathcal{B}} = \frac{\bm{\mathcal{B}} - \bm{\mu}}{\bm{\sigma}}$$
+\textit{Batch normalization} is a reparametrization method, which is applied to individual layers. If $\bm{x} \in \mathcal{B}$ is an input to the batch normalization, $\text{BN}$, then batch normalization is done by the following
+$$\text{BN}(\bm{x}) = \bm{\gamma} \odot \frac{\bm{x} - \hat{\bm{\mu}}_{\mathcal{B}}}{\hat{\bm{\sigma}}_{\mathcal{B}}} + \bm{\beta}$$
 where
-$$\bm{\mu} = \frac{1}{|\bm{\mathcal{B}}|} \sum_{\bm{x} \in \bm{\mathcal{B}}} \bm{x}$$
+$$\hat{\bm{\mu}} = \frac{1}{|\mathcal{B}|} \sum_{i} \mathcal{B}_i$$
 and
-$$\bm{\sigma} = \sqrt{\delta + \frac{1}{|\bm{\mathcal{B}}|} \sum_{\bm{x} \in \bm{\mathcal{B}}}} \left(\bm{\mathcal{B}} - \bm{\mu} \right)^2$$
-where $\delta$ is positive number, close to $0$, which is used to avoid division by zero when normalizing $\bm{\mathcal{B}}$.
-% MANGLER AT FÆRDIGGØRE BATCH NORMALIZATION.
+$$\hat{\bm{\sigma}} = \sqrt{\epsilon + \frac{1}{|\mathcal{B}|} \sum_{i} \left(\mathcal{B} - \bm{\mu} \right)_i ^2 },$$
+which makes the minibatch have $0$ mean and unit variance. $\bm{\gamma}$ and $\bm{\beta}$ are then used to make the mini-batch have an arbitrary mean and standard deviation and are two parameters that needs to be learned when the network is being fitted. This helps the network to converge, as the batch normalization keeps centering the mean and standard deviation of the mini-batches \cite{d2l}.
 \\
 \\
 \textbf{Epoch} \\
@@ -130,11 +117,13 @@ An \textit{epoch} is an iteration through the whole dataset during fitting of th
     \label{feedforward_nn}
 \end{figure}
 \noindent \textbf{The Architecture and Forwardpropagation} \\
-One of the most common types of neural networks are \textit{feedforward neural networks}, where the data flows unidirectionally through the network. Such a network is visualized in Figure \ref{feedforward_nn}. The network is built up of three types of components: the \textit{input layer}, the \textit{hidden layers} and the \textit{output layer}. Each layer is built up of \textit{units}, also called \textit{neurons} (which are visualized as circles in Figure \ref{feedforward_nn}), where each neuron has a \textit{bias} assigned to it, and is connected to one or two other layers through \textit{edges} (which are visualized as arrows in FIgure \ref{feedforward_nn}), where each edge has a \textit{weight} assigned to it. Hidden layers are connected to two other layers - one before the hidden layer and one after the hidden layer - where the input layer is only connected to the next layer in the network and the output layer is only connected to the previous layer in the network. \\
-We can define the network mathemaically by letting $h_n ^{(i)}$ denote the value of the $n$th node in the $i$th layer, $w_{m, n}$ denote the value of the weight of the edge connecting the $n$th node in the $i$th layer to the $m$th node in layer $i + 1$ and $b_n ^{(i)}$ denote the bias corresponding to the $n$th node in the $i$th layer. \\
+One of the most common types of neural networks are \textit{feedforward neural networks}, where the data flows unidirectionally through the network. Such a network is visualized in Figure \ref{feedforward_nn}. The network is built up of three types of components: the \textit{input layer}, the \textit{hidden layers} and the \textit{output layer}. Each layer is built up of \textit{units}, also called \textit{neurons} (which are visualized as circles in Figure \ref{feedforward_nn}), where each neuron has a \textit{bias} assigned to it, and is connected to one or two other layers through \textit{edges} (which are visualized as arrows in Figure \ref{feedforward_nn}), where each edge has a \textit{weight} assigned to it. Hidden layers are connected to two other layers - one before the hidden layer and one after the hidden layer - where the input layer is only connected to the next layer in the network and the output layer is only connected to the previous layer in the network. \\
+We can define the network mathemaically by letting $a_n ^{(i)}$ denote the value of the $n$th node in the $i$th layer, $w_{m, n}$ denote the value of the weight of the edge connecting the $n$th node in the $i$th layer to the $m$th node in layer $i + 1$ and $b_n ^{(i)}$ denote the bias corresponding to the $n$th node in the $i$th layer. \\
 When data flows through the model it follows the following formula
-$$\bm{h}^{(i + 1)} = g^{(i + 1)} \left( \bm{W}^{(i + 1)} \bm{h}^{(i)} + \bm{b}^{(i + 1)} \right)$$
-where $\bm{W}^{(i + 1)}$ is the weights between layer $i$ and layer $i + 1$ defined by
+$$\bm{a}^{(i + 1)} = g^{(i + 1)} \left( \bm{z}^{(i + 1)} \right)$$
+where
+$$\bm{z}^{(i + 1)} = \bm{W}^{(i + 1)} \bm{a}^{(i)} + \bm{b}^{(i + 1)},$$
+$\bm{W}^{(i + 1)}$ is the weights between layer $i$ and layer $i + 1$ defined by
 \begin{center}
     \begin{math}
         \bm{W}^{(i + 1)} =
@@ -147,15 +136,15 @@ where $\bm{W}^{(i + 1)}$ is the weights between layer $i$ and layer $i + 1$ defi
         ,
     \end{math}
 \end{center}
-$\bm{h}^{(i)}$ is the values of the nodes in the $i$th layer defined by
+$\bm{a}^{(i)}$ is the values of the nodes in the $i$th layer defined by
 \begin{center}
     \begin{math}
-        \bm{h}^{(i)} =
+        \bm{a}^{(i)} =
         \begin{pmatrix}
-            h_{0} ^{(i)} \\
-            h_{1} ^{(i)} \\
+            a_{0} ^{(i)} \\
+            a_{1} ^{(i)} \\
             \vdots \\
-            h_{n} ^{(i)} \\
+            a_{n} ^{(i)} \\
         \end{pmatrix}
         ,
     \end{math}
@@ -172,10 +161,22 @@ $\bm{b}^{(i + 1)}$ is the values of the biases of layer $i + 1$ defined by
         \end{pmatrix}
     \end{math}
 \end{center}
-and $g$ is an \textit{activation function}, that is typically applied element-wise \cite{DeepLearning} \cite{3b1b_1}. One often used activation function is the \textit{rectified linear activation function} (or \textit{ReLu} for short) defined by
+and $g$ is an \textit{activation function}, that is typically applied element-wise \cite{DeepLearning} \cite{3b1b_1}. One often used activation function is the \textit{rectified linear activation function} (or \textit{ReLU} for short) defined by
 $$g(x) = \max\{0, x\}.$$
-The ReLu-function is very close to being linear, making the function keep many of the properties of linear functions that make them easy to optimize and generalizing, which are two great advantages of using the ReLu-function. Another great advantage of using the ReLu-function is stated by the \textit{universal approximation theorem} that states, that a feedforward network with a linear output layer and at least one hidden layer with the ReLu-function (or another activation function from a wide class of activation functions) can approximate any continuous function on a closed and bounded subset of $\mathbb{R}^n$, as long as the network has enough hidden neurons \cite{DeepLearning}. 
+The ReLU-function is very close to being linear, making the function keep many of the properties of linear functions that make them easy to optimize and generalizing, which are two great advantages of using the ReLU-function. Another great advantage of using the ReLU-function is stated by the \textit{universal approximation theorem} that states, that a feedforward network with a linear output layer and at least one hidden layer with the ReLU-function (or another activation function from a wide class of activation functions) can approximate any continuous function on a closed and bounded subset of $\mathbb{R}^n$ (and actually some functions outside of this class), as long as the network has enough hidden neurons \cite{DeepLearning}. 
+\\
+\\
 \noindent \textbf{Backpropagation} \\
+Backpropagation is an algorithm used to compute the gradient of each parameter in the network. It is used together with an optimization algorithm, such as \texttt{RMSProp}, to train the model by minimizing the training loss of the model. Backpropagation happens after data has flowed through the model from the input to the output, and works by computing the gradient of each parameter sequentially from the output to the input of the model. The procedure makes heavily use of the \textit{chain rule} from calculus, which states, that if we let $\bm{x} \in \mathbb{R}^m$, $\bm{y} \in \mathbb{R}^n$, $g$ be a function that maps from $\mathbb{R}^m$ to $\mathbb{R}^n$ and $f$ be a function that maps from $\mathbb{R}^n$ to $\mathbb{R}$, then, if we let $\bm{y} = g(\bm{x})$ and $z = f(\bm{y})$, we can then compute $\frac{\partial z}{\partial x_i}$ by
+$$\frac{\partial z}{\partial x_i} = \sum_j \frac{\partial z}{\partial y_j} \frac{y_j}{x_i}$$
+\cite{DeepLearning}. If we use this to find the gradient of each parameter, we will find, that the partial derivative for each weight is
+$$\frac{\partial L}{\partial w_{jk} ^{(i)}} = \frac{\partial z_j ^{(i)}}{\partial w_{jk} ^{(i)}} \frac{\partial a_j ^{(i)}}{\partial z_j ^{(i)}} \frac{\partial L}{\partial a_j ^{(L)}} = a_k ^{(i - 1)} g ^{\prime (i)} \left( z_j ^{(i)} \right) \frac{\partial L}{\partial a_j ^{(i)}}$$
+and the partial derivative of each bias is
+$$\frac{\partial L}{\partial b^{(i)} _j} = \frac{\partial z^{(i)} _j}{\partial b^{(i)} _j} \frac{\partial a_j ^{(i)}}{\partial z^{(i)} _j} \frac{\partial L}{\partial a_j ^{(i)}} = g^{(i + 1)} \left( z_j ^{(i + 1)} \right) \frac{\partial L}{\partial a_j ^{(i)}}$$
+where for both cases
+$$ \frac{\partial L}{\partial a_j ^{(i)}} = \sum_{j = 0} ^{n_i - 1} w_{jk} ^{(i + 1)} g^{(i + 1)} \left( z_j ^{(i + 1)} \right) \frac{\partial L}{\partial a_j ^{(i + 1)}}.$$
+if $\bm{a}^{(i)}$ is the not the output-layer. Once the partial derivative of all weights and biases has been found, the gradient vector can be formed and an optimization method can be used to optimize the parameters of the model \cite{3b1b_4}.
+
 
 \subsubsection{Convolutional Neural Networks}
 \textbf{NN Upsampling} \\
@@ -190,6 +191,5 @@ The ReLu-function is very close to being linear, making the function keep many o
 \subsection{Principal Components Analysis and K-means Clustering}
 \subsubsection{Principal Components Analysis (PCA)}
 \subsubsection{K-means Clustering}
-
 
 \end{document}

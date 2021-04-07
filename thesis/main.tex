@@ -5,9 +5,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage{wallpaper}
 \usepackage{palatino}
-\usepackage{subfiles}
 \usepackage{hyperref}
-\usepackage{biblatex}
+\usepackage[maxnames = 10]{biblatex}
 \usepackage{floatrow}
 \usepackage{float}
 \usepackage{caption}
@@ -18,8 +17,11 @@
 \usepackage[ruled]{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{varwidth}
-\addbibresource{./bibliography.bib}
+
+\usepackage{subfiles}
+
 \bibliography{./bibliography.bib}
+\addbibresource{./bibliography.bib}
 
 \hypersetup{
     colorlinks=true,
