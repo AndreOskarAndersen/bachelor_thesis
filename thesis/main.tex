@@ -5,9 +5,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage{wallpaper}
 \usepackage{palatino}
-\usepackage{subfiles}
 \usepackage{hyperref}
-\usepackage{biblatex}
+\usepackage[maxnames = 10]{biblatex}
 \usepackage{floatrow}
 \usepackage{float}
 \usepackage{caption}
@@ -18,8 +17,12 @@
 \usepackage[ruled]{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{varwidth}
-\addbibresource{./bibliography.bib}
+\usepackage{subcaption}
+
+\usepackage{subfiles}
+
 \bibliography{./bibliography.bib}
+\addbibresource{./bibliography.bib}
 
 \hypersetup{
     colorlinks=true,
@@ -66,12 +69,24 @@
 \tableofcontents
 \newpage
 
+% ========================== Notation =======================
+\subfile{notation.tex}
+\newpage
+
 % ========================== Machine Learning Theory =======================
 \subfile{theory.tex}
 \newpage
 
+% ========================== ALGORITHMS =======================
+\subfile{algorithms.tex}
+\newpage
+
 % ======================= THE DATASET ======================================
 \subfile{dataset.tex}
+\newpage
+
+% ======================= Experiments ======================================
+\subfile{experiments.tex}
 \newpage
 
 \printbibliography

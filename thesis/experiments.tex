@@ -1,0 +1,31 @@
+\documentclass[./main.tex]{subfiles}
+
+\begin{document}
+\section{Experiment}
+Throughout the following section the results and configuration details of our trained model are described and explained.
+
+\subsection{Configuration Details}
+\begin{itemize}
+    \item kun 1 hourglass
+    \item størrelse af hourglass
+    \item lav diagram af model
+    \item minibatch-størrelse
+    \item activation function
+    \item learning rate og plateau
+    \item optimizer
+    \item vis grafer
+    \item loss function
+    \item ingen dataaugmentation
+    \item PCK
+    \item Batch normalization
+    \item Overfitting
+    \item Initialisering af parametrer
+    \item max pooling størrelse
+\end{itemize}
+
+\subsection{Results}    
+
+\subsection{Training Details}
+The stacked hourglass was implemented in Python 3.8.2 using PyTorch version 1.7.1 and Cuda version 10.2 on a machine using Windows 10 version 20H2, build 19042. The network was trained on an 8 GB NVIDIA GeForce GTX 1070 GPU using a Samsung 840 EVO SSD for data storage. Training the network takes about $70$ minutes per epoch, totalling to about $58$ hours for $50$ epochs.
+
+\end{document}
