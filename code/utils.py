@@ -118,6 +118,228 @@ def draw_segmentation_extremes(I, segmentation, r, g, b, radius):
 
 	return I_copy
 
+def draw_skeleton(keypoints, img_shape = (64, 64)):
+	""" Draws a skeleton corresponding to the keypoints onto a zero-matrix with shape img_shape """
+
+	img = np.zeros((img_shape[0], img_shape[1], 3))
+ 
+	keypoints = np.round(keypoints).astype("int")
+
+	keypoints = np.array(keypoints).reshape((-1, 3))
+
+	"""
+	COCO keypoint-annotation uses the following indexing:
+	0: nose
+	1: left eye
+	2: right eye
+	3: left ear
+	4: right ear
+	5: left shoulder
+	6: right shoulder
+	7: left elbow
+	8: right elbow
+	9: left wrist
+	10: right wrist
+	11: left hip
+	12: right hip
+	13: left knee
+	14: right knee
+	15: left ankle
+	16: right ankle
+	"""
+ 
+	# Colors
+	light_blue = [0.2, 0.8, 1]
+	light_green = [0.1, 1, 0.1]
+	orange = [1, 0.4, 0]
+	red = [1, 0, 0]
+	yellow = [1, 1, 0]
+	pink = [1, 0.3, 0.8]
+
+	# Connecting nose to left eye
+	if (keypoints[0, 2] != 0 and keypoints[1, 2] != 0):
+		x_1 = keypoints[0, 0]
+		x_2 = keypoints[1, 0]
+		y_1 = keypoints[0, 1]
+		y_2 = keypoints[1, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	# Connecting nose to right eye
+	if (keypoints[0, 2] != 0 and keypoints[2, 2] != 0):
+		x_1 = keypoints[0, 0]
+		x_2 = keypoints[2, 0]
+		y_1 = keypoints[0, 1]
+		y_2 = keypoints[2, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	# Connecting left ear to left eye
+	if (keypoints[3, 2] != 0 and keypoints[1, 2] != 0):
+		x_1 = keypoints[3, 0]	
+		x_2 = keypoints[1, 0]
+		y_1 = keypoints[3, 1]
+		y_2 = keypoints[1, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	# Connecting right ear to right eye
+	if (keypoints[2, 2] != 0 and keypoints[4, 2] != 0):
+		x_1 = keypoints[2, 0]
+		x_2 = keypoints[4, 0]
+		y_1 = keypoints[2, 1]
+		y_2 = keypoints[4, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	# Connecting left shoulder to left elbow
+	if (keypoints[5, 2] != 0 and keypoints[7, 2] != 0):
+		x_1 = keypoints[5, 0]
+		x_2 = keypoints[7, 0]
+		y_1 = keypoints[5, 1]
+		y_2 = keypoints[7, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = yellow
+
+	# Connecting right shoulder to right elbow
+	if (keypoints[6, 2] != 0 and keypoints[8, 2] != 0):
+		x_1 = keypoints[6, 0]
+		x_2 = keypoints[8, 0]
+		y_1 = keypoints[6, 1]
+		y_2 = keypoints[8, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = pink
+
+	# Connecting left elbow to left wrist
+	if (keypoints[7, 2] != 0 and keypoints[9, 2] != 0):
+		x_1 = keypoints[7, 0]
+		x_2 = keypoints[9, 0]
+		y_1 = keypoints[7, 1]
+		y_2 = keypoints[9, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = yellow
+  
+	# Connecting right elbow to right wrist
+	if (keypoints[8, 2] != 0 and keypoints[10, 2] != 0):
+		x_1 = keypoints[8, 0]
+		x_2 = keypoints[10, 0]
+		y_1 = keypoints[8, 1]
+		y_2 = keypoints[10, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = pink
+
+	# Connecting left hip to left knee
+	if (keypoints[11, 2] != 0 and keypoints[13, 2] != 0):
+		x_1 = keypoints[11, 0]
+		x_2 = keypoints[13, 0]
+		y_1 = keypoints[11, 1]
+		y_2 = keypoints[13, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = light_blue
+
+	# Connecting right hip to right knee
+	if (keypoints[12, 2] != 0 and keypoints[14, 2] != 0):
+		x_1 = keypoints[12, 0]
+		x_2 = keypoints[14, 0]
+		y_1 = keypoints[12, 1]
+		y_2 = keypoints[14, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = light_green
+
+	# Connecting left knee to left ankle
+	if (keypoints[13, 2] != 0 and keypoints[15, 2] != 0):
+		x_1 = keypoints[13, 0]
+		x_2 = keypoints[15, 0]
+		y_1 = keypoints[13, 1]
+		y_2 = keypoints[15, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = light_blue
+
+	# Connecting right knee to right ankle
+	if (keypoints[14, 2] != 0 and keypoints[16, 2] != 0):
+		x_1 = keypoints[14, 0]
+		x_2 = keypoints[16, 0]
+		y_1 = keypoints[14, 1]
+		y_2 = keypoints[16, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = light_green
+
+	# Connecting left hip to left shoulder
+	if (keypoints[5, 2] != 0 and keypoints[11, 2] != 0):
+		x_1 = keypoints[5, 0]
+		x_2 = keypoints[11, 0]
+		y_1 = keypoints[5, 1]
+		y_2 = keypoints[11, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = orange
+
+	# Connecting right hip to right shoulder
+	if (keypoints[6, 2] != 0 and keypoints[12, 2] != 0):
+		x_1 = keypoints[6, 0]
+		x_2 = keypoints[12, 0]
+		y_1 = keypoints[6, 1]
+		y_2 = keypoints[12, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = orange
+  
+	# Connecting hips
+	if (keypoints[11, 2] != 0 and keypoints[12, 2] != 0):
+		x_1 = keypoints[11, 0]
+		x_2 = keypoints[12, 0]
+		y_1 = keypoints[11, 1]
+		y_2 = keypoints[12, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = orange
+  
+	# Connecting shoulders
+	if (keypoints[5, 2] != 0 and keypoints[6, 2] != 0):
+		x_1 = keypoints[5, 0]
+		x_2 = keypoints[6, 0]
+		y_1 = keypoints[5, 1]
+		y_2 = keypoints[6, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = orange
+  
+	# Connecting right ear to right shoulder
+	if (keypoints[4, 2] != 0 and keypoints[6, 2] != 0):
+		x_1 = keypoints[4, 0]
+		x_2 = keypoints[6, 0]
+		y_1 = keypoints[4, 1]
+		y_2 = keypoints[6, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+  
+	# Connecting left ear to left shoulder
+	if (keypoints[3, 2] != 0 and keypoints[5, 2] != 0):
+		x_1 = keypoints[3, 0]
+		x_2 = keypoints[5, 0]
+		y_1 = keypoints[3, 1]
+		y_2 = keypoints[5, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	img = draw_keypoints(img, keypoints.reshape(-1), radius = 1, r = 1, b = 1, g = 1)
+
+	return img
+
 def grey_to_rgb(img):
     """ Transforms the img from grey-scale to rgb """
     return np.stack((img,)*3, axis = -1)
@@ -171,33 +393,66 @@ def draw_predicitions_and_gt(img, gt, pred):
 	return img
 	
  
-def PCK(gt_heatmaps, pred_heatmaps, dist = None):
-	""" Computes the PCK between the groundtruth keypoints and the predicted keypoints. 
-		gt_heatmaps: the groundtruth heatmaps
-		pred_heatmaps: the predicted heatmaps
-		dist: the distance used for normalizing the distance. If None, the mean torso size is used
+def PCK(gt_heatmaps, pred_heatmaps, normalizing_const = 6.4, threshold = 0.5):
+	"""
+	Computes the Percentage of Correct Keypoints between the groundtruth heatmaps and predicted heatmaps.
+	Unannotated keypoints are ignored.
+ 
+	Parameters:
+		gt_heatmaps: tensor of groundtruth heatmaps
+		pred_heatmaps: tensor of predicted heatmaps
+		normalizing_const: constant used for normalizing the distance between gt_heatmaps and pred_heatmaps
+		threshold: threshold used for ensuring if pred_heatmaps is equal to gt_heatmaps
 	"""
 
-	gt_kp = np.array(turn_featuremaps_to_keypoints(gt_heatmaps))
-	pred_kp = np.array(turn_featuremaps_to_keypoints(pred_heatmaps))
-	gt_kp = gt_kp.reshape((-1, 3))
-	pred_kp = pred_kp.reshape((-1, 3))[:, :-1] # We dont care about the visibility flag
+	# Turning the heatmaps into arrays
+	gt_kp = np.array(turn_featuremaps_to_keypoints(gt_heatmaps)).reshape((-1, 3))
+	pred_kp = np.array(turn_featuremaps_to_keypoints(pred_heatmaps)).reshape((-1, 3))
 
-	if dist is None:
-		# If all of the used keypoints are annotated, use the torso size
-		if (gt_kp[5][2] != 0 and gt_kp[6][2] != 0 and gt_kp[11][2] != 0 and gt_kp[12][2] != 0):
-			gt_kp = gt_kp[:, :-1]
-			left_dist = np.linalg.norm(gt_kp[5] - gt_kp[11])
-			right_dist = np.linalg.norm(gt_kp[6] - gt_kp[12])
-			dist = np.mean([left_dist, right_dist])
-		else: # Else use the mean size of annotated torsos of the validation set
-			dist = 27.340717256980344
+	# Removing unannotated joints
+	pred_kp = pred_kp[gt_kp[:, -1] != 0]
+	gt_kp = gt_kp[gt_kp[:, -1] != 0]
 
-	if (gt_kp.shape[1] == 3):
-		gt_kp = gt_kp[:, :-1] # We dont care about the visibility flag
-	total_keypoints = len(gt_kp)
+	# Removing visibility flag
+	gt_kp = gt_kp[:, :-1]
+	pred_kp = pred_kp[:, :-1]
 
-	distance = np.linalg.norm(gt_kp - pred_kp, axis = 1)
-	correct = len(distance[distance < dist])
+	# Distance between ground truth keypoints and predictions
+	dist = np.linalg.norm(gt_kp - pred_kp, axis = 1)
 
-	return correct/total_keypoints
+	# Normalizing distance
+	dist = dist/normalizing_const
+
+	# Counting the amount of correctly predicted joints
+	num_correct = len(dist[dist < threshold])
+
+	# Returning the ratio of correctly predicted joints
+	return num_correct/len(dist)
+
+def find_correct_incorrect(gt_heatmaps, pred_heatmaps, normalizing_const = 6.4, threshold = 0.5):
+	""" Returns the indexes of the keypoints that are classified as being correct and incorrect according to PCK"""
+
+	# Turning the heatmaps into arrays
+	gt_kp = np.array(turn_featuremaps_to_keypoints(gt_heatmaps)).reshape((-1, 3))
+	pred_kp = np.array(turn_featuremaps_to_keypoints(pred_heatmaps)).reshape((-1, 3))
+ 
+	# Finding indexes of keypoints unnanotated
+	unanotated_indexes = np.where(gt_kp[:, -1] == 0)
+ 
+	# Removing unannotated joints
+	pred_kp = pred_kp[gt_kp[:, -1] != 0]
+	gt_kp = gt_kp[gt_kp[:, -1] != 0] 
+
+	# Distance between ground truth keypoints and predictions
+	dist = np.linalg.norm(gt_kp[:, :-1] - pred_kp[:, :-1], axis = 1)
+
+	# Normalizing distance
+	dist = dist/normalizing_const
+
+	# Finding indexes of correct
+	correct = np.where(dist < threshold)
+	
+	# Finding indexes of incorrect
+	incorrect = np.where(dist >= threshold)
+ 
+	return correct, incorrect, unanotated_indexes

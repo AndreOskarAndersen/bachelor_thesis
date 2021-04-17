@@ -89,7 +89,7 @@ class Hourglass(nn.Module):
         return x + self.branch[0], bottleneck_res
 
 class SHG(nn.Module):
-    def __init__(self, num_hourglasses = 2, num_layers = 4, num_bottlenecks = 2):
+    def __init__(self, num_hourglasses, num_layers = 4, num_bottlenecks = 3):
         super(SHG, self).__init__()
         self.num_hourglasses = num_hourglasses
         self.num_layers = num_layers
