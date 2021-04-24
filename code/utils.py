@@ -340,6 +340,231 @@ def draw_skeleton(keypoints, img_shape = (64, 64)):
 
 	return img
 
+def draw_necessary_skeleton(pred_keypoints, gt_keypoints, img_shape = (64, 64)):
+	""" Draws a skeleton corresponding to the keypoints onto a zero-matrix with shape img_shape. Only joints where v != 0 from the groundtruth keypoints are drawn"""
+
+	img = np.zeros((img_shape[0], img_shape[1], 3))
+ 
+	pred_keypoints = np.round(pred_keypoints).astype("int")
+	gt_keypoints = np.round(gt_keypoints).astype("int")
+
+	pred_keypoints = np.array(pred_keypoints).reshape((-1, 3))
+	gt_keypoints = np.array(gt_keypoints).reshape((-1, 3))
+
+	"""
+	COCO keypoint-annotation uses the following indexing:
+	0: nose
+	1: left eye
+	2: right eye
+	3: left ear
+	4: right ear
+	5: left shoulder
+	6: right shoulder
+	7: left elbow
+	8: right elbow
+	9: left wrist
+	10: right wrist
+	11: left hip
+	12: right hip
+	13: left knee
+	14: right knee
+	15: left ankle
+	16: right ankle
+	"""
+ 
+	# Colors
+	light_blue = [0.2, 0.8, 1]
+	light_green = [0.1, 1, 0.1]
+	orange = [1, 0.4, 0]
+	red = [1, 0, 0]
+	yellow = [1, 1, 0]
+	pink = [1, 0.3, 0.8]
+
+	# Connecting nose to left eye
+	if (gt_keypoints[0, 2] != 0 and gt_keypoints[1, 2] != 0):
+		x_1 = pred_keypoints[0, 0]
+		x_2 = pred_keypoints[1, 0]
+		y_1 = pred_keypoints[0, 1]
+		y_2 = pred_keypoints[1, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	# Connecting nose to right eye
+	if (gt_keypoints[0, 2] != 0 and gt_keypoints[2, 2] != 0):
+		x_1 = pred_keypoints[0, 0]
+		x_2 = pred_keypoints[2, 0]
+		y_1 = pred_keypoints[0, 1]
+		y_2 = pred_keypoints[2, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	# Connecting left ear to left eye
+	if (gt_keypoints[3, 2] != 0 and gt_keypoints[1, 2] != 0):
+		x_1 = pred_keypoints[3, 0]	
+		x_2 = pred_keypoints[1, 0]
+		y_1 = pred_keypoints[3, 1]
+		y_2 = pred_keypoints[1, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	# Connecting right ear to right eye
+	if (gt_keypoints[2, 2] != 0 and gt_keypoints[4, 2] != 0):
+		x_1 = pred_keypoints[2, 0]
+		x_2 = pred_keypoints[4, 0]
+		y_1 = pred_keypoints[2, 1]
+		y_2 = pred_keypoints[4, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	# Connecting left shoulder to left elbow
+	if (gt_keypoints[5, 2] != 0 and gt_keypoints[7, 2] != 0):
+		x_1 = pred_keypoints[5, 0]
+		x_2 = pred_keypoints[7, 0]
+		y_1 = pred_keypoints[5, 1]
+		y_2 = pred_keypoints[7, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = yellow
+
+	# Connecting right shoulder to right elbow
+	if (gt_keypoints[6, 2] != 0 and gt_keypoints[8, 2] != 0):
+		x_1 = pred_keypoints[6, 0]
+		x_2 = pred_keypoints[8, 0]
+		y_1 = pred_keypoints[6, 1]
+		y_2 = pred_keypoints[8, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = pink
+
+	# Connecting left elbow to left wrist
+	if (gt_keypoints[7, 2] != 0 and gt_keypoints[9, 2] != 0):
+		x_1 = pred_keypoints[7, 0]
+		x_2 = pred_keypoints[9, 0]
+		y_1 = pred_keypoints[7, 1]
+		y_2 = pred_keypoints[9, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = yellow
+  
+	# Connecting right elbow to right wrist
+	if (gt_keypoints[8, 2] != 0 and gt_keypoints[10, 2] != 0):
+		x_1 = pred_keypoints[8, 0]
+		x_2 = pred_keypoints[10, 0]
+		y_1 = pred_keypoints[8, 1]
+		y_2 = pred_keypoints[10, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = pink
+
+	# Connecting left hip to left knee
+	if (gt_keypoints[11, 2] != 0 and gt_keypoints[13, 2] != 0):
+		x_1 = pred_keypoints[11, 0]
+		x_2 = pred_keypoints[13, 0]
+		y_1 = pred_keypoints[11, 1]
+		y_2 = pred_keypoints[13, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = light_blue
+
+	# Connecting right hip to right knee
+	if (gt_keypoints[12, 2] != 0 and gt_keypoints[14, 2] != 0):
+		x_1 = pred_keypoints[12, 0]
+		x_2 = pred_keypoints[14, 0]
+		y_1 = pred_keypoints[12, 1]
+		y_2 = pred_keypoints[14, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = light_green
+
+	# Connecting left knee to left ankle
+	if (gt_keypoints[13, 2] != 0 and gt_keypoints[15, 2] != 0):
+		x_1 = pred_keypoints[13, 0]
+		x_2 = pred_keypoints[15, 0]
+		y_1 = pred_keypoints[13, 1]
+		y_2 = pred_keypoints[15, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = light_blue
+
+	# Connecting right knee to right ankle
+	if (gt_keypoints[14, 2] != 0 and gt_keypoints[16, 2] != 0):
+		x_1 = pred_keypoints[14, 0]
+		x_2 = pred_keypoints[16, 0]
+		y_1 = pred_keypoints[14, 1]
+		y_2 = pred_keypoints[16, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = light_green
+
+	# Connecting left hip to left shoulder
+	if (gt_keypoints[5, 2] != 0 and gt_keypoints[11, 2] != 0):
+		x_1 = pred_keypoints[5, 0]
+		x_2 = pred_keypoints[11, 0]
+		y_1 = pred_keypoints[5, 1]
+		y_2 = pred_keypoints[11, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = orange
+
+	# Connecting right hip to right shoulder
+	if (gt_keypoints[6, 2] != 0 and gt_keypoints[12, 2] != 0):
+		x_1 = pred_keypoints[6, 0]
+		x_2 = pred_keypoints[12, 0]
+		y_1 = pred_keypoints[6, 1]
+		y_2 = pred_keypoints[12, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = orange
+  
+	# Connecting hips
+	if (gt_keypoints[11, 2] != 0 and gt_keypoints[12, 2] != 0):
+		x_1 = pred_keypoints[11, 0]
+		x_2 = pred_keypoints[12, 0]
+		y_1 = pred_keypoints[11, 1]
+		y_2 = pred_keypoints[12, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = orange
+  
+	# Connecting shoulders
+	if (gt_keypoints[5, 2] != 0 and gt_keypoints[6, 2] != 0):
+		x_1 = pred_keypoints[5, 0]
+		x_2 = pred_keypoints[6, 0]
+		y_1 = pred_keypoints[5, 1]
+		y_2 = pred_keypoints[6, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = orange
+  
+	# Connecting right ear to right shoulder
+	if (gt_keypoints[4, 2] != 0 and gt_keypoints[6, 2] != 0):
+		x_1 = pred_keypoints[4, 0]
+		x_2 = pred_keypoints[6, 0]
+		y_1 = pred_keypoints[4, 1]
+		y_2 = pred_keypoints[6, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+  
+	# Connecting left ear to left shoulder
+	if (gt_keypoints[3, 2] != 0 and gt_keypoints[5, 2] != 0):
+		x_1 = pred_keypoints[3, 0]
+		x_2 = pred_keypoints[5, 0]
+		y_1 = pred_keypoints[3, 1]
+		y_2 = pred_keypoints[5, 1]
+
+		rr, cc = skimage.draw.line(y_1, x_1, y_2, x_2)
+		img[rr, cc] = red
+
+	pred_keypoints = pred_keypoints[gt_keypoints[:, -1] != 0]
+	img = draw_keypoints(img, pred_keypoints.reshape(-1), radius = 1, r = 1, b = 1, g = 1)
+
+	return img
+
 def grey_to_rgb(img):
     """ Transforms the img from grey-scale to rgb """
     return np.stack((img,)*3, axis = -1)
