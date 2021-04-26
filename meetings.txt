@@ -115,9 +115,35 @@ Forberedelse til møde 7:
 18. Er der bestemte steder for batch norms?
 
 Forberedelse til møde 8:
-1. Lavede gradient descent algoritme
-2. Laver formler om
-3. Hvad hvis jeg selv kommer op med noget?
-4. Kan man kalde det at "centralisere rgb" når man trækker den gennemsnitlige rgb fra?
-5. Har skrevet lidt om på universal approximation theorem
-6. pt. bruger jeg rmsprop uden momentum - tror du jeg burde prøve med?
+1. Køretid er kommet ned på 1 time. Se loss udvikling - starter allerede ved epoch 0 med at være meget lav
+2. Er det rigtigt, at vægtene ikke må starte med at være 0?
+3. Camilla gør brug af Glorot normal distribution til at initializere sine vægte - skal jeg også det?
+4. Hvad hvis jeg selv kommer op med noget?
+5. Lavede gradient descent algoritme
+6. Har skrevet lidt om på universal approximation theorem - Kan approximere alle Borel målelig function. Istedet: any continuous 
+	function on a closed and bounded subset of R^n
+7. Laver formler om
+8. Kan man kalde det at "centralisere rgb" når man trækker den gennemsnitlige rgb fra?
+9. Skal jeg skrive "I", "we" eller holde det mere generelt som "one/you"?
+10. Hvis jeg bruger et stykke materiale, som referer til et andet stykke materiale, hvem skal jeg så refere til?
+11. pt. bruger jeg rmsprop uden momentum - tror du jeg burde prøve med?
+
+Forberedelse til møde 9:
+1. Går jeg for matematisk til den?
+2. Skal jeg beskrive intermediate supervision når jeg beskriver SHG, selvom jeg ikke bruger det i min implementation?
+3. Må jeg kalde det "encoder" og "decoder"?
+4. Må jeg kalde det at "downsample" når man maxpooler?
+5. Skal jeg også skrive et al. ved Camilla, selvom hun kun er én person? Skal jeg kun skrive hendes efternavn?
+6. Hvilke felter skulle jeg bruge når jeg skulle referere?
+7. Normalt gør man brug af en baseline og flere eksperimenterer med flere forskellige modeller. Burde jeg også det?
+8. Ifølge Newell er der stor forskel størrelsen af det ene hourglass (8 residuals er bedre end 8). Burde jeg have testet forskellige størrelser? (se fig. 8)
+9. Hvorfor var det, at vægtene ikke måtte være = 0 ved start?
+
+Forberedelse til møde 10:
+* Pre MAD mail
+1. Må jeg bruge mit testset til at finde ud af hvilken model jeg skal bruge til xai (mindste los != bedste accuracy)
+2. Hvad med, at sende gennemsnitligt billeder for hvert cluster igennem modellen
+3. Se på gennemsnitligt billed for hvert led den har fået korrekt/forkert (dvs. i alt 2*17 billeder)
+4. Nearest neighbours
+5. Der er vel to forskellige måder man kan gå til XAI? Kigge på modellen og kigge på dataen? Man kan vel lave en masse statistik på de to
+grupper (dem den har fået rigtigt og dem den har fået forkert)

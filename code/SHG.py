@@ -36,10 +36,11 @@ class Residual(nn.Module):
         return x + branch
 
 class Hourglass(nn.Module):
-    def __init__(self, num_layers = 4, num_bottlenecks = 3):
+    def __init__(self, num_layers = 4, num_bottlenecks = 3, use_skip_connections = True):
         super(Hourglass, self).__init__()
         self.num_layers = num_layers
         self.num_bottlenecks = num_bottlenecks
+        self.use_skip_connections = use_skip_connections
         
         self.encoder_max_poolings = [] # downsampling
         self.encoder_residuals = [] # downsampling
@@ -63,33 +64,53 @@ class Hourglass(nn.Module):
         self.branch_cov = nn.ModuleList(self.branch_cov)
         self.bottlenecks = nn.ModuleList([Residual() for _ in range(self.num_bottlenecks)])
         
-    def forward(self, x):
-        self.branch = []
-        bottleneck_res = []
-        
-        # Encoding
+    def encode(self, x):
         for i in range(self.num_layers):
-            self.branch.append(self.branch_cov[i](x))
+            if (self.use_skip_connections): # XAI: we only use the skip connections sometimes
+                self.branch.append(self.branch_cov[i](x))
+                
             x = self.encoder_max_poolings[i](x)
             x = self.encoder_residuals[i](x)
             
-        # Bottleneck
+        return x
+    
+    def bottleneck(self, x):
+        bottleneck_res = []
+        
         for i in range(self.num_bottlenecks):
             x = self.bottlenecks[i](x)
             bottleneck_res.append(x)
             
-        # Decode
+        return x, bottleneck_res
+    
+    def decode(self, x):
         for i in range(self.num_layers - 1):
             x = self.decoder_upsamplings[i](x)
-            x = x + self.branch[-1 * i - 1] # branches are stored backwards
+            
+            if (self.use_skip_connections): # XAI: we only use the skip connections sometimes
+                x = x + self.branch[-1 * i - 1] # branches are stored backwards
+                
             x = self.decoder_residuals[i](x)
             
         x = self.decoder_upsamplings[-1](x) # Last layer does not end on residual
             
-        return x + self.branch[0], bottleneck_res
+        return x
+        
+    def forward(self, x):
+        if (self.use_skip_connections): # XAI: we only use the skip connections sometimes
+            self.branch = []
+        
+        x = self.encode(x)
+        x, bottleneck_res = self.bottleneck(x)
+        x = self.decode(x)
+            
+        if (self.use_skip_connections): # XAI: we only use the skip connections sometimes
+            return x + self.branch[0], bottleneck_res
+        else:
+            return x, bottleneck_res
 
 class SHG(nn.Module):
-    def __init__(self, num_hourglasses = 2, num_layers = 4, num_bottlenecks = 2):
+    def __init__(self, num_hourglasses, num_layers = 4, num_bottlenecks = 3, use_skip_connections = True):
         super(SHG, self).__init__()
         self.num_hourglasses = num_hourglasses
         self.num_layers = num_layers
@@ -112,7 +133,7 @@ class SHG(nn.Module):
         self.pred_branch = None
         
         # Hourglasses
-        self.hourglasses = nn.ModuleList([Hourglass(num_layers=num_layers, num_bottlenecks=num_bottlenecks) for _ in range(self.num_hourglasses)])
+        self.hourglasses = nn.ModuleList([Hourglass(num_layers=num_layers, num_bottlenecks=num_bottlenecks, use_skip_connections=use_skip_connections) for _ in range(self.num_hourglasses)])
         
         for _ in range(self.num_hourglasses - 1):
             self.post_res.append(Residual())
@@ -140,7 +161,19 @@ class SHG(nn.Module):
         for p in self.parameters():
             if (len(p.shape) > 1): # cannot init batchnorms. 
                 nn.init.xavier_normal_(p)
+    
+    def decode(self, x):
+        """ Given a sample from the latent-space (x) of the last hourglass, return the corresponding output of the whole network"""                
+                    
+        x = self.hourglasses[-1].decode(x)
+        x = self.last_res(x)
+        x = self.last_conv_1(x)
+        x = self.bn_last(x)
+        x = relu(x)
+        x = self.last_conv_2(x)
             
+        return x
+    
     def forward(self, x):
         x = self.pre_conv1(x)
         x = self.bn_pre(x)
