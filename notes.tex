@@ -144,8 +144,54 @@
     \item The most recent human pose estimation systems have adopted CNN as thir backbones and yielded drastic improvements on standard benchmarks. However, they are still prine to fail when there exist ambiguities caused by overlapping parts, nearby persons and clutte rbackgrounds.
 \end{itemize}
 
+\section*{Aljalbout et al. - Clustering with Deep Learning:
+Taxonomy and New Methods}
 
+\begin{itemize}
+    \item The performance of current clustering methods is however highly dependent on the input data. Dif-
+    ferent datasets usually require different similarity measures and separation techniques. As a result,
+    dimensionality reduction and representation learning have been extensively used alongside cluster-
+    ing in order to map the input data into a feature space where separation is easier. By utilizing deep
+    neural networks (DNNs), it is possible to learn non-linear mappings that allow transforming data
+    into more clustering-friendly representations without manual feature extraction/selection.
+\end{itemize}
+\begin{center}
+    \includegraphics[height = 4 cm]{entities/Aljalbout.PNG}
+\end{center}
 
+\section*{MIN et al. - A Survey of Clustering With Deep Learning: From
+the Perspective of Network Architecture}
+\begin{itemize}
+    \item Clustering is a fundamental problem in many data-driven application domains, and clustering
+    performance highly depends on the quality of data representation. Hence, linear or non-linear feature
+    transformations have been extensively used to learn a better data representation for clustering. In recent years,
+    a lot of works focused on using deep neural networks to learn a clustering-friendly representation, resulting
+    in a significant increase of clustering performance.
+    \item Conventional clustering methods usually have poor performance on high-dimensional data, due to the inefficiency of similarity
+    measures used in these methods. Furthermore, these meth-
+    ods generally suffer from high computational complexity on
+    large-scale datasets.
+    \item The second category is based on feed-forward net-
+    works trained only by specific clustering loss, thus we refer to
+    this type of DNN as Clustering DNN (CDNN). The network
+    architecture of this category can be very deep and networks
+    pre-trained on large-scale image datasets can further boost
+    its clustering performance.
+    \item Although unsupervised pre-training provides a better initial-
+    ization of networks, it is still challenging to extract feasible
+    features from complex image data. Guérin et al. conduct extensive experiments by testing the performance of combinations of different popular CNN architectures pre-trained on ImageNet [45] and different classical clustering algorithms. The experimental results show that feature extracted from deep CNN trained on large and diverse labeled datasets, combined with classical clustering algorithms, can outperform the state-of-the-art image clustering methods.
+\end{itemize}
 
+\section*{Xie et al. - Unsupervised Deep Embedding for Clustering Analysis}
+\begin{itemize}
+    \item In this paper, we propose Deep Embedded Clustering (DEC), a method that simultaneously learns feature representations and cluster assignments using deep neural networks. DEC learns a mapping from the data space to a lower-dimensional feature space in which it iteratively optimizes a clustering objective
+    \item We transforms the data to a lower space to avoid the "curse of dimensionality". 
+\end{itemize}
+
+\section*{Zeiler et al. - Visualizing and Understanding Convolutional Networks}
+
+\begin{itemize}
+    \item Uses deconv layers
+\end{itemize}
 
 \end{document}

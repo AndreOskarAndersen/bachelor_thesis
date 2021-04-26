@@ -1,5 +1,7 @@
 \documentclass[./main.tex]{subfiles}
 
+\renewcommand{\algorithmicforall}{\textbf{for each}}
+
 \begin{document}
 
 \section{Machine Learning Theory}
@@ -203,6 +205,27 @@ As described previously, by using a convolutional layer we can dramatically decr
 \\
 \\
 \textbf{Pooling layers} \\
-Pooling layers are layers used to reduce the dimension of the input. The most common pooling layer is the \textit{maxpooling}-operation. The operation works by considering each $k \times k$ "grid", like in the case with the convolutional layer, in which the maximum entry in that grid is being inserted into the output \cite{CNN}. 
+Pooling layers are layers used to reduce the dimension of the input. The most common pooling layer is the \textit{maxpooling}-operation. The operation works by considering each $k \times k$ grid, like in the case with the convolutional layer, in which the maximum entry in that grid is being inserted into the output \cite{CNN}.
+\\
+\\
+\textbf{Nearest Neighbour Upsampling} \\
+\begin{algorithm}[t]
+    \caption{Nearest Neighbour Upsampling \cite{NNUpsampling}}
+    \label{Algorithm:NNUpsampling}
+    \begin{algorithmic}[1]
+        \Require Input image, $X$, of size $m \times n$
+        \Require Wanted output size $xm \times yn$
+        \State Create empty image, $O$, of size $xm \times yn$
+        \ForAll{pixel, $p$, in $X$}
+            \State $i,j \gets \text{index of } p \text{ in } X$
+            \State Insert $p$ at index $(xi, yj)$ in $O$
+        \EndFor
+        \ForAll{empty pixel, $p$, in $O$}
+            $p \gets$ value of nearest neighbour
+        \EndFor
+        return $O$
+    \end{algorithmic}
+\end{algorithm}
+Sometimes we want to increase the size of an image. This is done by making use of \textit{upsampling} (also known as \textit{interpolation}) techniques. One of the most common upsampling techniques is \textit{nearest neighbour upsampling}, whose pseudocode has been written in \ref{Algorithm:NNUpsampling}. The algorithm starts off by taking an image, $X$, of size $m \times n$, as input, which we wish to upsample to size $xm \times yn$. The algorithm then loops over each pixel, $p$, in $X$, finds the corresponding index, $i, j$, of $p$ in $X$, and places $p$ at index $(xi, yj)$ in the output image $O$ of size $xm \times yn$. When this is done, it assigns each of the empty pixel in $O$ the value of their nearest neighbour, making each pixel in $O$ have a value, and then returns $O$ \cite{NNUpsampling}.
 
 \end{document}
