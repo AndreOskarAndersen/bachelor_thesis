@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+\documentclass[11pt, a4paper]{article}
 \usepackage[a4paper, hmargin={1in, 1in}, vmargin={1in, 1in}]{geometry}
 \usepackage[english]{babel}
 \usepackage[T1]{fontenc}
@@ -55,10 +55,12 @@
     \noindent {\Large André Oskar Andersen (\texttt{wpr684})} \\
     \noindent \texttt{\large wpr684@alumni.ku.dk} \\
     \vspace{0.5 cm}
-    \noindent \today
+    \noindent \today \\
+    \vspace{1 cm}
+    \noindent Source code available at\\ \url{https://github.com/KeenbitGitHub/bachelor_thesis.git}
 \end{center}
 
-\vspace{12 cm}
+\vspace{10 cm}
 \noindent \textbf{\large Supervisor} \\
 \noindent Kim Steenstrup Pedersen \texttt{kimstp@di.ku.dk}
 
@@ -89,8 +91,10 @@
 \subfile{experiments.tex}
 \newpage
 
-\printbibliography
-
+% ======================= Discussion ======================================
+\subfile{discussion.tex}
 \newpage
+
+\printbibliography
 
 \end{document}

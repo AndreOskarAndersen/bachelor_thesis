@@ -38,7 +38,7 @@ After the decoder two $1 \times 1$ convolution layers er applied to produce the 
     \label{fig:SHG}
 \end{figure}
 \noindent The full network is build by stacking multiple hourglasses end-to-end, making the output of one hourglass be the input of the next hourglass, as shown in Figure \ref{fig:SHG}, which makes each hourglass reestimate features of the image. The input of the network is a $256 \times 256$ RGB-image. To lower the memory usage, the network starts off with a $7 \times 7$ convolution layer with stride 2, followed by a residual module and max pooling to bring the resolution down to $64 \times 64$, which is then input to the first hourglass.
-By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joints it should predict. The prediction of a joint is thus the maximum activation of the corresponding heatmap.
+By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joints it should predict for a single person. The prediction of a joint is thus the maximum activation of the corresponding heatmap.
 % MANGLER AT SKRIVE, AT DER GØRES BRUG AF INTERMEDIATE SUPERVISION, MEN AT DET IKKE ER RELEVANT FOR MIG.
 
 \subsection{t-SNE}
