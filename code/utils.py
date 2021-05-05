@@ -7,12 +7,22 @@ import os
 import torch
 from tqdm.notebook import tqdm
 from warnings import simplefilter
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from sklearn_extra.cluster import KMedoids
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.manifold import TSNE
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+
 simplefilter(action='ignore', category=FutureWarning)
 
 
-def create_heatmaps(keypoints, input_shape = (256, 256), output_shape = (64, 64)):
-	""" GIVEN ONE OF THE ROWS IN THE CSV, CREATES THE 17 CORRESPONDING HEATMAPS """
-	keypoints = keypoints[0, 1:] # We dont need the ID of the image
+def create_heatmaps(keypoints, input_shape = (256, 256), output_shape = (64, 64), is_csv_row = False):
+	""" Creates heatmaps, given keypoints """
+ 
+	if (is_csv_row):
+		keypoints = keypoints[0, 1:] # We dont need the ID of the image
 
 	x_val = keypoints[::3]
 	y_val = keypoints[1::3]
@@ -681,3 +691,261 @@ def find_correct_incorrect(gt_heatmaps, pred_heatmaps, normalizing_const = 6.4, 
 	incorrect = np.where(dist >= threshold)
  
 	return correct, incorrect, unanotated_indexes
+
+def load_data(IMGS_PATH, HEATMAPS_PATH):
+	""" 
+		Load all the images and the corresponding heatmaps, located at IMGS_PATH and HEATMAPS_PATH
+		NOTE: IT IS ASSUMED, THAT THE IMAGES ARE .npy!
+	"""
+
+	img_res = []
+	heatmap_res = []
+	imgs = os.listdir(IMGS_PATH)
+
+	for img in tqdm(imgs, leave = False):
+		img_path = IMGS_PATH + img
+		heatmap_dir = HEATMAPS_PATH + img[:-4] + "/"
+		heatmaps = []
+
+		for i in range(17):
+			heatmaps.append(torch.from_numpy(np.load(heatmap_dir + str(i) + ".npy")))
+		
+		img_res.append(np.load(img_path))
+		heatmap_res.append(torch.stack(heatmaps))
+
+	img_res = np.array(img_res).reshape((len(imgs), -1))
+	heatmap_res = torch.stack(heatmap_res)
+ 
+	return img_res, heatmap_res, imgs
+
+def get_kmeans(X, max_k = 10, max_iter = 1000):
+    Ks = np.arange(2, max_k + 1, 1) # Which k's to use for KMeans
+    sil = [] # Storing silhouette score
+    best_model = None # Storing the best model, based on silhouette score
+    overall_best_sil = -1 # Storing the best silhouette score
+    best_centroids = None
+    inertias = []
+
+    for k in tqdm(Ks, desc = "k", leave = False):
+        model = KMeans(n_clusters = k, max_iter = max_iter).fit(X)
+        
+        # Computes silhouette score
+        labels = model.labels_
+        cur_sil = silhouette_score(X, labels, metric = 'euclidean')
+
+        # Inertia
+        inertias.append(model.inertia_)
+
+        # Compares current silhouette score with the best silhouette score of the current k
+        if (cur_sil > overall_best_sil):
+            best_model = model
+            overall_best_sil = cur_sil
+            best_centroids = model.cluster_centers_
+
+        # Appends the best silhouette score of each k
+        sil.append(cur_sil)
+
+    # Plotting silhouette score
+    sil = np.array(sil)
+    plt.figure()
+    plt.plot(np.arange(2, max_k + 1, 1), sil)
+    plt.xticks(np.arange(2, max_k + 1, 1))
+    plt.title("Best silhouette score for each cluster")
+    plt.xlabel("Amount of clusters")
+    plt.ylabel("Silhouette score")
+    plt.show()
+
+    # Plotting inertia
+    plt.figure()
+    plt.plot(np.arange(2, max_k + 1, 1), inertias)
+    plt.xticks(np.arange(2, max_k + 1, 1))
+    plt.title("Inertia for each amount of clusters")
+    plt.xlabel("Amount of clusters")
+    plt.ylabel("Inertia score")
+    plt.show()
+
+    return best_model, sil, best_centroids
+ 
+
+def get_kmeans_alternative(X, min_k = 2, max_k = 10, max_iter = 1000):
+	""" 
+	Runs kmeans, but instead of finding the synthetic centroid of each cluster, it finds the nearest true observation and assigns that as the centroid.
+	Each observation is labelled accordingly.
+	"""
+
+	Ks = np.arange(min_k, max_k + 1, 1) # Which k's to use for KMeans
+	sil = [] # Storing silhouette score
+	best_model = None # Storing the best model, based on silhouette score
+	overall_best_sil = -1 # Storing the best silhouette score
+	best_centroids = None
+	best_labels = None
+
+	for k in tqdm(Ks, desc = "k", leave = False):
+		model = KMeans(n_clusters = k, max_iter = max_iter).fit(X)
+		centroids = model.cluster_centers_
+		
+		true_centroids = np.zeros(centroids.shape)
+
+		# Finds the nearest true centroids
+		for i, centroid in enumerate(centroids):
+			dists = np.linalg.norm(centroid - X, axis = 1)
+			true_centroids[i] = X[np.argmin(dists)]
+			dists[np.argmin(dists)] = np.max(dists) # Makes sure that multiple centroids are not set to the same nearest observation
+
+		# Labels each datapoint accordingly to which true centroid it is the closest to
+		labels = np.zeros(X.shape[0])
+		dists = None # the best distances from a cluster to each observation
+		for i, centroid in enumerate(true_centroids):
+			centroid = centroid.reshape((1, -1))
+			dist = np.linalg.norm(centroid - X, axis = 1)
+	
+			if (dists is None):
+				dists = dist
+			else:
+				labels[dist < dists] = i
+				dists[dist < dists] = dist[dist < dists]
+		
+		# Computes silhouette score
+		cur_sil = silhouette_score(X, labels, metric = 'euclidean')
+
+		# Compares current silhouette score with the best silhouette score of the current k
+		if (cur_sil > overall_best_sil):
+			best_model = model
+			overall_best_sil = cur_sil
+			best_centroids = np.copy(true_centroids)
+			best_labels = np.copy(labels)
+
+		# Appends the best silhouette score of each k
+		sil.append(cur_sil)
+
+	# Plotting silhouette score
+	sil = np.array(sil)
+	plt.figure()
+	plt.plot(np.arange(min_k, max_k + 1, 1), sil)
+	plt.xticks(np.arange(min_k, max_k + 1, 1))
+	plt.title("Best silhouette score for each cluster")
+	plt.xlabel("Amount of clusters")
+	plt.ylabel("Silhouette score")
+	plt.show()
+
+	return best_model, best_centroids, best_labels.astype("uint8")
+
+def get_kmedoids(X, max_k = 10, max_iter = 1000):
+	Ks = np.arange(2, max_k + 1, 1) # Which k's to use for KMeans
+	sil = [] # Storing silhouette score
+	best_model = None # Storing the best model, based on silhouette score
+	overall_best_sil = -1 # Storing the best silhouette score
+	best_centroids = None
+	inertias = []
+
+	for k in tqdm(Ks, desc = "k", leave = False):
+		model = KMedoids(n_clusters = k, max_iter = max_iter).fit(X)
+		
+		# Computes silhouette score
+		labels = model.labels_
+		cur_sil = silhouette_score(X, labels, metric = 'euclidean')
+
+		# Inertia
+		inertias.append(model.inertia_)
+
+		# Compares current silhouette score with the best silhouette score of the current k
+		if (cur_sil > overall_best_sil):
+			best_model = model
+			overall_best_sil = cur_sil
+			best_centroids = model.cluster_centers_
+
+		# Appends the best silhouette score of each k
+		sil.append(cur_sil)
+
+	# Plotting silhouette score
+	sil = np.array(sil)
+	plt.figure()
+	plt.plot(np.arange(2, max_k + 1, 1), sil)
+	plt.xticks(np.arange(2, max_k + 1, 1))
+	plt.title("Best silhouette score for each cluster")
+	plt.xlabel("Amount of clusters")
+	plt.ylabel("Silhouette score")
+	plt.show()
+
+	# Plotting inertia
+	plt.figure()
+	plt.plot(np.arange(2, max_k + 1, 1), inertias)
+	plt.xticks(np.arange(2, max_k + 1, 1))
+	plt.title("Inertia for each amount of clusters")
+	plt.xlabel("Amount of clusters")
+	plt.ylabel("Inertia score")
+	plt.show()
+
+	return best_model, sil, best_centroids
+
+def visualize_clusters_pca(X, heatmaps, labels):
+	NUM_CLUSTERS = len(np.unique(labels))
+	clusters = [[] for _ in range(NUM_CLUSTERS)]
+	points_in_each_cluster = np.zeros(NUM_CLUSTERS)
+
+	# Seperates the clusters
+	for x, l in zip(X, labels):
+		points_in_each_cluster[l] += 1
+		clusters[l].append(x)
+
+	# Reshapes the clusters
+	for i in range(NUM_CLUSTERS):
+		clusters[i] = np.array(clusters[i]).reshape((int(points_in_each_cluster[i]), -1))
+
+	# Draws the clusters in 2D space
+	for i in tqdm(range(NUM_CLUSTERS), leave = False):
+		fig, ax = plt.subplots(figsize = (10, 10))
+		plt.figure()
+
+		pca = PCA(n_components=2)
+		
+		X = pca.fit_transform(StandardScaler().fit_transform(clusters[i]))
+
+		ax.set_xlabel("Principal component 1\nExplained Variance ratio: {:.3f}".format(pca.explained_variance_ratio_[0]))
+		ax.set_ylabel("Principal component 2\nExplained Variance ratio: {:.3f}".format(pca.explained_variance_ratio_[1]))
+		
+		for x, y, l in zip(X, heatmaps, labels):
+			if (l == i):
+				y = turn_featuremaps_to_keypoints(y)
+				image = draw_skeleton(y)
+				im = OffsetImage(image, zoom = 0.5)
+				ab = AnnotationBbox(im, (x[0], x[1]), xycoords = "data", frameon = False)
+				ax.add_artist(ab)
+				ax.update_datalim([(x[0], x[1])])
+				ax.autoscale()           
+
+		plt.show()
+  
+def visualize_clusters_tsne(X, heatmaps, labels):
+	NUM_CLUSTERS = len(np.unique(labels))
+	clusters = [[] for _ in range(NUM_CLUSTERS)]
+	points_in_each_cluster = np.zeros(NUM_CLUSTERS)
+
+	# Seperates the clusters
+	for x, l in zip(X, labels):
+		points_in_each_cluster[l] += 1
+		clusters[l].append(x)
+
+	# Reshapes the clusters
+	for i in range(NUM_CLUSTERS):
+		clusters[i] = np.array(clusters[i]).reshape((int(points_in_each_cluster[i]), -1))
+
+	# Draws the clusters in 2D space
+	for i in tqdm(range(NUM_CLUSTERS), leave = False):
+
+		if (clusters[i].shape[1] != 2):
+			X = TSNE(n_components = 2).fit_transform(X)
+		
+		fig, ax = plt.subplots(figsize = (10, 10))
+		plt.figure()
+		for x, y, l in zip(X, heatmaps, labels):
+			if (l == i):
+				y = turn_featuremaps_to_keypoints(y)
+				image = draw_skeleton(y)
+				im = OffsetImage(image, zoom = 0.5)
+				ab = AnnotationBbox(im, (x[0], x[1]), xycoords = "data", frameon = False)
+				ax.add_artist(ab)
+				ax.update_datalim([(x[0], x[1])])
+				ax.autoscale()
+
+		plt.show()
