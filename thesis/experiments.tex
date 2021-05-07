@@ -77,12 +77,12 @@ In Figure \ref{fig:results} the evolution of the training loss, validation loss 
 The reduction of the learning rate happened after $21$ epochs. By looking at the validation accuracy in Figure \ref{fig:results} we can see, that the accuracy rapidly increases shortly after the reduction of the learning rate, hinting at the effectiveness of dropping the learning rate. 
 \\
 \\
-Comparing the training loss, validation loss and the validation accuracy from Table \ref{tab:results} we see, that the there is not overlap between the models yielding the best training loss, validation loss and validation accuracy. As we in section \textbf{REFERENCE MANGLER} want to explore a model that performs decently well, we will be using the model with the highest validation accuracy as our model going forward. Thus, our model is the model from epoch $47$, which has a training loss of $4.19 \cdot 10^{-5}$, a validation loss of $5.43 \cdot 10^{-5}$ and a validation accuracy of $0.433$.
+Comparing the training loss, validation loss and the validation accuracy from Table \ref{tab:results} we see, that the there is not an overlap between the models yielding the best training loss, validation loss and validation accuracy. As we in section \textbf{REFERENCE MANGLER} want to explore a model that performs decently well, we will be using the model with the highest validation accuracy as our model going forward. Thus, our model is the model from epoch $47$, which has a training loss of $4.19 \cdot 10^{-5}$, a validation loss of $5.43 \cdot 10^{-5}$ and a validation accuracy of $0.433$.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width = \textwidth]{entities/results.png}
-    \caption{Visualization of the evolution of the training loss, validation loss and validation PCK accuracy of the trained model. Top row shows all of the $50$ epochs. Bottom row shows epoch $2$ and forward to ease the visualization of the training loss}
+    \caption{Visualization of the evolution of the training loss, validation loss and validation PCK accuracy of the trained model. Top row shows all of the $50$ epochs. Bottom row shows epoch $2$ and forward to ease the reading of the training loss}
     \label{fig:results}
 \end{figure}
 

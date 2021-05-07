@@ -51,11 +51,41 @@ The input of the network is a $256 \times 256$ RGB-image. To lower the memory us
 By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joints it should predict for a single person. The prediction of a joint is thus the maximum activation of the corresponding heatmap.
 
 \subsection{Principal Components Analysis (PCA)}
+\begin{algorithm}[t]
+    \caption{PCA \cite{MAD_book}}
+    \begin{algorithmic}[1]
+        \Require Input data $\bm{Y} \in \mathbb{R}^{N \times D}$, with feature columns $\bm{y}_1, ..., \bm{y}_N$.
+        \Require Wanted output dimensions $k$
+        \State Let each feature column have zero mean by subtracting the corresponding mean, $\bar{y} = \frac{1}{N} \sum_{n = 1} ^N \bm{y}_n$, from each feature column
+        \State Compute the sample covariance matrix $\bm{C} = \frac{1}{N} \sum_{n = 1} ^N \bm{y}_n \bm{y}_n ^T$ 
+        \State Find the $D$ eigenvector/eigenvalue pairs of the covariance matrix
+        \State Find the eigenvectors, $\bm{w}_1, ..., \bm{w}_k \in \mathbb{R}^D$, corresponding to the $k$ highest eigenvalues
+        \State Let $\bm{W} = \left[ \bm{w}_1, ..., \bm{w}_k \right]$, that is, the $D \times k$ matrix created by placing the $k$ eigenvectors alongside one another
+        \State Let $\bm{X} = \bm{Y} \bm{W}$ be the projection of $Y$ down to $k$ dimensions
+        \State \textbf{return} $\bm{X}$
+    \end{algorithmic}
+    \label{Algorithm:PCA}
+\end{algorithm}
 
-
+It is very common, that a given dataset has an enormous amount of dimensions. This is quickly become a problem, as it can be difficult to visualize or it can lead to other problems, such as models becoming too complex, thus being prone to overfitting. This is a common phenomen called the \textit{Curse of Dimensionality} \cite{ESL}. For this reason multiple techniques have been developed for reducing the dimensions of a given dataset. One of the most common techniques for reducing the dimension of a dataset is \textit{Principal Components Analysis} (\textit{PCA}).
+\\
+\\
+PCA is an unsupervised linear projection method used for reducing the dimension of a dataset from $D$ down to $k$ dimensions. The algorithm works by finding the $k$ orthogonal vectors that maximizes the variance of the input data. \cite{MAD_book} 
+\\
+\\
+The pseudocode of the algorithm has been visualized in Algorithm \ref{Algorithm:PCA}. The algorithm starts off by finding the sample covariance matrix $\bm{C}$. It then finds the $k$ vectors, that maximizes the variance of the input data. The $k$ vectors that maximizes the variance are the $k$ eigenvectors with the corresponding highest eigenvalues. Thus, the projection with the first eigenvector captures the most variance, the projection with the second eigenvector captures the second most variance, and so on. The projection down to $k$ dimensions then happens by stacking the $k$ eigenvectors, forming a $D \times k$ matrix, where $D$ is the input dimensions, which is then multiplied with the input data, resulting in the projected data. \cite{MAD_book}
 
 \subsection{$K$-Means Clustering}
-\begin{algorithm}[t]
+
+Often we want to find patterns in data that has not been labelled. One common group of techniques for this purpose is the \textit{clustering algorithms}, that are used to group observations into clusters, such that observations from the same cluster are more similar, than observations from different clusters. One common clustering technique is $K$\textit{-Means}.
+\\
+\\
+$K$-Means is a unsupervised method used for clustering observations into $K$ groups of similar observations, such that no observation occurs in multiple clusters. The algorithm uses distance as a measure of similarity, such that observations closer to each other are more likely to being grouped to the same cluster, than two observations far appart. In the middle of each cluster is a synthetic observation (that is, not a real observation), called the \textit{centroid}, which is defined as the mean of the cluster. The pseudocode of the algorithm has been visualized in Algorithm \ref{Algorithm:KMeans}. The algorithm is an iterative process, which works firstly by assigning each observation to the closest centroid. Next, each centroid is updated accordingly. This is done until the assigning of each observation is unchanged \cite{MAD_book}.
+\\
+\\
+$K$-Means is guaranteed to converge to a local minimum of the total distance between the objects and their corresponding centroid, however, it is not guaranteed to reach the global minimum. This only depends on the initial position of the centroids. To partly overcome this problem it is common to run the algorithm multiple times with different random initial positions of the centroids and use the best solution as the final output \cite{MAD_book}.
+
+\begin{algorithm}[h]
     \caption{$K$-Means \cite{MAD_book}}
     \begin{algorithmic}[1]
         \Require Input data $\bm{X}$
@@ -74,11 +104,6 @@ By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joint
     \end{algorithmic}
     \label{Algorithm:KMeans}
 \end{algorithm}
-
-\textit{K-Means} is a unsupervised method used for clustering observations into $K$ groups of similar observations, such that no observation occurs in multiple clusters. In the middle of each cluster is a synthetic observation (that is, not a real observation), called the \textit{centroid}, which is defined as the mean of the cluster. The pseudocode of the algorithm has been visualized in Algorithm \ref{Algorithm:KMeans}. The algorithm is an iterative process, which works firstly by assigning each observation to the closest centroid. Next, each centroid is updated accordingly. This is done until the assigning of each observation is unchanged \cite{MAD_book}.
-\\
-\\
-$K$-Means is guaranteed to converge to a local minimum of the total distance between the objects and their corresponding centroid, however, it is not guaranteed to reach the global minimum. This only depends on the initial position of the centroids. To partly overcome this problem it is common to run the algorithm multiple times with different random initial positions of the centroids and use the best solution as the final output \cite{MAD_book}.
 
 
 \end{document}
