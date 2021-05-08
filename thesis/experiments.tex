@@ -1,10 +1,10 @@
 \documentclass[./main.tex]{subfiles}
 
 \begin{document}
-\section{Experiment}
+\section{Experiment}\label{experiement}
 Throughout the following section the results and configuration details of our trained model are described and explained.
 
-\subsection{Configuration Details}
+\subsection{Configuration Details}\label{subsec:conf_details}
 Our model only consists of a single hourglass. The hourglass consists of $4$ down- and upsamples, with $1$ residual module between each down- and upsample. In each skip-connection a single residual module is used, and in the bottleneck $3$ residual modules are used. Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla} experiment with different amount of hourglasses and with different amount of residual modules in each hourglass. They both come to the conclusion, that stacking multiple hourglasses or using hourglasses with multiple residual modules between each down- and upsample increases the performance of the model. However, as the main purpose of this thesis is not to create a model with state-of-the-art results, but instead to create a model that can be interpreted and explored, we have chosen to reduce the size of the model. For the same reasons, we will not be developing and testing various configurations of the architecture. Likewise, the purpose is neither to improve the model developed by Newell \textit{et. al} \cite{Newell}, hence why we will be making the same configuration choices as Newell \textit{et. al} \cite{Newell} and Olsen \cite{Camilla}, which are described in the following.
 \\
 \\
