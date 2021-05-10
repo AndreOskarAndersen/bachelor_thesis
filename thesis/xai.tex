@@ -49,8 +49,102 @@ By looking at Figure \ref{fig:pred_comparison} we can see, that the model withou
 
 
 \subsection{Shape Analysis of the Latent Space}
-
-
+\clearpage
 \subsection{Using Clustering to Seperate the Latent Space}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width = \textwidth]{entities/latent_space_all_skeletons.png}
+    \caption{Plot of $10.000$ samples of the latent space of the trained model, with the corresponding ground truth heatmaps}
+    \label{fig:latent_space_all_skeletons}
+\end{figure}
+In subsection \ref{subsec:reasoning} we described how we decided to use the Stacked Hourglass for the pose estimation, as it is similar to Autoencoders. This makes the model useful for encoding the data into a lower dimension, resulting in the lower dimensional data in the bottleneck of the model a great representation of how the input data actually is. By exploring this representation of the data in the bottleneck, we can get an understanding of how the model relate similar data to each other.
+\\
+\\
+We start off by feeding training data through the encoder of the model and storing the output of the third residual module in the bottleneck. Due to memory constraints only $10.000$ random samples were used. We decided to make use of training data for this, as we wish to look at what features of the training data that the model has learned. Each output of the bottleneck is a $4 \times 4 \times 256$ tensor, which we flattened to a $4.096$ vector. Each vector was then stacked, forming a $10.000 \times 4.096$ matrix of the \textit{latent space}.
+\\
+\\
+If we take this latent space matrix, project it down to $2$ dimensions using PCA and visualize the samples with their corresponding ground truth heatmaps, we get the plot visualized in Figure \ref{fig:latent_space_all_skeletons}. The plot only explains about $37\%$ of the variance of the original data, however, we can clearly see how there is some specific structure in the data, as samples that are somewhat similar are close to each other, however, with a few outliers.
+\\
+\\
+To see how to model seperates the data in the latent space, we will be using $K$-Means. Choosing the optimal $K$ can often be difficult, as it is often not clear how many clusters there are in the data. For choosing the optimal $k$ the \textit{Silhouette score} is often computed, following the pseudocode visualized in \ref{Algorithm:Silhouette_score}. For computing the Silhouette score, various various values of $K$ are used for training various $K$-Means models. After each model has been trained, let $a_i$ be the average distance of the $i$th sample to the other samples in the same cluster as $i$th sample. Then, let $b_i$ be the average distance of the $i$th sample to the samples in the nearest cluster. Ideally, we want $a_i < b_i$, as $b_i < a_i$ means that the $i$th sample probably has been grouped to the wrong cluster. For that reason, the $i$th silhouette score is set to $1 - \frac{a_i}{b_i}$ if $a_i < b_i$ or $\frac{b_i}{a_i} - 1$ if $a_i > b_i$. By the end of the algorithm the mean silhouette score is returned. By computing the silhouette score for various values of $K$, the $K$ with the silhouette score closest to $1$ is chosen as the optimal $K$.
+\begin{algorithm}[t]
+    \caption{Compute Silhouette Score \cite{MAD_L12}}
+    \label{Algorithm:Silhouette_score}
+    \begin{algorithmic}[1]
+        \Require Clusters: $\bm{C}_0, \bm{C}_1, ..., \bm{C}_{k - 1}$
+        \ForAll{cluster $\bm{C}_i$}
+            \ForAll{sample $\bm{x} \in \bm{C}_i$}
+                \State \begin{varwidth}[t]{\linewidth}
+                    Compute the mean distance from $\bm{x}$ to the other samples in the same cluster: $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
+                \end{varwidth}
+                \State \begin{varwidth}[t]{\linewidth}
+                Compute the mean distance from $\bm{x}$ to the nearest other cluster $\bm{C}_j$: $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
+                \end{varwidth}
+                \State Compute the Silhouette of $\bm{x}$:
+                \begin{math}
+                    s(\bm{x}) =
+                    \begin{cases}
+                        1 - \frac{a(\bm{x})}{b(\bm{x})} & \text{if } a(\bm{x}) < b(\bm{x}) \\
+                        0 & \text{if } a(\bm{x}) = b(\bm{x}) \text{ or } |\bm{C}_i| = 1 \\
+                        \frac{b(\bm{x})}{a(\bm{x})} - 1 & \text{if } a(\bm{x}) > b(\bm{x})
+                    \end{cases}
+                \end{math}
+            \EndFor
+        \EndFor
+        \State \textbf{return} mean of the Silhouettes
+    \end{algorithmic}
+\end{algorithm}
+\begin{figure}[b]
+    \centering
+    \begin{subfigure}{7 cm}
+        \centering
+        \includegraphics[width = 7 cm]{entities/silhouette_score_all_skeletons.png}
+        \caption{Latent space consists of $10.000$ randomly chosen training samples}
+        \label{fig:silhouette_all}
+    \end{subfigure}
+    \begin{subfigure}{7 cm}
+        \centering
+        \includegraphics[width = 7 cm]{entities/silhouette_score_full_skeletons.png}
+        \caption{Latent space consists of $7.017$ fully-annotated training samples.}
+        \label{fig:silhouette_full}
+    \end{subfigure}
+    \caption{Silhouette score of running various $K$-Means models on different data from the latent space.}
+\end{figure}
+\\
+\\
+When running the $K$-Means algorithm on the latent space, we use $K = 2, 3, ..., 10$, where the algorithm is retrained $10$ times with different initial centroid position for each $K$. For each run we record the Silhouette score, where the highest Silhouette score for each $K$ has been visualized in Figure \ref{fig:silhouette_all}. By looking at Figure \ref{fig:silhouette_all} we can clearly see, how the optimal $K$ for the model is when $K = 2$.
+\\
+\begin{figure}[t]
+    \centering
+    \includegraphics[width = \textwidth]{entities/cluster_all_skeletons.png}
+    \caption{The resulting clusters of running a $K$-Means model with $K = 2$ on the latent space consisting of $10.000$ random training samples}
+    \label{fig:clusters_all_skeletons}
+\end{figure}
+\\
+The results of running the $K$-Means model with $K = 2$ has been visualized in Figure \ref{fig:clusters_all_skeletons}. The $K$-Means model were ran on the latent space in all of the $4.096$ dimensions and only each cluster were projected down to $2$ dimensions for the purpose of visualization. By looking at Figure \ref{fig:clusters_all_skeletons} we can see how the two clusters has different content: where Cluster $0$ focuses more on almost fully annotated samples, Cluster $1$ focuses more on samples that have a lot of keypoints missing. This is also easy to see if we look at the ground truth heatmaps of the samples closest to the centroids of the two clusters, as visualized in Figure \ref{fig:centroids_all}. By doing so we can see, that the ground truth heatmap of the closest sample to the centroid of Cluster $0$ almost has all of its joints annotated, whereas the ground truth heatmap of the closest sample to the centroid of Cluster $1$ only consists of $2$ keypoints.
+\\
+\begin{figure}[b]
+    \centering
+    \includegraphics[height = 4 cm]{entities/centroids_all_skeletons.png}
+    \caption{Closest points to the centroids of the two clusters from running $K$-Means on the latent space consisting of $10.000$ random training samples}
+    \label{fig:centroids_all}
+\end{figure}
+\\
+Although there are differences in the two clusters in Figure \ref{fig:clusters_all_skeletons}, there are still quite a lot of missclassified samples. To overcome this problem we remove all of the not-fully annotated samples and instead use all of the $7.017$ fully-annotated samples of the training set, again fed through the network and outputted by the third residual module in the bottleneck. By doing so we get the Silhouette scores visualized in Figure \ref{fig:silhouette_full}, where we again clearly see, that $K = 2$ is the optimal value of $K$.
+\\
+\\
+The two clusters, resulted by only using fully-annotated samples, have been visualized in Figure \ref{fig:clusters_full_skeletons} and the corresponding clusters have been visualized in \ref{fig:centroids_full}. Like before, the $K$-Means model were ran on the data in full dimension to create the two clusters, which then were projected down to $2$ dimensions using PCA for the purpose of visualization. By looking at the figure we clearly see how the content of Cluster $0$ contains samples that are stationary, whereas the samples of Cluster $1$ carry a lot more movement. The two clusters does have a lot less missclassifications, than it was the case with the two clusters in Figure \ref{fig:clusters_all_skeletons}. The missclassifications could explain the not-optimal performance of the model as this could mean, that the network has not fully learned the differences between certain positions and where the positions should be placed in the latent space.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width = \textwidth]{entities/cluster_full_skeletons.png}
+    \caption{The resulting clusters of running a $K$-Means model with $K = 2$ on the latent space consisting of $7.017$ fully annotated training samples}
+    \label{fig:clusters_full_skeletons}
+\end{figure}
+\begin{figure}[b]
+    \centering
+    \includegraphics[height = 4 cm]{entities/centroids_full_skeletons.png}
+    \caption{Closest points to the centroids of the two clusters from running $K$-Means on the latent space consisting of $7.017$ fully annotated training samples}
+    \label{fig:centroids_full}
+\end{figure}
 
 \end{document}

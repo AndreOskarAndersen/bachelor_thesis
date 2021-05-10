@@ -6,9 +6,9 @@ In this section the various algorithms and architectures used throughout this th
 \subsection{Stacked Hourglass}
 When performing the pose estimation in section \textbf{REFERENCE MANGLER}, we will be implementing and using the \textit{stacked hourglass} described by Newell \textit{et al.} \cite{Newell}. The following description and explanation of the architecture is based on an interpretation of Newell \textit{et al.} \cite{Newell} and Camilla Olsen \cite{Camilla}.
 
-\subsubsection{Reasoning behind using the Stacked Hourglass}
+\subsubsection{Reasoning behind using the Stacked Hourglass}\label{subsec:reasoning}
 % MANGLER MÅSKE AT SKRIVE, AT DER ER SKET MEGET VIDEREBYGNING PÅ SHG SIDEN NEWELL, HVILKET VI KAN BRUGE NÅR VI SKAL BRUGE VORES VIDEN OM MODELLEN TIL AT OPTIMERE DEN.
-We have decided to make use of the Stacked hourglass described by Newell \textit{et al.}, as it is an architecture that has shown state-of-the-art results. At the same time the architecture of the network is similar to the architecture of \textit{autoencoders}, making the architecture useful for encoding the data into a lower dimension, which can be useful in section \textbf{REFERENCE MANGLER}, when we will be doing the interpretation of the model.
+We have decided to make use of the Stacked hourglass described by Newell \textit{et al.}, as it is an architecture that has shown state-of-the-art results. At the same time the architecture of the network is similar to the architecture of \textit{Autoencoders}, making the architecture useful for encoding the data into a lower dimension, which can be useful in section \textbf{REFERENCE MANGLER}, when we will be doing the interpretation of the model.
 
 \subsubsection{The Residual Module}
 \begin{figure}[h]
