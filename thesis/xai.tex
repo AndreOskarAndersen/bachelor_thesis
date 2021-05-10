@@ -33,7 +33,7 @@ Olsen \cite{Camilla} and Newell \cite{Newell} claims, that the skip-connections 
 Thus, the second model has not been retrained and is identical to the first model, however, without its skip-connections.
 \\
 \\
-In Figure \ref{fig:PCK_accs} the distributions of the PCK training accuracies of the two models have been visualized. We have decided to make use of the training data for computing the PCK accuracies, as we want to look at the data, that the model has been trained on. By looking at the two distributions we can clearly see, how to model without its skip-connections performs much worse, than the model with its skip-connections.
+In Figure \ref{fig:PCK_accs} the distributions of the PCK training accuracies of the two models have been visualized. We have decided to make use of the training data for computing the PCK accuracies, as we want to look at the data, that the model has been trained on. By looking at the two distributions we can clearly see how to model without its skip-connections performs much worse, than the model with its skip-connections.
 \\
 \\
 To further understand the decrease of accuracy in the case where the skip-connections are disabled, we have in Figure \ref{fig:pred_comparison} visualized $20$ samples from the training dataset, where the model with skip-connections has an $100\%$ PCK accuracy score. Next to each image the ground truth heatmaps, or the prediction by the model with skip-connections, and the prediction by the model without skip-connections has been visualized.
@@ -45,8 +45,7 @@ To further understand the decrease of accuracy in the case where the skip-connec
     \label{fig:pred_comparison}
 \end{figure}
 \\
-By looking at Figure \ref{fig:pred_comparison} we can see, that the model without its skip-connections often struggles with smaller joints, such as the eyes, ears or nose, whereas it performs better, however still not always perfect, on bigger joints, such as the shoulders, hips or knees. This is probably due to the fact, that the details of the smaller joints has a bigger chance of being lost by the max pooling layers in the encoder. Without the skip-connections they are thus not recreatable in the decoder, resulting in bad predictions. Thus, we can verify Olsen's \cite{Camilla} and Newell's \cite{Newell} claims, that the skip-connections are used for recreating details lost in the encoder. 
-
+By looking at Figure \ref{fig:pred_comparison} we can see, that the model without its skip-connections often struggles with smaller joints, such as the eyes, ears or nose, whereas it performs better, however still not always perfect, on bigger joints, such as the shoulders, hips or knees. This is probably due to the fact, that the details of the smaller joints has a bigger chance of being lost by the max pooling layers in the encoder. Without the skip-connections their information is thus lost, resulting in bad predictions. Thus, we can verify Olsen's \cite{Camilla} and Newell's \cite{Newell} claims, that the skip-connections are used for recreating details lost in the encoder. 
 
 \subsection{Shape Analysis of the Latent Space}
 \clearpage
@@ -65,8 +64,6 @@ We start off by feeding training data through the encoder of the model and stori
 \\
 If we take this latent space matrix, project it down to $2$ dimensions using PCA and visualize the samples with their corresponding ground truth heatmaps, we get the plot visualized in Figure \ref{fig:latent_space_all_skeletons}. The plot only explains about $37\%$ of the variance of the original data, however, we can clearly see how there is some specific structure in the data, as samples that are somewhat similar are close to each other, however, with a few outliers.
 \\
-\\
-To see how to model seperates the data in the latent space, we will be using $K$-Means. Choosing the optimal $K$ can often be difficult, as it is often not clear how many clusters there are in the data. For choosing the optimal $k$ the \textit{Silhouette score} is often computed, following the pseudocode visualized in \ref{Algorithm:Silhouette_score}. For computing the Silhouette score, various various values of $K$ are used for training various $K$-Means models. After each model has been trained, let $a_i$ be the average distance of the $i$th sample to the other samples in the same cluster as $i$th sample. Then, let $b_i$ be the average distance of the $i$th sample to the samples in the nearest cluster. Ideally, we want $a_i < b_i$, as $b_i < a_i$ means that the $i$th sample probably has been grouped to the wrong cluster. For that reason, the $i$th silhouette score is set to $1 - \frac{a_i}{b_i}$ if $a_i < b_i$ or $\frac{b_i}{a_i} - 1$ if $a_i > b_i$. By the end of the algorithm the mean silhouette score is returned. By computing the silhouette score for various values of $K$, the $K$ with the silhouette score closest to $1$ is chosen as the optimal $K$.
 \begin{algorithm}[t]
     \caption{Compute Silhouette Score \cite{MAD_L12}}
     \label{Algorithm:Silhouette_score}
@@ -94,6 +91,9 @@ To see how to model seperates the data in the latent space, we will be using $K$
         \State \textbf{return} mean of the Silhouettes
     \end{algorithmic}
 \end{algorithm}
+\\
+To see how to model seperates the data in the latent space, we will be using $K$-Means. Choosing the optimal $K$ can often be difficult, as it is often not clear how many clusters there are in the data. For choosing the optimal $k$ the \textit{Silhouette score} is often computed, following the pseudocode visualized in \ref{Algorithm:Silhouette_score}. For computing the Silhouette score, various values of $K$ are used for training various $K$-Means models. After each model has been trained, let $a_i$ be the average distance of the $i$th sample to the other samples in the same cluster as $i$th sample. Then, let $b_i$ be the average distance of the $i$th sample to the samples in the nearest cluster. Ideally, we want $a_i < b_i$, as $b_i < a_i$ means that the $i$th sample probably has been grouped to the wrong cluster. For that reason, the $i$th silhouette score is set to $1 - \frac{a_i}{b_i}$ if $a_i < b_i$ or $\frac{b_i}{a_i} - 1$ if $a_i > b_i$. By the end of the algorithm the mean silhouette score is returned. By computing the silhouette score for various values of $K$, the $K$ with the silhouette score closest to $1$ is chosen as the optimal $K$ \cite{MAD_L12}.
+\\
 \begin{figure}[b]
     \centering
     \begin{subfigure}{7 cm}
@@ -110,7 +110,6 @@ To see how to model seperates the data in the latent space, we will be using $K$
     \end{subfigure}
     \caption{Silhouette score of running various $K$-Means models on different data from the latent space.}
 \end{figure}
-\\
 \\
 When running the $K$-Means algorithm on the latent space, we use $K = 2, 3, ..., 10$, where the algorithm is retrained $10$ times with different initial centroid position for each $K$. For each run we record the Silhouette score, where the highest Silhouette score for each $K$ has been visualized in Figure \ref{fig:silhouette_all}. By looking at Figure \ref{fig:silhouette_all} we can clearly see, how the optimal $K$ for the model is when $K = 2$.
 \\
@@ -133,7 +132,7 @@ The results of running the $K$-Means model with $K = 2$ has been visualized in F
 Although there are differences in the two clusters in Figure \ref{fig:clusters_all_skeletons}, there are still quite a lot of missclassified samples. To overcome this problem we remove all of the not-fully annotated samples and instead use all of the $7.017$ fully-annotated samples of the training set, again fed through the network and outputted by the third residual module in the bottleneck. By doing so we get the Silhouette scores visualized in Figure \ref{fig:silhouette_full}, where we again clearly see, that $K = 2$ is the optimal value of $K$.
 \\
 \\
-The two clusters, resulted by only using fully-annotated samples, have been visualized in Figure \ref{fig:clusters_full_skeletons} and the corresponding clusters have been visualized in \ref{fig:centroids_full}. Like before, the $K$-Means model were ran on the data in full dimension to create the two clusters, which then were projected down to $2$ dimensions using PCA for the purpose of visualization. By looking at the figure we clearly see how the content of Cluster $0$ contains samples that are stationary, whereas the samples of Cluster $1$ carry a lot more movement. The two clusters does have a lot less missclassifications, than it was the case with the two clusters in Figure \ref{fig:clusters_all_skeletons}. The missclassifications could explain the not-optimal performance of the model as this could mean, that the network has not fully learned the differences between certain positions and where the positions should be placed in the latent space.
+The two clusters, resulted by only using fully-annotated samples, have been visualized in Figure \ref{fig:clusters_full_skeletons} and the corresponding closest ground truth heatmaps for the samples closest to the centroids have been visualized in \ref{fig:centroids_full}. Like before, the $K$-Means model were ran on the data in full dimension to create the two clusters, which then were projected down to $2$ dimensions using PCA for the purpose of visualization. By looking at the figure we clearly see how the content of Cluster $0$ contains samples that are stationary, whereas the samples of Cluster $1$ carry a lot more movement. This is also the case for the ground truth heatmaps of the samples closest to the centroids, visualized in Figure \ref{fig:centroids_full}, as we can see, that the heatmap for Cluster $0$ is more straighten, whereas the heatmapf for Cluster $1$ is more bent and looks like it is in more movement. The two clusters does have a lot less missclassifications, than it was the case with the two clusters in Figure \ref{fig:clusters_all_skeletons}. The missclassifications could explain the not-optimal performance of the model as this could mean, that the network has not fully learned the differences between certain positions and where the positions should be placed in the latent space.
 \begin{figure}[t]
     \centering
     \includegraphics[width = \textwidth]{entities/cluster_full_skeletons.png}
