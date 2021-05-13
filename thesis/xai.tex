@@ -72,10 +72,10 @@ If we take this latent space matrix, project it down to $2$ dimensions using PCA
         \ForAll{cluster $\bm{C}_i$}
             \ForAll{sample $\bm{x} \in \bm{C}_i$}
                 \State \begin{varwidth}[t]{\linewidth}
-                    Compute the mean distance from $\bm{x}$ to the other samples in the same cluster: $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
+                    Compute the mean euclidean distance from $\bm{x}$ to the other samples in the same cluster: $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
                 \end{varwidth}
                 \State \begin{varwidth}[t]{\linewidth}
-                Compute the mean distance from $\bm{x}$ to the nearest other cluster $\bm{C}_j$: $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
+                Compute the mean euclidean distance from $\bm{x}$ to the nearest other cluster $\bm{C}_j$: $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
                 \end{varwidth}
                 \State Compute the Silhouette of $\bm{x}$:
                 \begin{math}
