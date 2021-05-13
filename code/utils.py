@@ -718,7 +718,7 @@ def load_data(IMGS_PATH, HEATMAPS_PATH):
  
 	return img_res, heatmap_res, imgs
 
-def get_kmeans(X, max_k = 10, max_iter = 1000):
+def get_kmeans(X, max_k = 10, max_iter = 1000, fig_saving_path = None):
     Ks = np.arange(2, max_k + 1, 1) # Which k's to use for KMeans
     sil = [] # Storing silhouette score
     best_model = None # Storing the best model, based on silhouette score
@@ -753,6 +753,10 @@ def get_kmeans(X, max_k = 10, max_iter = 1000):
     plt.title("Best silhouette score for each cluster")
     plt.xlabel("Amount of clusters")
     plt.ylabel("Silhouette score")
+    
+    if (fig_saving_path is not None):
+        plt.savefig(fig_saving_path + "silhouette_score.png")
+    
     plt.show()
 
     # Plotting inertia
@@ -762,12 +766,16 @@ def get_kmeans(X, max_k = 10, max_iter = 1000):
     plt.title("Inertia for each amount of clusters")
     plt.xlabel("Amount of clusters")
     plt.ylabel("Inertia score")
+    
+    if (fig_saving_path is not None):
+        plt.savefig(fig_saving_path + "intertia_score.png")
+    
     plt.show()
 
     return best_model, sil, best_centroids
  
 
-def get_kmeans_alternative(X, min_k = 2, max_k = 10, max_iter = 1000):
+def get_kmeans_alternative(X, min_k = 2, max_k = 10, max_iter = 1000, fig_saving_path = None):
 	""" 
 	Runs kmeans, but instead of finding the synthetic centroid of each cluster, it finds the nearest true observation and assigns that as the centroid.
 	Each observation is labelled accordingly.
@@ -826,6 +834,10 @@ def get_kmeans_alternative(X, min_k = 2, max_k = 10, max_iter = 1000):
 	plt.title("Best silhouette score for each cluster")
 	plt.xlabel("Amount of clusters")
 	plt.ylabel("Silhouette score")
+
+	if (fig_saving_path is not None):
+			plt.savefig(fig_saving_path + "silhouette_score.png")
+
 	plt.show()
 
 	return best_model, best_centroids, best_labels.astype("uint8")
@@ -878,7 +890,7 @@ def get_kmedoids(X, max_k = 10, max_iter = 1000):
 
 	return best_model, sil, best_centroids
 
-def visualize_clusters_pca(X, heatmaps, labels):
+def visualize_clusters_pca(X, heatmaps, labels, fig_saving_path = None):
 	NUM_CLUSTERS = len(np.unique(labels))
 	clusters = [[] for _ in range(NUM_CLUSTERS)]
 	points_in_each_cluster = np.zeros(NUM_CLUSTERS)
@@ -892,17 +904,17 @@ def visualize_clusters_pca(X, heatmaps, labels):
 	for i in range(NUM_CLUSTERS):
 		clusters[i] = np.array(clusters[i]).reshape((int(points_in_each_cluster[i]), -1))
 
+	figs, axs = plt.subplots(1, 2, figsize = (20, 10))
+
 	# Draws the clusters in 2D space
 	for i in tqdm(range(NUM_CLUSTERS), leave = False):
-		fig, ax = plt.subplots(figsize = (10, 10))
-		plt.figure()
-
 		pca = PCA(n_components=2)
 		
 		X = pca.fit_transform(StandardScaler().fit_transform(clusters[i]))
 
-		ax.set_xlabel("Principal component 1\nExplained Variance ratio: {:.3f}".format(pca.explained_variance_ratio_[0]))
-		ax.set_ylabel("Principal component 2\nExplained Variance ratio: {:.3f}".format(pca.explained_variance_ratio_[1]))
+		axs[i].set_xlabel("Principal component 1\nExplained Variance ratio: {:.3f}".format(pca.explained_variance_ratio_[0]))
+		axs[i].set_ylabel("Principal component 2\nExplained Variance ratio: {:.3f}".format(pca.explained_variance_ratio_[1]))
+		axs[i].set_title("Cluster {}\n$n =${}".format(i, int(points_in_each_cluster[i])))
 		
 		for x, y, l in zip(X, heatmaps, labels):
 			if (l == i):
@@ -910,11 +922,16 @@ def visualize_clusters_pca(X, heatmaps, labels):
 				image = draw_skeleton(y)
 				im = OffsetImage(image, zoom = 0.5)
 				ab = AnnotationBbox(im, (x[0], x[1]), xycoords = "data", frameon = False)
-				ax.add_artist(ab)
-				ax.update_datalim([(x[0], x[1])])
-				ax.autoscale()           
+				axs[i].add_artist(ab)
+				axs[i].update_datalim([(x[0], x[1])])
+				axs[i].autoscale()
 
-		plt.show()
+	plt.tight_layout()
+
+	if (fig_saving_path is not None):
+		plt.savefig(fig_saving_path + "cluster.png")
+
+	plt.show()
   
 def visualize_clusters_tsne(X, heatmaps, labels):
 	NUM_CLUSTERS = len(np.unique(labels))
