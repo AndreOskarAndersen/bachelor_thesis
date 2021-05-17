@@ -6,7 +6,7 @@
 Throughout this section the theory of machine learning that will be used in this thesis is described and explained.
 
 \subsection{Motivation}
-It can be difficult for humans to recognize certain patterns and trends in data. This becomes more difficult the greater the quantity of the data is, which is becomming more and more common with the rapidly growing topic of \textit{Big Data}. For this reason, computers are often used instead of humans to recognize patterns and trends in the data by analyzing the data, which is what is called \textit{Machine Learning}. In this thesis, we will use machine learning in section \textbf{MANGLER REFERENCE} to develop a model to estimate the 2D pose of a single human in an image. Later, in section \textbf{MANGLER REFERENCE}, we will use machine learning to improve our understanding of the model.
+It can be difficult for humans to recognize certain patterns and trends in data. This becomes more difficult the greater the quantity of the data is, which is becomming more and more common with the rapidly growing topic of \textit{Big Data}. For this reason, computers are often used instead of humans to recognize patterns and trends in the data by analyzing the data, which is what is called \textit{Machine Learning}. In this thesis, we will use machine learning in section \ref{experiement} to develop a model to estimate the 2D pose of a single human in an image. Later, in section \ref{sec:XAI}, we will use machine learning to improve our understanding of the model.
 
 \subsection{Machine Learning Paradigms}
 Machine learning is usally split into the following three paradigms
@@ -37,7 +37,7 @@ where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the es
 \subsection{Neural Networks} \label{subsec:NeuralNetworks}
 In recent years \textit{deep learning} and \textit{neural networks} have revolutionized the use of machine learning. In this thesis a neural network will be used for performing the human pose estimation. Throughout subsection \ref{subsec:NeuralNetworks} the theory and mathematics behind neural networks is described and explained.
 \subsubsection{Feedforward Neural Networks} \label{subsubsec:FeedforwardNN}
-\begin{algorithm}[h]
+\begin{algorithm}[htbp]
     \caption{GradientDescent \cite{d2l}}
     \label{Algorithm:gradient_descent_alg}
     \begin{algorithmic}[1]
@@ -72,7 +72,7 @@ Choosing the right batch size can be difficult, however, there are a few guideli
     \item A batch size that is of power of $2$ can offer in better runtime for some hardware. A batch size that is often used for larger models is $16$, however, they typically range between $32$ and $256$.
     \item Smaller batch sizes can offer a regularizing effect, as it is difficult for the model to "remember" the complete dataset from batches that does not represent the whole dataset.
 \end{enumerate}
-\begin{algorithm}[h]
+\begin{algorithm}[htbp]
     \caption{RMSProp \cite{DeepLearning}}
     \label{Algorithm:RMSProp}
     \begin{algorithmic}[1]
@@ -110,7 +110,7 @@ which makes the minibatch have $0$ mean and unit variance. $\bm{\gamma}$ and $\b
 \textbf{Epoch} \\
 An \textit{epoch} is an iteration through the whole dataset during fitting of the network. Multiple epochs are often needed to reach the minimum of the loss function \cite{d2l}.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[height = 5 cm]{entities/feed_forward_nn.jpg}
     \caption{Visualization of a feedforward neural network with a single hidden layer \cite{feedforward_nn}}
@@ -179,7 +179,7 @@ if $\bm{a}^{(i)}$ is not the output-layer. Once the partial derivative of all we
 
 
 \subsubsection{Convolutional Neural Networks} \label{subsubsec:CNN}
-\begin{figure}[t]
+\begin{figure}[htbp]
     \centering
     \begin{subfigure}[t]{0.4\textwidth}
         \centering
@@ -207,7 +207,7 @@ Pooling layers are layers used to reduce the dimension of the input. The most co
 \\
 \\
 \textbf{Nearest Neighbour Upsampling} \\
-\begin{algorithm}[t]
+\begin{algorithm}[htbp]
     \caption{Nearest Neighbour Upsampling \cite{NNUpsampling}}
     \label{Algorithm:NNUpsampling}
     \begin{algorithmic}[1]

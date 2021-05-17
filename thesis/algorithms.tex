@@ -4,14 +4,14 @@
 \section{Stacked Hourglass, PCA and $K$-Means}
 In this section the various algorithms and architectures used throughout this thesis is described and explained in details.
 \subsection{Stacked Hourglass}
-When performing the pose estimation in section \textbf{REFERENCE MANGLER}, we will be implementing and using the \textit{stacked hourglass} described by Newell \textit{et al.} \cite{Newell}. The following description and explanation of the architecture is based on an interpretation of Newell \textit{et al.} \cite{Newell} and Camilla Olsen \cite{Camilla}.
+When performing the pose estimation in section \ref{experiement}, we will be implementing and using the \textit{stacked hourglass} described by Newell \textit{et al.} \cite{Newell}. The following description and explanation of the architecture is based on an interpretation of Newell \textit{et al.} \cite{Newell} and Camilla Olsen \cite{Camilla}.
 
 \subsubsection{Reasoning behind using the Stacked Hourglass}\label{subsec:reasoning}
 % MANGLER MÅSKE AT SKRIVE, AT DER ER SKET MEGET VIDEREBYGNING PÅ SHG SIDEN NEWELL, HVILKET VI KAN BRUGE NÅR VI SKAL BRUGE VORES VIDEN OM MODELLEN TIL AT OPTIMERE DEN.
-We have decided to make use of the Stacked hourglass described by Newell \textit{et al.}, as it is an architecture that has shown state-of-the-art results. At the same time the architecture of the network is similar to the architecture of \textit{Autoencoders}, making the architecture useful for encoding the data into a lower dimension, which can be useful in section \textbf{REFERENCE MANGLER}, when we will be doing the interpretation of the model.
+We have decided to make use of the Stacked hourglass described by Newell \textit{et al.}, as it is an architecture that has shown state-of-the-art results. At the same time the architecture of the network is similar to the architecture of \textit{Autoencoders}, making the architecture useful for encoding the data into a lower dimension, which can be useful in section \ref{sec:XAI}, when we will be doing the interpretation of the model.
 
 \subsubsection{The Residual Module}
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[height = 2 cm]{entities/Residual.png}
     \caption{Visualization of the residual module \cite{Newell}}
@@ -20,7 +20,7 @@ We have decided to make use of the Stacked hourglass described by Newell \textit
 \noindent The Stacked hourglass makes heavily use of so-called \textit{residual modules}, one of which is visualized in Figure \ref{fig:residual}. The module works by taking an input, which is sent through a $1 \times 1$ and a $3 \times 3$ convolution, each with $128$ channels. Then, the $128$ output featuremaps are sent through a $1 \times 1$ convolution with $256$ channels. Lastly, element-wise addition is then used to add the $256$ output featuremaps to the input of the module, which the module then returns. All convolutions are followed by an acitvation function and are \textit{same convolutions}, meaning the output featuremaps are of the same dimensions as the input featuremeaps.
 
 \subsubsection{The Hourglass}
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[height = 4 cm]{entities/Hourglass.png}
     \caption{Visualization of a single hourglass \cite{Newell}}
@@ -36,7 +36,7 @@ Between the encoder and decoder the network has a bottleneck, where no downsampl
 After the decoder two $1 \times 1$ convolution layers er applied to produce the final predictions of the network.
 
 \subsubsection{The Stacked Hourglass}
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[height = 4 cm]{entities/SHG.png}
     \caption{Visualization of the Stacked hourglass \cite{Newell}}
@@ -51,7 +51,7 @@ The input of the network is a $256 \times 256$ RGB-image. To lower the memory us
 By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joints it should predict for a single person. The prediction of a joint is thus the maximum activation of the corresponding heatmap.
 
 \subsection{Principal Components Analysis (PCA)}
-\begin{algorithm}[t]
+\begin{algorithm}[htbp]
     \caption{PCA \cite{MAD_book}}
     \begin{algorithmic}[1]
         \Require Input data $\bm{Y} \in \mathbb{R}^{N \times D}$, with feature columns $\bm{y}_1, ..., \bm{y}_N$.
@@ -85,7 +85,7 @@ $K$-Means is a unsupervised method used for clustering observations into $K$ gro
 \\
 $K$-Means is guaranteed to converge to a local minimum of the total distance between the objects and their corresponding centroid, however, it is not guaranteed to reach the global minimum. This only depends on the initial position of the centroids. To partly overcome this problem it is common to run the algorithm multiple times with different random initial positions of the centroids and use the best solution as the final output \cite{MAD_book}.
 
-\begin{algorithm}[h]
+\begin{algorithm}[htbp]
     \caption{$K$-Means \cite{MAD_book}}
     \begin{algorithmic}[1]
         \Require Input data $\bm{X}$

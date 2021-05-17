@@ -18,6 +18,7 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{varwidth}
 \usepackage{subcaption}
+\usepackage{enumitem}
 
 \usepackage{subfiles}
 
@@ -70,8 +71,16 @@
 \clearpage
 \ClearWallPaper
 
-% ======================= TABLE OF CONTENT =================================
+% ======================= Abstract =================================
+\subfile{abstract.tex}
+\clearpage
+
+% ======================= Table of content =================================
 \tableofcontents
+\clearpage
+
+% ========================== Introduction ==========================
+\subfile{introduction.tex}
 \clearpage
 
 % ========================== Notation =======================
@@ -82,11 +91,11 @@
 \subfile{theory.tex}
 \clearpage
 
-% ========================== ALGORITHMS =======================
+% ========================== Algorithms =======================
 \subfile{algorithms.tex}
 \clearpage
 
-% ======================= THE DATASET ======================================
+% ======================= The dataset ======================================
 \subfile{dataset.tex}
 \clearpage
 
@@ -102,6 +111,12 @@
 \subfile{discussion.tex}
 \clearpage
 
-\printbibliography
+% ======================= Conlusion =======================
+\subfile{conclusion.tex}
+\clearpage
+
+% ======================= References =======================
+\section{References}
+\printbibliography[heading=none]
 
 \end{document}

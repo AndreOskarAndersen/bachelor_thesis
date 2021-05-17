@@ -5,7 +5,7 @@
 To perform the pose estimation, we need some data on which to train, validate and test our model. Throughout this section the used data and preprocessing are described.
 
 \subsection{The COCO Dataset}
-\begin{figure}[t]
+\begin{figure}[htbp]
     \centering
     \includegraphics[height = 4 cm]{./entities/coco_example.png}
     \RawCaption{\caption*{\footnotesize Notice how the image contains multiple people, each \\ with their own keypoints and amount of joints labeled}}
@@ -28,7 +28,7 @@ The training and validation sets contains a total of about $123.000$ various ima
 To create the dataset which will be used for testing we take the training set, since it is the larger of the training and validation set, and sample $5.064$ images randomly without replacement, to create a test set. This ensures that the test-set and validation-set are of the same size. This new test set will not be used when training the model nor used when tuning the parameters. Instead, it will only be used to evaluate the very final model. 
 
 \subsubsection{Preprocessing the images}
-\begin{table}[t]
+\begin{table}[htbp]
     \centering
     \begin{tabular}{l|c|c}
          & Amount of images & Percentage \\
@@ -46,7 +46,7 @@ To create the dataset which will be used for testing we take the training set, s
     \caption{Data distribution}
     \label{tab:data_distribution}
 \end{table}
-\begin{figure}[t]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width = \textwidth - 2 cm]{./entities/crop_img.PNG}
     \caption{The results of processing the image from Figure \ref{fig:coco_example} with the corresponding labels \cite{COCO_article}}
@@ -69,14 +69,14 @@ By doing the data preprocessing as described above, we get the distribution of i
 
 \subsubsection{Handling the labels}
 % NOTE: MÅSKE BRUG EGEN HEATMAPS I FIGUR?
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[height = 4 cm]{./entities/heatmaps_ex.PNG}
     \RawCaption{\caption*{\footnotesize Left: The original image. Right: The heatmaps of all the keypoints, fused together to a single image.}}
     \caption{An example of the heatmaps of a single image fused together and put over the original image \cite{survey_1}}
     \label{fig:heatmaps_ex}
 \end{figure}
-For each image our model outputs $17$ heatmaps, one for each possible joint in the image. An example of such heatmaps fused togehter can be seen in Figure \ref{fig:heatmaps_ex}. \\
+\noindent For each image our model outputs $17$ heatmaps, one for each possible joint in the image. An example of such heatmaps fused togehter can be seen in Figure \ref{fig:heatmaps_ex}. \\
 The ground truth heatmap of a single joint is created firstly by initializing an all-zero 2D array with size $64 \times 64$. Next, at coordinate $\left( x \cdot \frac{64}{256}, y \cdot \frac{64}{256} \right)$, where $(x, y)$ is the annotated position of the joint in the original image, a $1$ is places, representing the position of the corresponding joint in the output image - by placing the $1$ in a heatmap of size $64 \times 64$ instead of in a heatmap of size $256 \times 256$, which is later resize to $64 \times 64$, we ensure, that the $1$ is not lost once resized. Next, a Gaussian filter is used to smear out the heatmap, where the standard deviation of the Gaussian filter depends on the visibility, $v$, of the joint: if the joint is visible, that is if $v = 2$, then the standard deviation is set to be $0.5$, whereas the standard deviation of the Gaussian filter is set to be $1$ if the joint is not visible, as there there are more uncertainty with the labeling of such keypoints. We do all of this for all of the $17$ joints for each image, resulting in the keypoints which will be used for developing our model.
 
 
