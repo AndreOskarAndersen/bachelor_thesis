@@ -1,11 +1,8 @@
-import numpy as np
-import torch
 import torch.nn as nn
 from torch.nn.functional import relu
-import torch.nn.functional as F
 import torch.cuda
-import torch.optim as optim
 from tqdm.notebook import tqdm
+from AE import CONV_AE
 
 class Residual(nn.Module):
     def __init__(self, in_channels = 256):
@@ -48,6 +45,7 @@ class Hourglass(nn.Module):
         self.decoder_residuals = [] # upsampling
         self.branch_cov = []
         self.bottlenecks = []
+        self.branch = []
         
         for i in range(self.num_layers):
             self.encoder_max_poolings.append(nn.MaxPool2d(2, stride = 2))
@@ -65,6 +63,9 @@ class Hourglass(nn.Module):
         self.bottlenecks = nn.ModuleList([Residual() for _ in range(self.num_bottlenecks)])
         
     def encode(self, x):
+        if (self.use_skip_connections): # XAI: we only use the skip connections sometimes
+            self.branch = []
+        
         for i in range(self.num_layers):
             if (self.use_skip_connections): # XAI: we only use the skip connections sometimes
                 self.branch.append(self.branch_cov[i](x))
@@ -93,21 +94,18 @@ class Hourglass(nn.Module):
             x = self.decoder_residuals[i](x)
             
         x = self.decoder_upsamplings[-1](x) # Last layer does not end on residual
+        
+        if (self.use_skip_connections):
+            x = x + self.branch[0]
             
         return x
         
     def forward(self, x):
-        if (self.use_skip_connections): # XAI: we only use the skip connections sometimes
-            self.branch = []
-        
         x = self.encode(x)
         x, bottleneck_res = self.bottleneck(x)
         x = self.decode(x)
-            
-        if (self.use_skip_connections): # XAI: we only use the skip connections sometimes
-            return x + self.branch[0], bottleneck_res
-        else:
-            return x, bottleneck_res
+        
+        return x, bottleneck_res
 
 class SHG(nn.Module):
     def __init__(self, num_hourglasses, num_layers = 4, num_bottlenecks = 3, use_skip_connections = True):
@@ -208,3 +206,34 @@ class SHG(nn.Module):
         x = self.last_conv_2(x)
         
         return x, bottleneck_res
+
+class SHG_AE(nn.Module):
+    def __init__(self, SHG_model, AE_model):
+        super(SHG_AE, self).__init__()
+        self.SHG_model = SHG_model
+        self.AE_model = AE_model
+        
+    def forward(self, x):
+        # SHG prework
+        x = self.SHG_model.pre_conv1(x)
+        x = self.SHG_model.bn_pre(x)
+        x = relu(x)
+        x = self.SHG_model.pre_residual1(x)
+        x = self.SHG_model.pre_max_pool(x)
+        x = self.SHG_model.pre_residual2(x)
+        x = self.SHG_model.pre_residual3(x)
+        
+        # SHG + AE bottleneck
+        x = self.SHG_model.hourglasses[-1].encode(x)
+        x, _ = self.SHG_model.hourglasses[-1].bottleneck(x)
+        _, x = self.AE_model.forward(x, add_noise = False)
+        x = self.SHG_model.hourglasses[-1].decode(x)
+        
+        # SHG postwork
+        x = self.SHG_model.last_res(x)
+        x = self.SHG_model.last_conv_1(x)
+        x = self.SHG_model.bn_last(x)
+        x = relu(x)
+        x = self.SHG_model.last_conv_2(x)
+        
+        return x

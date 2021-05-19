@@ -18,6 +18,7 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{varwidth}
 \usepackage{subcaption}
+\usepackage{enumitem}
 
 \usepackage{subfiles}
 
@@ -67,41 +68,55 @@
 \noindent \textbf{\large Supervisor} \\
 \noindent Kim Steenstrup Pedersen \texttt{kimstp@di.ku.dk}
 
-\newpage
+\clearpage
 \ClearWallPaper
 
-% ======================= TABLE OF CONTENT =================================
+% ======================= Abstract =================================
+\subfile{abstract.tex}
+\clearpage
+
+% ======================= Table of content =================================
 \tableofcontents
-\newpage
+\clearpage
+
+% ========================== Introduction ==========================
+\subfile{introduction.tex}
+\clearpage
 
 % ========================== Notation =======================
 \subfile{notation.tex}
-\newpage
+\clearpage
 
 % ========================== Machine Learning Theory =======================
 \subfile{theory.tex}
-\newpage
+\clearpage
 
-% ========================== ALGORITHMS =======================
+% ========================== Algorithms =======================
 \subfile{algorithms.tex}
-\newpage
+\clearpage
 
-% ======================= THE DATASET ======================================
+% ======================= The dataset ======================================
 \subfile{dataset.tex}
-\newpage
+\clearpage
 
 % ======================= Experiments ======================================
 \subfile{experiments.tex}
-\newpage
+\clearpage
 
 % ======================= XAI ======================================
 \subfile{xai.tex}
-\newpage
+\clearpage
 
 % ======================= Discussion ======================================
 \subfile{discussion.tex}
-\newpage
+\clearpage
 
-\printbibliography
+% ======================= Conlusion =======================
+\subfile{conclusion.tex}
+\clearpage
+
+% ======================= References =======================
+\section{References}
+\printbibliography[heading=none]
 
 \end{document}
