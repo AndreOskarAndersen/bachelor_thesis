@@ -48,7 +48,7 @@ After each epoch we find the validation accuracy of the model by computing the \
         \Require Predicted heatmaps $heatmaps_{pred}$ of keypoints
         \Require Threshold radius $r$
         \Require Normalization constant $c$
-        \State Let $n \gets 0$ be the running total of correctly predicted keypoints
+        \State Let $n = 0$ be the running total of correctly predicted keypoints
         \State Let $N \text{ be the amount of annotated heatmaps}$
         \ForAll{annotated ground truth heatmap, $heatmap_{gt}$, in $heatmaps_{gt}$}
             \State Let $(x_{gt}, y_{gt})$ be the $2D$ index of the maximum activation of $heatmap_{gt}$
@@ -56,12 +56,12 @@ After each epoch we find the validation accuracy of the model by computing the \
                 Let $(x_{pred}, y_{pred})$ be the $2D$ index of the maximum activation of the predicted heatmap corresponding to $heatmap_{gt}$
             \end{varwidth}
             \State Let $dist$ be the Euclidean distance between $(x_{gt}, y_{gt})$ and $(x_{pred}, y_{pred})$.
-            \State Normalize $dist$: $dist \gets \frac{dist}{c}$
+            \State Normalize $dist$ $dist = \frac{dist}{c}$
             \If{$dist < r$}
-                \State $n \gets n + 1$
+                \State $n = n + 1$
             \EndIf
         \EndFor
-        \State Let $ratio \gets \frac{n}{N}$ be the ratio of correctly annotated heatmaps
+        \State Let $ratio = \frac{n}{N}$ be the ratio of correctly annotated heatmaps
         \State \textbf{return} $ratio$
     \end{algorithmic}
 \end{algorithm}
@@ -71,7 +71,7 @@ The pseudocode of PCK has been visualized in Algorithm \ref{Algorithm:PCK}. The 
 While training the model the PCK accuracy of the model is computed after each epoch, keeping track of the best PCK accuracy. The first time the best PCK accuracy has not improved for $5$ continuous epochs, the learning rate is dropped by a factor of $5$ permanently, helping the training loss reach a minimum.
 
 \subsection{Results}
-In Figure \ref{fig:results} the evolution of the training loss, validation loss and validation PCK accuracy has been visualized. The model were initially set to train for $100$ epochs, however, we decided to stop the training early, as the model clearly started to overfit after $30$ epochs, as seen by comparing the training and validation loss.
+In Figure \ref{fig:results} the evolution of the training loss, validation loss and validation PCK accuracy has been visualized. The model were initially set to train for $100$ epochs, however, we decided to stop the training early, as the model clearly started to overfit after $32$ epochs, as seen by comparing the training and validation loss.
 \\
 \\
 The reduction of the learning rate happened after $21$ epochs. By looking at the validation accuracy in Figure \ref{fig:results} we can see, that the accuracy rapidly increases shortly after the reduction of the learning rate, hinting at the effectiveness of dropping the learning rate. 

@@ -8,14 +8,14 @@
     \label{fig:PCK_accs}
 \end{figure}
 
-\section{Understanding the Model}\label{sec:XAI}
+\section{Interpreting the Model}\label{sec:XAI}
 In the following section we will be interpreting the model developed in section \ref{experiement}, with the intention of getting an understanding of how the model works.
 
 \subsection{Motivation}
-Deep learning models are often complex and work like a \textit{black boxes}. By that it is meant, that when a network is given some input, the model simply just returns some output without any explanation or reasoning behind the output. This can often be a problem, especially in cases where the output of the network can result in a life or death situation of a human. For that reason, understanding and explaining how a network works can be very important - this is what is called \textit{explainable ai} (\textit{XAI}) 
+Deep learning models are often complex and work like a \textit{black boxes}. By that it is meant, that when a network is given some input, the model simply just returns some output without any explanation or reasoning behind the output. This can often be a problem, especially in cases where the output of the network can result in a life or death situation of a human. For that reason, understanding and explaining how a network works can be very important - this is what is called \textit{explainable AI} (\textit{XAI}) 
 \\
 \\
-Selvaraju \textit{et al.} \cite{Selvaraju} argues that there are three cases for using explainable ai:
+Selvaraju \textit{et al.} \cite{Selvaraju} argues that there are three cases for using explainable AI:
 \begin{enumerate}
     \item When the network performs worse than humans, an understanding of the network can help us improve the performance of the model.
     \item When the network is on par with humans, an understanding of the network is trivial for humans to build trust in the network, as we can understand its strengths and weaknesses
@@ -95,16 +95,16 @@ If we take this latent space matrix, project it down to $2$ dimensions using PCA
     \caption{Compute Silhouette Score \cite{MAD_L12}}
     \label{Algorithm:Silhouette_score}
     \begin{algorithmic}[1]
-        \Require Clusters: $\bm{C}_0, \bm{C}_1, ..., \bm{C}_{k - 1}$
+        \Require Clusters $\bm{C}_0, \bm{C}_1, ..., \bm{C}_{k - 1}$
         \ForAll{cluster $\bm{C}_i$}
             \ForAll{sample $\bm{x} \in \bm{C}_i$}
                 \State \begin{varwidth}[t]{\linewidth}
-                    Compute the mean euclidean distance from $\bm{x}$ to the other samples in the same cluster: $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
+                    Compute the mean euclidean distance from $\bm{x}$ to the other samples in the same cluster $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
                 \end{varwidth}
                 \State \begin{varwidth}[t]{\linewidth}
-                Compute the mean euclidean distance from $\bm{x}$ to the nearest other cluster $\bm{C}_j$: $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
+                Compute the mean euclidean distance from $\bm{x}$ to the nearest other cluster $\bm{C}_j$ $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
                 \end{varwidth}
-                \State Compute the Silhouette of $\bm{x}$:
+                \State Compute the Silhouette of $\bm{x}$ as
                 \begin{math}
                     s(\bm{x}) =
                     \begin{cases}

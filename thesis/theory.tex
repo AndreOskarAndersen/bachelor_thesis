@@ -43,8 +43,9 @@ In recent years \textit{deep learning} and \textit{neural networks} have revolut
     \begin{algorithmic}[1]
         \Require Learning rate $\eta$
         \Require Starting position $\bm{\theta}$
+        \Require Function to minimize $f$
         \While{stopping criterion not met}
-            \State Apply update: $\bm{\theta} \gets  \bm{\theta} - \eta \nabla f(\bm{\theta})$
+            \State Apply update $\bm{\theta} = \bm{\theta} - \eta \nabla f(\bm{\theta})$
         \EndWhile
         \State \textbf{return} $\bm{\theta}$
     \end{algorithmic}
@@ -80,15 +81,15 @@ Choosing the right batch size can be difficult, however, there are a few guideli
         \Require Decay rate $\rho$
         \Require Starting position $\bm{\theta}$
         \Require Small constant $\delta$, usually $10^{-6}$
-        \State Initialize accumulation variables: $\bm{r} \gets \bm{0}$
+        \State Initialize accumulation variables $\bm{r} = \bm{0}$
         \While{stopping criterion not met}
             \State \begin{varwidth}[t]{\linewidth}
             Sample a minibatch of $m$ observations from the training set $\{\bm{x}^{(1)}, ..., \bm{x}^{(m)}\}$ with corresponding targets $\bm{y}^{(i)}$
             \end{varwidth}
-            \State Compute gradient: $\bm{g} \gets \frac{1}{m} \nabla_{\bm{\theta}} \sum_i L(f(\bm{x}^{(i)}; \bm{\theta}), \bm{y}^{(i)})$
-            \State Accumulate squared gradient: $\bm{r} \gets \rho \bm{r} + (1 - \rho) \bm{g} \odot \bm{g}$
-            \State Compute parameter update: $\Delta\theta = - \frac{\eta}{\sqrt{\delta + \bm{r}}} \odot \bm{g}$
-            \State Apply update: $\bm{\theta} \gets \bm{\theta} + \Delta \bm{\theta}$ 
+            \State Compute gradient $\bm{g} = \frac{1}{m} \nabla_{\bm{\theta}} \sum_i L(f(\bm{x}^{(i)}; \bm{\theta}), \bm{y}^{(i)})$
+            \State Accumulate squared gradient $\bm{r} = \rho \bm{r} + (1 - \rho) \bm{g} \odot \bm{g}$
+            \State Compute parameter update $\Delta\theta = - \frac{\eta}{\sqrt{\delta + \bm{r}}} \odot \bm{g}$
+            \State Apply update $\bm{\theta} = \bm{\theta} + \Delta \bm{\theta}$ 
         \EndWhile
         \State \textbf{return} $\bm{\theta}$
     \end{algorithmic}
@@ -109,13 +110,14 @@ which makes the minibatch have $0$ mean and unit variance. $\bm{\gamma}$ and $\b
 \\
 \textbf{Epoch} \\
 An \textit{epoch} is an iteration through the whole dataset during fitting of the network. Multiple epochs are often needed to reach the minimum of the loss function \cite{d2l}.
-
+\\
 \begin{figure}[htbp]
     \centering
     \includegraphics[height = 5 cm]{entities/feed_forward_nn.jpg}
     \caption{Visualization of a feedforward neural network with a single hidden layer \cite{feedforward_nn}}
     \label{feedforward_nn}
 \end{figure}
+\\
 \noindent \textbf{The Architecture and Forwardpropagation} \\
 One of the most common types of neural networks are \textit{feedforward neural networks}, where the data flows unidirectionally through the network. Such a network is visualized in Figure \ref{feedforward_nn}. The network is built up of three types of components: the \textit{input layer}, the \textit{hidden layers} and the \textit{output layer}. Each layer is built up of \textit{units}, also called \textit{neurons} (which are visualized as circles in Figure \ref{feedforward_nn}), where each neuron has a \textit{bias} assigned to it, and is connected to one or two other layers through \textit{edges} (which are visualized as arrows in Figure \ref{feedforward_nn}), where each edge has a \textit{weight} assigned to it. Hidden layers are connected to two other layers - one before the hidden layer and one after the hidden layer - where the input layer is only connected to the next layer in the network and the output layer is only connected to the previous layer in the network. \\
 We can define the network mathemaically by letting $a_n ^{(i)}$ denote the value of the $n$th node in the $i$th layer, $w_{m, n}$ denote the value of the weight of the edge connecting the $n$th node in the $i$th layer to the $m$th node in layer $i + 1$ and $b_n ^{(i)}$ denote the bias corresponding to the $n$th node in the $i$th layer. \\
@@ -211,15 +213,15 @@ Pooling layers are layers used to reduce the dimension of the input. The most co
     \caption{Nearest Neighbour Upsampling \cite{NNUpsampling}}
     \label{Algorithm:NNUpsampling}
     \begin{algorithmic}[1]
-        \Require Input image, $X$, of size $m \times n$
+        \Require Input image $X$ of size $m \times n$
         \Require Wanted output size $xm \times yn$
-        \State Create empty image, $O$, of size $xm \times yn$
+        \State Create empty image $O$ of size $xm \times yn$
         \ForAll{pixel, $p$, in $X$}
-            \State $i,j \gets \text{index of } p \text{ in } X$
+            \State $i,j = \text{index of } p \text{ in } X$
             \State Insert $p$ at index $(xi, yj)$ in $O$
         \EndFor
-        \ForAll{empty pixel, $p$, in $O$}
-            $p \gets$ value of nearest neighbour
+        \ForAll{empty pixel $p \in O$}
+            $p =$ value of nearest neighbour
         \EndFor
         return $O$
     \end{algorithmic}
