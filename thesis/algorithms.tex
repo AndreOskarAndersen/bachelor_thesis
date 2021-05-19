@@ -85,20 +85,23 @@ $K$-Means is a unsupervised method used for clustering observations into $K$ gro
 $K$-Means is guaranteed to converge to a local minimum of the total distance between the objects and their corresponding centroid, however, it is not guaranteed to reach the global minimum. This only depends on the initial position of the centroids. To partly overcome this problem it is common to run the algorithm multiple times with different random initial positions of the centroids and use the best solution as the final output \cite{MAD_book}.
 
 \begin{algorithm}[htbp]
-    \caption{$K$-Means \cite{MAD_book}}
+    \caption{$K$-Means \cite{DS_manual}}
     \begin{algorithmic}[1]
-        \Require Input data $\bm{X}$
-        \Require Amount of clusters $K$
-        \State Let $\bm{\mu}_k$ be a matrix of the coordinates of the centroids of the $k$ clusters. Usually intially set with random values
-        \State \begin{varwidth}[t]{\linewidth}
-            Let $\bm{Z}_{nk}$ be a matrix of binary indicator variables that is $1$ if object $n$ is assigned to cluster $k$ and $0$ otherwise
-        \end{varwidth}
-        \While{$\bm{Z}_{nk}$ is changed between each iteration}
-            \ForAll{observations $\bm{x}_n \in \bm{X}$}
-                \State Find the centroid, $k$, that $\bm{x}_n$ is closest to
-                \State Let $\bm{Z}_{nk} = 1$ and $\bm{Z}_{nj} = 0$ for all $j \neq k$
+        \Require Input data $\bm{X} \in \mathbb{R}^{n \times m}$
+        \Require Amount of clusters $k$
+        \State Select $k$ points as initial cluster centers $\bm{C}_1, ..., \bm{C}_k$
+        \While{not converged}
+            \For{$1 \leq 1 \leq n$}
+                \State Map point $p_i$ to its nearest cluster center $\bm{C}_j$
             \EndFor
-            \State Update centroids: $\bm{\mu}_k = \frac{\sum_n\bm{Z}_{nk} \bm{x}_n}{\sum_n \bm{Z}_{nk}}$
+
+            \For{$1 \leq j \leq k$}
+                \State Compute centroid $\bm{C}'_j$ of the points nearest $\bm{C}_j$
+            \EndFor
+
+            \For{$1 \leq j \leq k$}
+                \State Set $\bm{C}_j = \bm{C}'_j$
+            \EndFor
         \EndWhile
     \end{algorithmic}
     \label{Algorithm:KMeans}
