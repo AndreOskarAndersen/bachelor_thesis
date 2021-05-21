@@ -9,7 +9,7 @@
 \end{figure}
 
 \section{Interpreting the Model}\label{sec:XAI}
-In the following section we will be interpreting the model developed in section \ref{experiement}, with the intention of getting an understanding of how the model works.
+In the following section we will be interpreting the model developed in section \ref{experiement}, with the intention of getting an understanding of what the model has learned during training, what the different parts of the model are used for, as well as checking for any redundancy in the model.
 
 \subsection{Motivation}
 Deep learning models are often complex and work like a \textit{black boxes}. By that it is meant, that when a network is given some input, the model simply just returns some output without any explanation or reasoning behind the output. This can often be a problem, especially in cases where the output of the network can result in a life or death situation of a human. For that reason, understanding and explaining how a network works can be very important - this is what is called \textit{explainable AI} (\textit{XAI}) 
@@ -21,7 +21,7 @@ Selvaraju \textit{et al.} \cite{Selvaraju} argues that there are three cases for
     \item When the network is on par with humans, an understanding of the network is trivial for humans to build trust in the network, as we can understand its strengths and weaknesses
     \item When the network performs better than humans, an understanding of the network can teach humans how to perform better.
 \end{enumerate}
-Throughout section \ref{sec:XAI} we will be getting an understanding of our model developed in section \ref{experiement}, as we wish to understand its strengths and weaknesses.
+Throughout section \ref{sec:XAI} we will be exploring and understanding what the model, developed in section \ref{experiement}, learned during training and what the different parts of the model are used for, leading towards improving the performance of the model easier.
 % MÅSKE OGSÅ, AT VI VIL FORBEDRE MODELLEN!
 
 \subsection{Verifying the Effects of Skip-Connections}\label{subsec:verifying_skip_cons}
@@ -60,33 +60,35 @@ We start off by finding the $4.096$ principal components and the corresponding e
 \\
 \\
 When doing the walk along a principal component, we made the step size be equal to $c \cdot \sqrt{\lambda}$, where $c$ is a constant and $\lambda$ is the explained variance of the principal component. By doing so we ensure, that we are not walking too far, ending up with misleading visualizations as there will be far from the end point to the nearest observation. Some of the results have been visualized in Figure \ref{fig:shape_analysis}.
+\\
+\\
 By looking at Figure \ref{fig:shape_analysis} we can see, that the first principal component is used for determining if the person is sitting or standing up. This is very clear, as the person sits down if we are "walking" in the negative direction from the mean coordinate, and on the otherhand the person straightens up if we are "walking" in the positive direction from the mean coordinate.
 \\
 \\
-We can also see, that  principal component $2$ and $3$ do not have an easy-to-see pattern, like it was the case with the first principal component. This could possibly be because, that the data in the latent space lie on a non-linear manifold, which PCA has trouble modelling, resulting in the principal components have different meaning than what they actually do.
+We can also see, that principal component $2$, $3$, $10$ and $30$ do not have an easy-to-see pattern, like it is the case with the first principal component. This could probably be becuase they explain a very little amount of the variance in the data, resulting in a very small step size, as well as patterns contributing very little to the prediction of the model.
 \\
 \\
-Lastly, we can see, that principal component $50$, $100$, $500$, $1000$ and $4.096$ do not have any variations in their corresponding results. This is most likely because the corresponding explained variances are very small, yielding principal components that acts as noise, as they do not add any useful information to the reduced data.
-% Måske en bedre afrundning?
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width = \textwidth]{entities/latent_space_all_skeletons.png}
-    \caption{Plot of $10.000$ samples of the latent space of the trained model, with the corresponding ground truth heatmaps}
-    \label{fig:latent_space_all_skeletons}
-\end{figure}
-\clearpage
+Lastly, we can see, that principal components $50$ and onwards do not have any variations in their corresponding results. This results in them acting as noise, and hints towards how the model could be using many fewer filters in the bottleneck.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width = \textwidth]{entities/shape_analysis.png}
     \caption{Nearest observations to the end point of "walking" along various principal components with varying step sizes.}
     \label{fig:shape_analysis}
 \end{figure}
-
+\\
+\\
+All in all, by doing the shape analysis of the latent space of the hourglass, we have learned how the model has learned the difference between people sitting down and standing up (and the poses in between), as well as possibly have identified some redundancy, in the form of the model using more filters in the bottleneck, than what might is needed. 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width = \textwidth]{entities/latent_space_all_skeletons.png}
+    \caption{Plot of $10.000$ samples of the latent space of the trained model, with the corresponding ground truth heatmaps}
+    \label{fig:latent_space_all_skeletons}
+\end{figure}
 \subsection{Using Clustering to Seperate the Latent Space}
-Similar to subsection \ref{subsec:shape_analysis}, we will be exploring the latent space of the model to further get an understanding of how the model works. We will again be using the training observations, as we wish to understand what the model has learned. Instead of exploring the principal components of the latent space, we will instead be grouping the training observations to get an understanding of how the model relate similar data to each other.
+Similar to subsection \ref{subsec:shape_analysis}, we will be exploring the latent space of the model to further get an understanding of what the model has learned during training, where we again will be using the training observations. Instead of exploring the principal components of the latent space, we will instead be grouping the training observations to get an understanding of how the model relate similar data to each other.
 \\
 \\
-To create the latent space matrix we follow the same procedure as in \ref{subsec:shape_analysis}, but instead also use not fully-annotated observations. Due to memory constraints only $10.000$ random samples were used, resulting in a $10.000 \times 4.096$ matrix of the latent space
+To create the latent space matrix we follow the same procedure as in \ref{subsec:shape_analysis}, but instead also use not fully-annotated observations. Due to memory constraints only $10.000$ random samples were used, resulting in an $10.000 \times 4.096$ matrix of the latent space
 \\
 \\
 If we take this latent space matrix, project it down to $2$ dimensions using PCA and visualize the samples with their corresponding ground truth heatmaps, we get the plot visualized in Figure \ref{fig:latent_space_all_skeletons}. The plot only explains about $37\%$ of the variance of the original data, however, we can clearly see how there is some specific structure in the data, as samples that are somewhat similar are close to each other, however, with a few outliers.
@@ -160,7 +162,6 @@ Although there are differences in the two clusters in Figure \ref{fig:clusters_a
 \\
 \\
 The two clusters, resulted by only using fully-annotated samples, have been visualized in Figure \ref{fig:clusters_full_skeletons} and the corresponding closest ground truth heatmaps for the samples closest to the centroids have been visualized in Figure \ref{fig:centroids_full}. Like before, the $K$-Means model were ran on the data in full dimension to create the two clusters, which then were projected down to $2$ dimensions using PCA for the purpose of visualization. By looking at the figure we clearly see how the content of Cluster $0$ contains samples that are stationary, whereas the samples of Cluster $1$ carry a lot more movement. This is also the case for the ground truth heatmaps of the samples closest to the centroids, visualized in Figure \ref{fig:centroids_full}, as we can see, that the heatmap for Cluster $0$ is more straighten, whereas the heatmapf for Cluster $1$ is more bent and looks like it is in more movement. The two clusters does have a lot less missclassifications, than it was the case with the two clusters in Figure \ref{fig:clusters_all_skeletons}. The missclassifications could explain the not-optimal performance of the model as this could mean, that the network has not fully learned the differences between certain positions and where the positions should be placed in the latent space.
-% Måske en bedre afrundning?
 \begin{figure}[htbp]
     \centering
     \includegraphics[width = \textwidth]{entities/cluster_full_skeletons.png}
@@ -173,5 +174,8 @@ The two clusters, resulted by only using fully-annotated samples, have been visu
     \caption{Closest points to the centroids of the two clusters from running $K$-Means on the latent space consisting of $7.017$ fully-annotated training samples}
     \label{fig:centroids_full}
 \end{figure}
+\\
+\\
+All in all we have learned, that model, during training, has learned to distinguish between almost fully-annotated people and not fully-annotated people, as well as learned to distinguish between stationary people and people with a lot of motion. However, the distinguishments are not perfect, as there are some missclassifications, hinting towards the inaccuracies of the model.
 
 \end{document}
