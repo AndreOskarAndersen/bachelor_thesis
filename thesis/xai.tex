@@ -44,6 +44,7 @@ To further understand the decrease of accuracy in the case where the skip-connec
     \caption{20 samples of images correctly predicted by the model with skip-connections enabled, the corresponding ground truth heatmap and predictions by the model with skip-connections disabled.}
     \label{fig:pred_comparison}
 \end{figure}
+\\
 By looking at Figure \ref{fig:pred_comparison} we can see, that the model without its skip-connections often struggles with smaller joints, such as the eyes, ears or nose, whereas it performs better, however still not always perfect, on bigger joints, such as the shoulders, hips or knees. This is probably due to the fact, that the details of the smaller joints has a bigger chance of being lost by the max pooling layers in the encoder. Without the skip-connections their information is thus lost, resulting in bad predictions. Thus, we can verify Olsen's \cite{Camilla} and Newell's \cite{Newell} claims, that the skip-connections are used for recreating details lost in the encoder. 
 
 \subsection{Shape Analysis of the Latent Space}\label{subsec:shape_analysis}
@@ -101,12 +102,12 @@ If we take this latent space matrix, project it down to $2$ dimensions using PCA
         \ForAll{cluster $\bm{C}_i$}
             \ForAll{sample $\bm{x} \in \bm{C}_i$}
                 \State \begin{varwidth}[t]{\linewidth}
-                    Compute the mean euclidean distance from $\bm{x}$ to the other samples in the same cluster $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
+                    Compute the mean euclidean distance from $\bm{x}$ to the other samples in the same cluster: $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
                 \end{varwidth}
                 \State \begin{varwidth}[t]{\linewidth}
-                Compute the mean euclidean distance from $\bm{x}$ to the nearest other cluster $\bm{C}_j$ $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
+                Compute the mean euclidean distance from $\bm{x}$ to the nearest other cluster: $\bm{C}_j$ $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
                 \end{varwidth}
-                \State Compute the Silhouette of $\bm{x}$ as
+                \State Compute the Silhouette of $\bm{x}$:
                 \begin{math}
                     s(\bm{x}) =
                     \begin{cases}

@@ -56,7 +56,7 @@ After each epoch we find the validation accuracy of the model by computing the \
                 Let $(x_{pred}, y_{pred})$ be the $2D$ index of the maximum activation of the predicted heatmap corresponding to $heatmap_{gt}$
             \end{varwidth}
             \State Let $dist$ be the Euclidean distance between $(x_{gt}, y_{gt})$ and $(x_{pred}, y_{pred})$.
-            \State Normalize $dist$ $dist = \frac{dist}{c}$
+            \State Normalize $dist$: $dist = \frac{dist}{c}$
             \If{$dist < r$}
                 \State $n = n + 1$
             \EndIf

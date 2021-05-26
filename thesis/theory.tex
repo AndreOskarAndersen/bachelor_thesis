@@ -2,7 +2,7 @@
 
 \begin{document}
 
-\section{Machine Learning Theory}
+\section{Machine Learning Theory}\label{sec:theory}
 Throughout this section the theory of machine learning that will be used in this thesis is described and explained.
 
 \subsection{Motivation}
@@ -45,7 +45,7 @@ In recent years \textit{deep learning} and \textit{neural networks} have revolut
         \Require Starting position $\bm{\theta}$
         \Require Function to minimize $f$
         \While{stopping criterion not met}
-            \State Apply update $\bm{\theta} = \bm{\theta} - \eta \nabla f(\bm{\theta})$
+            \State Apply update: $\bm{\theta} = \bm{\theta} - \eta \nabla f(\bm{\theta})$
         \EndWhile
         \State \textbf{return} $\bm{\theta}$
     \end{algorithmic}
@@ -81,15 +81,17 @@ Choosing the right batch size can be difficult, however, there are a few guideli
         \Require Decay rate $\rho$
         \Require Starting position $\bm{\theta}$
         \Require Small constant $\delta$, usually $10^{-6}$
+        \Require Loss function $L$
+        \Require Function to minimize $f$
         \State Initialize accumulation variables $\bm{r} = \bm{0}$
         \While{stopping criterion not met}
             \State \begin{varwidth}[t]{\linewidth}
             Sample a minibatch of $m$ observations from the training set $\{\bm{x}^{(1)}, ..., \bm{x}^{(m)}\}$ with corresponding targets $\bm{y}^{(i)}$
             \end{varwidth}
-            \State Compute gradient $\bm{g} = \frac{1}{m} \nabla_{\bm{\theta}} \sum_i L(f(\bm{x}^{(i)}; \bm{\theta}), \bm{y}^{(i)})$
-            \State Accumulate squared gradient $\bm{r} = \rho \bm{r} + (1 - \rho) \bm{g} \odot \bm{g}$
-            \State Compute parameter update $\Delta\theta = - \frac{\eta}{\sqrt{\delta + \bm{r}}} \odot \bm{g}$
-            \State Apply update $\bm{\theta} = \bm{\theta} + \Delta \bm{\theta}$ 
+            \State Compute gradient: $\bm{g} = \frac{1}{m} \nabla_{\bm{\theta}} \sum_i L(f(\bm{x}^{(i)}; \bm{\theta}), \bm{y}^{(i)})$
+            \State Accumulate squared gradient: $\bm{r} = \rho \bm{r} + (1 - \rho) \bm{g} \odot \bm{g}$
+            \State Compute parameter update: $\Delta\bm{\theta} = - \frac{\eta}{\sqrt{\delta + \bm{r}}} \odot \bm{g}$
+            \State Apply update: $\bm{\theta} = \bm{\theta} + \Delta \bm{\theta}$ 
         \EndWhile
         \State \textbf{return} $\bm{\theta}$
     \end{algorithmic}
@@ -221,9 +223,9 @@ Pooling layers are layers used to reduce the dimension of the input. The most co
             \State Insert $p$ at index $(xi, yj)$ in $O$
         \EndFor
         \ForAll{empty pixel $p \in O$}
-            $p =$ value of nearest neighbour
+            \State Let $p$ be the value of the nearest neighbour
         \EndFor
-        return $O$
+        \State \textbf{return} $O$
     \end{algorithmic}
 \end{algorithm}
 Sometimes we want to increase the size of an image. This is done by making use of \textit{upsampling} (also known as \textit{interpolation}) techniques. One of the most common upsampling techniques is \textit{nearest neighbour upsampling}, whose pseudocode has been written in \ref{Algorithm:NNUpsampling}. The algorithm starts off by taking an image, $X$, of size $m \times n$, as input, which we wish to upsample to size $xm \times yn$. The algorithm then loops over each pixel, $p$, in $X$, finds the corresponding index, $i, j$, of $p$ in $X$, and places $p$ at index $(xi, yj)$ in the output image $O$ of size $xm \times yn$. When this is done, it assigns each of the empty pixel in $O$ the value of their nearest neighbour, making each pixel in $O$ have a value, and then returns $O$ \cite{NNUpsampling}.

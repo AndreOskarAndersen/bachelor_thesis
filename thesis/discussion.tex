@@ -1,7 +1,7 @@
 \documentclass[./main.tex]{subfiles}
 
 \begin{document}
-\section{Discussion}
+\section{Discussion}\label{sec:discussion}
 \begin{itemize}
     \item PCK: Scaler ikke med input størrelse
     \item Glorot Initialisering - kan være dårligt, se EML forelæsning om optimization.
@@ -11,5 +11,19 @@
     \item Skulle bruge t-SNE istedet for PCA til clustering
     \item Se kap. 14.6 "Learning Manifolds with Autoencoders" i deep learning book. Til sidst er der en diskussion om brugen af Autoencoder til manifold learning
     \item Euclidisk afstand er måske ikke det rigtige?
+    \item Man kan ikke gøre brug af den rigtige centroid for hvert cluster (grundet skip-connections). De centroids vi har fået kan eventuelt ligge langt væk fra de rigtige centroids, resulterende i misvisende centroids.
 \end{itemize}
+
+\subsection{The interpretation of the Model}
+\subsubsection{The Effects of the Skip-Connections}
+Noter:
+\begin{itemize}
+    \item Hvad kom vi frem til?
+    \item Hvordan kom vi frem til det?
+    \item Hvorfor gjorde vi det på den måde?
+    \item Hvad kunne man ellers gøre?
+    \item Hvilken metode ville være bedst?
+    \item Hvorfor ville den metode være bedst?
+\end{itemize}
+
 \end{document}
