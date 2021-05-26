@@ -2,9 +2,10 @@
 
 \begin{document}
 \section{Stacked Hourglass, PCA and $K$-Means}\label{sec:algorithms}
-In this section the various algorithms and architectures used throughout this thesis is described and explained in details.
-\subsection{Stacked Hourglass}
-When performing the pose estimation in section \ref{experiement}, we will be implementing and using the \textit{stacked hourglass} described by Newell \textit{et al.} \cite{Newell}. The following description and explanation of the architecture is based on an interpretation of Newell \textit{et al.} \cite{Newell} and Camilla Olsen \cite{Camilla}.
+In this section the various algorithms and architectures used throughout this thesis is described and explained in details. Throughout Section \ref{subsec:SHG} the Stacked hourglass, used for pose estimation, is described. Then, in Section \ref{subsec:PCA} the algorithm of Principal Components Analysis is described. In the last section, Section \ref{subsec:K_means}, $K$-Means clustering is described.
+
+\subsection{Stacked Hourglass}\label{subsec:SHG}
+When performing the pose estimation in section \ref{experiement}, we will be implementing and using the \textit{Stacked hourglass} described by Newell \textit{et al.} \cite{Newell}. The following description and explanation of the architecture is based on an interpretation of Newell \textit{et al.} \cite{Newell} and Camilla Olsen \cite{Camilla}.
 
 \subsubsection{Motivation behind using the Stacked Hourglass}\label{subsec:reasoning}
 % MANGLER MÅSKE AT SKRIVE, AT DER ER SKET MEGET VIDEREBYGNING PÅ SHG SIDEN NEWELL, HVILKET VI KAN BRUGE NÅR VI SKAL BRUGE VORES VIDEN OM MODELLEN TIL AT OPTIMERE DEN.
@@ -49,7 +50,7 @@ The input of the network is a $256 \times 256$ RGB-image. To lower the memory us
 \\
 By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joints it should predict for a single person. The prediction of a joint is thus the maximum activation of the corresponding heatmap.
 
-\subsection{Principal Components Analysis (PCA)}
+\subsection{Principal Components Analysis (PCA)}\label{subsec:PCA}
 \begin{algorithm}[htbp]
     \caption{PCA \cite{MAD_book}}
     \begin{algorithmic}[1]
@@ -74,8 +75,7 @@ PCA is an unsupervised linear projection method used for reducing the dimension 
 \\
 The pseudocode of the algorithm has been visualized in Algorithm \ref{Algorithm:PCA}. The algorithm starts off by finding the sample covariance matrix $\bm{C}$. It then finds the $k$ vectors, that maximizes the variance of the input data. The $k$ vectors that maximizes the variance are the $k$ eigenvectors with the corresponding highest eigenvalues. Thus, the projection with the first eigenvector captures the most variance, the projection with the second eigenvector captures the second most variance, and so on. The projection down to $k$ dimensions then happens by stacking the $k$ eigenvectors, forming a $D \times k$ matrix, where $D$ is the input dimensions, which is then multiplied with the input data, resulting in the projected data. \cite{MAD_book}
 
-\subsection{$K$-Means Clustering}
-
+\subsection{$K$-Means Clustering}\label{subsec:K_means}
 Often we want to find patterns in data that has not been labelled. One common group of techniques for this purpose is the \textit{clustering algorithms}, that are used to group observations into clusters, such that observations from the same cluster are more similar, than observations from different clusters. One common clustering technique is $K$\textit{-Means}.
 \\
 \\

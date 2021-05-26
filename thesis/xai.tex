@@ -9,9 +9,9 @@
 \end{figure}
 
 \section{Interpreting the Model}\label{sec:XAI}
-In the following section we will be interpreting the model developed in section \ref{experiement}, with the intention of getting an understanding of what the model has learned during training, what the different parts of the model are used for, as well as checking for any redundancy in the model.
+In the following section we will be interpreting the model developed in section \ref{experiement}, with the intention of getting an understanding of what the model has learned during training, what the different parts of the model are used for, as well as checking for any redundancy in the model. In Section \ref{subsec:motivation_xai} an overview of the motivation behind interpreting the model is given. Section \ref{subsec:verifying_skip_cons} then evaluates the effects of the skip-connections of the model. Then, Section \ref{subsec:shape_analysis} explores the latent space of the model with respect to getting an understanding of the principal components of the latent space. Section \ref{subsec:clustering} also explores the latent space of the model, however, instead it uses clustering to seperate the latent space, which the results are the discussed.
 
-\subsection{Motivation}
+\subsection{Motivation}\label{subsec:motivation_xai}
 Deep learning models are often complex and work like a \textit{black boxes}. By that it is meant, that when a network is given some input, the model simply just returns some output without any explanation or reasoning behind the output. This can often be a problem, especially in cases where the output of the network can result in a life or death situation of a human. For that reason, understanding and explaining how a network works can be very important - this is what is called \textit{explainable AI} (\textit{XAI}) 
 \\
 \\
@@ -85,7 +85,7 @@ All in all, by doing the shape analysis of the latent space of the hourglass, we
     \caption{Plot of $10.000$ samples of the latent space of the trained model, with the corresponding ground truth heatmaps}
     \label{fig:latent_space_all_skeletons}
 \end{figure}
-\subsection{Using Clustering to Seperate the Latent Space}
+\subsection{Using Clustering to Seperate the Latent Space}\label{subsec:clustering}
 Similar to subsection \ref{subsec:shape_analysis}, we will be exploring the latent space of the model to further get an understanding of what the model has learned during training, where we again will be using the training observations. Instead of exploring the principal components of the latent space, we will instead be grouping the training observations to get an understanding of how the model relate similar data to each other.
 \\
 \\

@@ -3,12 +3,12 @@
 \begin{document}
 
 \section{Machine Learning Theory}\label{sec:theory}
-Throughout this section the theory of machine learning that will be used in this thesis is described and explained.
+Throughout this section the theory of machine learning that will be used in this thesis is described and explained. In Section \ref{subsec:motivation_theory} we describe the general motivation behind using machine learning. Then, in Section \ref{subsec:ml_paradigmes} we explain the three most common paradigms in machine learning and how we will use some of them. In Section \ref{subsec:evaluation} we give a brief overview of how to evaluate a developed model. Lastly, in Section \ref{subsec:NeuralNetworks} we describe the mathematics behind feedforward- and convolutional neural networks .
 
-\subsection{Motivation}
+\subsection{Motivation}\label{subsec:motivation_theory}
 It can be difficult for humans to recognize certain patterns and trends in data. This becomes more difficult the greater the quantity of the data is, which is becomming more and more common with the rapidly growing topic of \textit{Big Data}. For this reason, computers are often used instead of humans to recognize patterns and trends in the data by analyzing the data, which is what is called \textit{Machine Learning}. In this thesis, we will use machine learning in section \ref{experiement} to develop a model to estimate the 2D pose of a single human in an image. Later, in section \ref{sec:XAI}, we will use machine learning to improve our understanding of the model.
 
-\subsection{Machine Learning Paradigms}
+\subsection{Machine Learning Paradigms}\label{subsec:ml_paradigmes}
 Machine learning is usally split into the following three paradigms
 \begin{enumerate}
     \item \textit{Supervised learning} where the data consists of features and labels. By analyizing the data the algorithm learns to predict the labels given the features \cite{ESL}. Supervised learning is further split into \textit{classification} and \textit{regression}. If the value of each label is limited, then the task is a classification task. If the value of each label is not limited, then the task is a regression task. 
@@ -17,7 +17,7 @@ Machine learning is usally split into the following three paradigms
 \end{enumerate}
 In this thesis we will make use of supervised learning when developing our model for pose estimation. Later, unsupervised learning is used when we explore our developed model.
 
-\subsection{Evaluation of Machine Learning Models}
+\subsection{Evaluation of Machine Learning Models}\label{subsec:evaluation}
 When developing a machine learning model it is important to know how trustworthy the developed model is. This is usually done by testing how good the model is at generalizing unseen data, which is done by making use of \textit{evaluation metrics}.
 
 \subsubsection{Splitting the dataset}

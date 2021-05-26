@@ -2,9 +2,9 @@
 
 \begin{document}
 \section{The Dataset}\label{sec:dataset}
-To perform the pose estimation, we need some data on which to train, validate and test our model. Throughout this section the used data and preprocessing are described.
+To perform the pose estimation, we need some data on which to train, validate and test our model. Throughout this section the used data and the relevant preprocessing is described. The section consists of two parts: Section \ref{subsec:COCO}, where a brief overview of the dataset is described, and Section \ref{subsec:data_preprocessing}, where the preprocessing of the data is described. 
 
-\subsection{The COCO Dataset}
+\subsection{The COCO Dataset}\label{subsec:COCO}
 \begin{figure}[htbp]
     \centering
     \includegraphics[height = 4 cm]{./entities/coco_example.png}
@@ -23,7 +23,7 @@ The creators of the dataset has already split the data into three parts: a part 
 \\
 The training and validation sets contains a total of about $123.000$ various images. As we only need the images that contain humans, we will be discarding the images without any humans, leaving us with a total of about $66.808$ images of humans doing various tasks, with a total of $149.813$ humans annotated with keypoints. Each image can contain multiple people, which we need to handle before training our model, as we will be focusing on single-human pose estimation. Besides this, each image also has different resolution and aspect ratio, which we also need to handle, as our model requires the images to have a fixed resolution. Lastly, we should also do some handling of the labels before training the model, as there could have been some inaccuracies, when the joints were labeled. This especially applies when $v = 1$, that is, when the joint is labeled but not visible, as there are more inaccuracies or uncertainty when labeling a non-visible joint than when labeling a visible joint.
 
-\subsection{Data Preprocessing}
+\subsection{Data Preprocessing}\label{subsec:data_preprocessing}
 \subsubsection{Creating the test dataset}
 To create the dataset which will be used for testing we take the training set, since it is the larger of the training and validation set, and sample $5.064$ images randomly without replacement, to create a test set. This ensures that the test-set and validation-set are of the same size. This new test set will not be used when training the model nor used when tuning the parameters. Instead, it will only be used to evaluate the very final model. 
 
