@@ -38,7 +38,7 @@ where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the es
 In recent years \textit{deep learning} and \textit{neural networks} have revolutionized the use of machine learning. In this thesis a neural network will be used for performing the human pose estimation. Throughout subsection \ref{subsec:NeuralNetworks} the theory and mathematics behind neural networks is described and explained.
 \subsubsection{Feedforward Neural Networks} \label{subsubsec:FeedforwardNN}
 \begin{algorithm}[htbp]
-    \caption{GradientDescent \cite{d2l}}
+    \caption{Gradient Descent \cite{d2l}}
     \label{Algorithm:gradient_descent_alg}
     \begin{algorithmic}[1]
         \Require Learning rate $\eta$
@@ -57,19 +57,13 @@ The main goal of a machine learning model is to generalize well on unseen data. 
 \\
 \textbf{Gradient Descent} \\
 The goal of a machine learning model when training is to minimize its loss. There are different methods to do so, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$, a starting position $\bm{\theta}$ and a function $f$ as input, where $f$ is the function to minimize. It then computes the gradient of $f$ with respect to $\bm{\theta}$, and subtracts the gradient times $\eta$ from $\bm{\theta}$. This is done untill a stopping condition is met, such as when the magnitude of the gradient $\left| \nabla f(\bm{\theta}) \right|$ is small or untill a maximum amount of iterations has been reached \cite{d2l}.
-\begin{figure}
-    \centering
-    \includegraphics[width = 8 cm]{entities/batch_methods.PNG}
-    \caption{Comparison of batch, mini-batch and stochastic gradient descent \cite{EML_optimization}}
-    \label{fig:batch_methods}
-\end{figure}
 \\
 \\
 \noindent \textbf{Online, Mini-batch and Batch methods} \\
-\noindent When gradient descent is used in machine learning, computing $\nabla f(\bm{x})$ is usually done by averaging the gradient of each of the $n$ observations of the trainingset, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} (also known as \textit{stochastic gradient descent}) a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size \cite{d2l}. \\
+\noindent When gradient descent is used in machine learning, computing $\nabla f(\bm{x})$ is usually done by averaging the gradient of each of the $n$ observations of the trainingset, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size \cite{d2l}. \\
 Choosing the right batch size can be difficult, however, there are a few guidelines which one can follow \cite{EML_optimization} \cite{d2l}
 \begin{enumerate}
-    \item Looking at Figure \ref{fig:batch_methods} we see, that batch gradient descent uses the fewest iterations, however, each iteration takes the longest to compute. On the other hand, in online gradient descent each iteration is the fastest to compute, however, it is also the method that uses the most iterations. Lastly, mini-batch gradient descent combines the two: it uses less iterations than online gradient descent, but more than batch gradient descent, and each iteration takes less time than in the case with batch gradient descent, but longer than in the case with online gradient descent.
+    \item Batch gradient descent uses the fewest iterations, however, each iteration takes the longest to compute. On the other hand, in online gradient descent each iteration is the fastest to compute, however, it is also the method that uses the most iterations. Lastly, mini-batch gradient descent combines the two: it uses less iterations than online gradient descent, but more than batch gradient descent, and each iteration takes less time than in the case with batch gradient descent, but longer than in the case with online gradient descent.
     \item A batch size that is of power of $2$ can offer in better runtime for some hardware. A batch size that is often used for larger models is $16$, however, they typically range between $32$ and $256$.
     \item Smaller batch sizes can offer a regularizing effect, as it is difficult for the model to "remember" the complete dataset from batches that does not represent the whole dataset.
 \end{enumerate}
@@ -81,14 +75,13 @@ Choosing the right batch size can be difficult, however, there are a few guideli
         \Require Decay rate $\rho$
         \Require Starting position $\bm{\theta}$
         \Require Small constant $\delta$, usually $10^{-6}$
-        \Require Loss function $L$
         \Require Function to minimize $f$
         \State Initialize accumulation variables $\bm{r} = \bm{0}$
         \While{stopping criterion not met}
             \State \begin{varwidth}[t]{\linewidth}
             Sample a minibatch of $m$ observations from the training set $\{\bm{x}^{(1)}, ..., \bm{x}^{(m)}\}$ with corresponding targets $\bm{y}^{(i)}$
             \end{varwidth}
-            \State Compute gradient: $\bm{g} = \frac{1}{m} \nabla_{\bm{\theta}} \sum_i L(f(\bm{x}^{(i)}; \bm{\theta}), \bm{y}^{(i)})$
+            \State Compute gradient: $\bm{g} = \frac{1}{m} \nabla_{\bm{\theta}} \sum_i f \left(\bm{x}^{(i)} \right)$
             \State Accumulate squared gradient: $\bm{r} = \rho \bm{r} + (1 - \rho) \bm{g} \odot \bm{g}$
             \State Compute parameter update: $\Delta\bm{\theta} = - \frac{\eta}{\sqrt{\delta + \bm{r}}} \odot \bm{g}$
             \State Apply update: $\bm{\theta} = \bm{\theta} + \Delta \bm{\theta}$ 
@@ -97,7 +90,27 @@ Choosing the right batch size can be difficult, however, there are a few guideli
     \end{algorithmic}
 \end{algorithm}
 \noindent \textbf{Optimization Algorithms} \\
-\noindent Online, mini-batch and batch gradient descent are all optimization algorithms used for estimating the minimum of a function. One problem of these algorithms is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \texttt{RMSProp}, which has been visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discards knowledge from the past, so that it can converge after finding a convex bowl. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
+\noindent Online, mini-batch and batch gradient descent are all optimization algorithms used for estimating the minimum of a function. One problem of these algorithms is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \textit{RMSProp}, which has been visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discards knowledge from the past, so that it can converge after finding a convex bowl. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
+\\
+\begin{algorithm}[htbp]
+    \caption{Stochastic Gradient Descent \cite{DeepLearning}}
+    \label{Algorithm:SGD}
+    \begin{algorithmic}[1]
+        \Require Learning rate $\eta$
+        \Require Initial parameter $\bm{\theta}$
+        \Require Function to minimize $f$
+        \While{stopping criterion not met}
+            \State \begin{varwidth}[t]{\linewidth}
+            Sample a minibatch of $m$ observations from the traning set $\{\bm{x}^{(1)}, ..., \bm{x}^{(n)}\}$ with corresponding targets $\bm{y}^{(i)}$
+            \end{varwidth}
+            \State Compute gradient estimate: $\hat{\bm{g}} = \frac{1}{m} \nabla_{\bm{\theta}} \sum_i f \left( \bm{x}^{(i)} \right)$
+            \State Apply update: $\bm{\theta} = \bm{\theta} - \eta \bm{\hat{g}}$
+        \EndWhile
+    \end{algorithmic}
+    \
+\end{algorithm}
+\\
+Another important optimization algorithm is \textit{Stochastic gradient descent} (\textit{SGD}). Unlike RMSProp, SGD does not adapt the learning rate over time, but instead keeps it fixed. The algorithm of SGD has been visualized in Algorithm \ref{Algorithm:SGD}. 
 \\
 \\
 \textbf{Batch Normalization} \\
@@ -171,7 +184,7 @@ The ReLU-function is very close to being linear, making the function keep many o
 \\
 \\
 \noindent \textbf{Backpropagation} \\
-Backpropagation is an algorithm used to compute the gradient of the network. It is used together with an optimization algorithm, such as \texttt{RMSProp}, to train the model by minimizing the training loss of the model. Backpropagation happens after data has flowed through the model from the input to the output, and works by computing the gradient of each parameter sequentially from the output to the input of the model. The procedure makes heavily use of the \textit{chain rule} from calculus, which states, that if we let $\bm{x} \in \mathbb{R}^m$, $\bm{y} \in \mathbb{R}^n$, $g$ be a function that maps from $\mathbb{R}^m$ to $\mathbb{R}^n$ and $f$ be a function that maps from $\mathbb{R}^n$ to $\mathbb{R}$, then, if we let $\bm{y} = g(\bm{x})$ and $z = f(\bm{y})$, we can then compute $\frac{\partial z}{\partial x_i}$ by
+Backpropagation is an algorithm used to compute the gradient of the network. It is used together with an optimization algorithm, such as RMSProp, to train the model by minimizing the training loss of the model. Backpropagation happens after data has flowed through the model from the input to the output, and works by computing the gradient of each parameter sequentially from the output to the input of the model. The procedure makes heavily use of the \textit{chain rule} from calculus, which states, that if we let $\bm{x} \in \mathbb{R}^m$, $\bm{y} \in \mathbb{R}^n$, $g$ be a function that maps from $\mathbb{R}^m$ to $\mathbb{R}^n$ and $f$ be a function that maps from $\mathbb{R}^n$ to $\mathbb{R}$, then, if we let $\bm{y} = g(\bm{x})$ and $z = f(\bm{y})$, we can then compute $\frac{\partial z}{\partial x_i}$ by
 $$\frac{\partial z}{\partial x_i} = \sum_j \frac{\partial z}{\partial y_j} \frac{y_j}{x_i}$$
 \cite{DeepLearning}. If we use this to find the gradient of each parameter, we will find, that the partial derivative for each weight is
 $$\frac{\partial L}{\partial w_{jk} ^{(i)}} = \frac{\partial z_j ^{(i)}}{\partial w_{jk} ^{(i)}} \frac{\partial a_j ^{(i)}}{\partial z_j ^{(i)}} \frac{\partial L}{\partial a_j ^{(i)}} = a_k ^{(i - 1)} g ^{\prime (i)} \left( z_j ^{(i)} \right) \frac{\partial L}{\partial a_j ^{(i)}}$$

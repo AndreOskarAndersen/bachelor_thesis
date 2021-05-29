@@ -1,15 +1,29 @@
 \documentclass[./main.tex]{subfiles}
 
 \begin{document}
-\section{Stacked Hourglass, PCA and $K$-Means}\label{sec:algorithms}
-In this section the various algorithms and architectures used throughout this thesis is described and explained in details. Throughout Section \ref{subsec:SHG} the Stacked hourglass, used for pose estimation, is described. Then, in Section \ref{subsec:PCA} the algorithm of Principal Components Analysis is described. In the last section, Section \ref{subsec:K_means}, $K$-Means clustering is described.
+\section{Autoencoders, Stacked Hourglass, PCA and $K$-Means}\label{sec:algorithms}
+In this section the various algorithms and architectures used throughout this thesis is described and explained in details. The section starts off with Section \ref{subsec:AE}, where we will be giving a brief introduction to autoencoders. Throughout Section \ref{subsec:SHG} the Stacked hourglass, used for pose estimation, is described. Then, in Section \ref{subsec:PCA} the algorithm of Principal Components Analysis is described. In the last section, Section \ref{subsec:K_means}, $K$-Means clustering is described.
+
+\subsection{Autoencoders}\label{subsec:AE}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width = 7 cm]{entities/AE.png}
+    \caption{Visualization of an undercomplete autoencoder \cite{AE}}
+    \label{fig:AE}
+\end{figure}
+\noindent \textit{Autoencoders} is a class of neural networks that are trained to output the input of the model. An autoencoder consists of two parts: the \textit{encoder} and the \textit{decoder}, where each part usually consist of multiple hidden layers. When data is fed to the autoencoder, the data is passed through the encoder, which then passes the data to the decoder, where the data is again processed and finally returned \cite{DeepLearning}. 
+\\
+\\
+If all of the layers of the autoencoder have the same dimensionality, the network can easily learn how to copy the input to its output. For this reason we often talk about \textit{undercomplete} autoencoders instead, where the dimension of the output of the encoder is smaller than the dimension of the input and output of the network, as visualized in Figure \ref{fig:AE}. By making use of an undercomplete autoencoder, the encoder learns how to encode the input to a lower dimensionality, forcing the network to learn the most important features of the training data \cite{DeepLearning}.
+\\
+\\
+To make the autoencoder more robust in relation to small variances, some noise is usually added to the input of the data during training. The noisy training data is then passed through the network and compared to the non-noisy training data, when the loss is computed \cite{DeepLearning}.
 
 \subsection{Stacked Hourglass}\label{subsec:SHG}
 When performing the pose estimation in section \ref{experiement}, we will be implementing and using the \textit{Stacked hourglass} described by Newell \textit{et al.} \cite{Newell}. The following description and explanation of the architecture is based on an interpretation of Newell \textit{et al.} \cite{Newell} and Camilla Olsen \cite{Camilla}.
 
 \subsubsection{Motivation behind using the Stacked Hourglass}\label{subsec:reasoning}
-% MANGLER MÅSKE AT SKRIVE, AT DER ER SKET MEGET VIDEREBYGNING PÅ SHG SIDEN NEWELL, HVILKET VI KAN BRUGE NÅR VI SKAL BRUGE VORES VIDEN OM MODELLEN TIL AT OPTIMERE DEN.
-We have decided to make use of the Stacked hourglass described by Newell \textit{et al.}, as it is an architecture that has shown state-of-the-art results. At the same time the architecture of the network is similar to the architecture of \textit{Autoencoders}, making the architecture useful for encoding the data into a lower dimension, which can be useful in section \ref{sec:XAI}, when we will be doing the interpretation of the model.
+We have decided to make use of the Stacked hourglass described by Newell \textit{et al.}, as it is an architecture that has shown state-of-the-art results. At the same time the architecture of the network is similar to the architecture of autoencoders, making the architecture useful for encoding the data into a lower dimension, which can be useful in section \ref{sec:XAI}, when we will be doing the interpretation of the model.
 
 \subsubsection{The Residual Module}
 \begin{figure}[htbp]
@@ -66,8 +80,7 @@ By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joint
     \end{algorithmic}
     \label{Algorithm:PCA}
 \end{algorithm}
-
-It is very common, that a given dataset has an enormous amount of dimensions. This is quickly become a problem, as it can be difficult to visualize or it can lead to other problems, such as models becoming too complex, thus being prone to overfitting. This is a common phenomen called the \textit{Curse of Dimensionality} \cite{ESL}. For this reason multiple techniques have been developed for reducing the dimensions of a given dataset. One of the most common techniques for reducing the dimension of a dataset is \textit{Principal Components Analysis} (\textit{PCA}).
+\noindent It is very common, that a given dataset has an enormous amount of dimensions. This is quickly become a problem, as it can be difficult to visualize or it can lead to other problems, such as models becoming too complex, thus being prone to overfitting. This is a common phenomen called the \textit{Curse of Dimensionality} \cite{ESL}. For this reason multiple techniques have been developed for reducing the dimensions of a given dataset. We have already seen in Section \ref{subsec:AE}, how autoencoders can be used as non-linear dimensionality reduction. Another very common technique for reducing the dimension of a dataset is \textit{Principal Components Analysis} (\textit{PCA}).
 \\
 \\
 PCA is an unsupervised linear projection method used for reducing the dimension of a dataset from $D$ down to $k$ dimensions. The algorithm works by finding the $k$ orthogonal vectors that maximizes the variance of the input data. \cite{MAD_book} 
