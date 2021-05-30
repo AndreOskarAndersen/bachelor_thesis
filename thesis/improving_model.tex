@@ -36,17 +36,21 @@ to each training sample, where $x$ is the value of the training sample. To help 
 After the autoencoder has been trained, the whole network is further trained by following Newell \textit{et al.} \cite{Newell} as described in Section \ref{subsec:conf_details}.
 
 \subsection{Results}
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[height = 10 cm]{entities/AE_evolution.png}
-    \caption{Visualization of the evolution of the traning- and validation loss of the trained autoencoder. The left column shows all of the $100$ epochs. Right column shows epoch $21$ and foward}
+    \caption{Visualization of the evolution of the training- and validation loss of the autoencoder during training. The left column shows all of the $100$ epochs. Right column shows epoch $21$ and foward}
     \label{fig:AE_evolution}
 \end{figure}
-By training the autoencoder isolated, we get the evolution of the training- and validation loss visualized in Figure \ref{fig_AE_evolution}. We can clearly see, how the model does not start to overfit, as in the case when we trained the stacked hourglass. We decided to stop the training of the autoencoder, as each update only yielded minor changes to the model.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width = \textwidth]{entities//SHG_AE_Evolution.png}
+    \caption{Visualization of the evolution of the training- and validation loss, as well as the PCK validation accuracy of the combination of the stacked hourglass and autoencoder, compared with the evolution of training the orignial stacked hourglass. The top row is of all of the $57$ epochs. The bottom row shows epoch $47$ and forward.}
+    \label{fig:SHG_AE_evolution}
+\end{figure}
+\noindent By training the autoencoder isolated, we get the evolution of the training- and validation loss visualized in Figure \ref{fig_AE_evolution}. We can clearly see, how the model does not start to overfit, as in the case when we trained the stacked hourglass. We decided to stop the training of the autoencoder, as each update only yielded minor changes to the model. The evolution of training the stacked hourglass with the autoencoder has been visualized in Figure \ref{fig:SHG_AE_evolution}. By looking at the figure we can see how the combined stacked hourglass and autoencoder initially performs worse than the original stacked hourglass, however, as the training continues it beats the original stacked hourglass, resulting an validation PCK accuracy of $46.7\%$ - an increase of $7.8\%$ or $3.4$ percentage points compared with the original stacked hourglass.
 \\
 \\
-% Træning af SHG + AE resultater/plot
-
 % Testing af SHG vs SHG + AE
 
 % XAI af AE?
