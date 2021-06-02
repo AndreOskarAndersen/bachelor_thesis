@@ -56,7 +56,7 @@ The main goal of a machine learning model is to generalize well on unseen data. 
 \\
 \\
 \textbf{Gradient Descent} \\
-The goal of a machine learning model when training is to minimize its loss. There are different methods to do so, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$, a starting position $\bm{\theta}$ and a function $f$ as input, where $f$ is the function to minimize. It then computes the gradient of $f$ with respect to $\bm{\theta}$, and subtracts the gradient times $\eta$ from $\bm{\theta}$. This is done untill a stopping condition is met, such as when the magnitude of the gradient $\left| \nabla f(\bm{\theta}) \right|$ is small or untill a maximum amount of iterations has been reached \cite{d2l}.
+The goal of a machine learning model when training is to minimize its loss. There are different methods to do so, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$, a starting position $\bm{\theta}$ and a function $f$ as input, where $f$ is the (loss) function to minimize. It then computes the gradient of $f$ with respect to $\bm{\theta}$, and subtracts the gradient times $\eta$ from $\bm{\theta}$. This is done untill a stopping condition is met, such as when the magnitude of the gradient $\left| \nabla f(\bm{\theta}) \right|$ is small or untill a maximum amount of iterations has been reached \cite{d2l}.
 \\
 \\
 \noindent \textbf{Online, Mini-batch and Batch methods} \\
@@ -110,7 +110,30 @@ Choosing the right batch size can be difficult, however, there are a few guideli
     \
 \end{algorithm}
 \\
-Another important optimization algorithm is \textit{Stochastic gradient descent} (\textit{SGD}). Unlike RMSProp, SGD does not adapt the learning rate over time, but instead keeps it fixed. The algorithm of SGD has been visualized in Algorithm \ref{Algorithm:SGD}. 
+Another important optimization algorithm is \textit{Stochastic gradient descent} (\textit{SGD}). Unlike RMSProp, SGD does not adapt the learning rate over time, but instead keeps it fixed. The algorithm of SGD has been visualized in Algorithm \ref{Algorithm:SGD}. SGD is very closely related to the algorithm behind gradient descent, however, instead of updating the parameters for each sample, SGD instead uses the mean of $n$ samples. The momentum algorithm works by accumulating a decaying moving average of the past gradients and continuing to move in their direction. 
+\\
+\begin{algorithm}[htbp]
+    \caption{Stochastic Gradient Descent with Momentum \cite{DeepLearning}}
+    \label{Algorithm:SGD_momentum}
+    \begin{algorithmic}[1]
+        \Require Learning rate $\eta$
+        \Require Momentum parameter $\alpha$
+        \Require Initial parameter $\bm{\theta}$
+        \Require Initial velocity $\bm{v}$
+        \Require Function to minimize
+        \While{Stopping criterion not met}
+            \State \begin{varwidth}[t]{\linewidth}
+            Sample a minibatch of $m$ observations from the traning set $\{\bm{x}^{(1)}, ..., \bm{x}^{(n)}\}$ with corresponding targets $\bm{y}^{(i)}$
+            \end{varwidth} 
+            \State Compute gradient estimate: $\bm{g} = \frac{1}{m} \nabla_{\bm{\theta}} \sum_i f \left( \bm{x}^{(i)} \right)$
+            \State Compute velocity update: $\bm{v} = \alpha \bm{v} - \eta \bm{g}$
+            \State $\bm{\theta} = \bm{\theta} + \bm{v}$
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\\
+\textbf{Momentum} \\
+One problem with SGD is how slow it often can be. For this reason \textit{momentum} is often used to accelerate learning. The algorithm behind SGD with momentum has been visualized in Algorithm \ref{Algorithm:SGD_momentum}. The algorithm works by introducing two new variable; $\bm{v}$, which is the direction and speed of which the parameters move through the parameter space, and $\alpha \in [0, 1)$, which describes how quickly the contribution of previous gradients decay. Common values of $\alpha$ are $0.5, 0.9$ and $0.99$ \cite{DeepLearning}. 
 \\
 \\
 \textbf{Batch Normalization} \\

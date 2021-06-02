@@ -14,16 +14,36 @@
     \item Latent space af AE sættes til $50$, idet vi ved shape analysis har set, at de resterende dimensioner er støj. Dette bygger sig dog på fulde skeleter og ikke alle skeleter, som modellen ellers trænes på
 \end{itemize}
 
-\subsection{The interpretation of the Model}
-\subsubsection{The Effects of the Skip-Connections}
-Noter:
+\subsection{Summary of Obtained Results}
+In Section \ref{experiement} we succefully implemented and trained a stacked hourglass, consisting of a single hourglass. We did this by following the configuration details described in Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla}. The developed model has a validation PCK accuracy of $0.433$ and a test PCK accuracy of $0.441$.
+\\
+\\
+In Section \ref{sec:XAI} we gained an understanding of how the devleoped model works by exploring the different components of the model. We could verify, that the skip-connections of the model were used for recreating details that are lost during the encoder-phase of the model, as argued by Newell \textit{et al-} \cite{Newell} and Olsen \cite{Camilla}. We then used PCA to gain an understanding of the structure of the latent space of the model. By doing so we came to the conclusion, that the model had learned the differences between people standing up and people sitting down, as well as possibly discovering some redundancy in the model, as principal componet $50$ and above seemed to act as noise. Lastly, we used clustering to gain an understanding of how the model works. By doing so we learned, that the model knows the difference between fully-annotated people and not-fully annotated people, as well as knows the difference between stationary people and moving people. Here we also identified some possible reasons for inaccuracies of the model, as these classifications were not always correct.
+\\
+\\
+In Section \ref{sec:improving} we used our knowledge of the model to improve the performance of the model. This was done by developing and training an autoencoder, which was placed in the model. By doing so, both the validation and test PCK accuracy increase to $0.467$ and $0.473$, respectively.
+
+\subsection{Comparison of Models}
+
+\subsection{Hvorfor er mine resultater dårligere/bedre end Newell/Camilla?}
 \begin{itemize}
-    \item Hvad kom vi frem til?
-    \item Hvordan kom vi frem til det?
-    \item Hvorfor gjorde vi det på den måde?
-    \item Hvad kunne man ellers gøre?
-    \item Hvilken metode ville være bedst?
-    \item Hvorfor ville den metode være bedst?
+    \item Forskelle imellem min(e) modeller og deres
+    \item Skal også komme ind på hvorfor mine valg var bedre end de valg de valgte
 \end{itemize}
+
+\subsubsection{Forskelle}
+\begin{itemize}
+    \item Batch normalization - ved ikke placering 
+    \item Autoencoder
+    \item Noget andet data
+    \item Gør også brug af $v = 1$
+    \item Anden spredning ved gaussian filter ved $v = 1$
+    \item Camillas model er kun trænet på $v = 2$, hvilket nok gør den bedre når $v = 2$
+    \item Forskelligt antal stacks
+    \item PCK med fixed normalization konstant straffer folk tættere på kammeraet mere end folk længere væk
+\end{itemize}
+
+\subsection{Future Work}
+If we were to work further with this project, it would be ideal to explore the effects of stacking multiple modified hourglasses end-to-end. By doing so we would not only hope that the performance of the model to increase further, but we would also hope we could obtain the same accuracy as Newell \textit{et al.} experiences \cite{Newell}, however with fewer stacks. For instance, we could hope that by stacking $2$ modified hourglasses, we would achieve the same results as Newell \textit{et al.} achieves with $4$ standard hourglasses.
 
 \end{document}
