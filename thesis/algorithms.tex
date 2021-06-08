@@ -63,6 +63,9 @@ The input of the network is a $256 \times 256$ RGB-image. To lower the memory us
 \\
 \\
 By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joints it should predict for a single person. The prediction of a joint is thus the maximum activation of the corresponding heatmap.
+\\
+\\
+As the Stacked hourglass performs regression, the $MSE$ will be minimized during training to optimize the performance of the model.
 
 \subsection{Principal Components Analysis (PCA)}\label{subsec:PCA}
 \begin{algorithm}[htbp]
