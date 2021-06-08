@@ -9,7 +9,7 @@
 \end{figure}
 
 \section{Interpreting the Model}\label{sec:XAI}
-In the following section we will be interpreting the model developed in section \ref{experiement}, with the intention of getting an understanding of what the model has learned during training, what the different parts of the model are used for, as well as checking for any redundancy in the model. In Section \ref{subsec:motivation_xai} an overview of the motivation behind interpreting the model is given. Section \ref{subsec:verifying_skip_cons} then evaluates the effects of the skip-connections of the model. Then, Section \ref{subsec:shape_analysis} explores the latent space of the model with respect to getting an understanding of the principal components of the latent space. Section \ref{subsec:clustering} also explores the latent space of the model, however, instead it uses clustering to seperate the latent space, which the results are the discussed.
+In the following section we will be interpreting the model developed in section \ref{experiement}, with the intention of getting an understanding of what the model has learned during training, what the different parts of the model are used for, as well as checking for any redundancy in the model. In Section \ref{subsec:motivation_xai} an overview of the motivation behind interpreting the model is given. Section \ref{subsec:verifying_skip_cons} then evaluates the effects of the skip-connections of the model. Then, Section \ref{subsec:shape_analysis} explores the latent space of the model with respect to getting an understanding of the principal components of the latent space. Section \ref{subsec:clustering} also explores the latent space of the model, however, instead it uses clustering to seperate the latent space.
 
 \subsection{Motivation}\label{subsec:motivation_xai}
 Deep learning models are often complex and work like a \textit{black boxes}. By that it is meant, that when a network is given some input, the model simply just returns some output without any explanation or reasoning behind the output. This can often be a problem, especially in cases where the output of the network can result in a life or death situation of a human. For that reason, understanding and explaining how a network works can be very important - this is what is called \textit{explainable AI} (\textit{XAI}) 
@@ -47,7 +47,7 @@ To further understand the decrease of accuracy in the case where the skip-connec
 \\
 By looking at Figure \ref{fig:pred_comparison} we can see, that the model without its skip-connections often struggles with smaller joints, such as the eyes, ears or nose, whereas it performs better, however still not always perfect, on bigger joints, such as the shoulders, hips or knees. This is probably due to the fact, that the details of the smaller joints has a bigger chance of being lost by the max pooling layers in the encoder. Without the skip-connections their information is thus lost, resulting in bad predictions. Thus, we can verify Olsen's \cite{Camilla} and Newell's \cite{Newell} claims, that the skip-connections are used for recreating details lost in the encoder. 
 
-\subsection{Shape Analysis of the Latent Space}\label{subsec:shape_analysis}
+\subsection{Dimensionality Analysis of the Latent Space}\label{subsec:shape_analysis}
 In subsection \ref{subsec:reasoning} we described how we decided to use the Stacked Hourglass for the pose estimation, as it is similar to Autoencoders. This makes the model useful for encoding the data into a lower dimensional representation of the input data. The space of this lower dimensional representation is known as the \textit{latent space} of the model. By exploring the latent space we can get an understanding of what the model has learned during training.
 \\
 \\
@@ -57,16 +57,16 @@ In the following subsection we will be exploring and explaining the most importa
 We decided to only use fully-annotated observations, as not fully-annotated observations would add some variance to the data, which would confuse the following procedure. We start off by feeding the fully-annotated training data through the encoder of the model and storing the output of the third residual module in the bottleneck. We decided to make use of training data for this, as we wish to look at what features of the training data that the model has learned. Each output of the bottleneck is a $4 \times 4 \times 256$ tensor, which we flattened to a $4.096$ vector. Each vector was then stacked, forming a $7.017 \times 4.096$ matrix of the latent space.
 \\
 \\
-We start off by finding the $4.096$ principal components and the corresponding explained variance ratio of the data by using Principal Components Analysis. By doing so we get an understanding of which components for predictions are the most important. Next, the mean coordinate of the principal components, $\bar{\bm{x}}$ is found. The closest point is then stored. We then explore each principal component by "walking" from $\bar{\bm{x}}$ along the principal component in positive and negative direction, with various step sizes. After each "walk" the closest point is found and stored. By doing so we can compare the heatmaps of the observations from a "walk" in positive and negative direction, which will give us an idea of what a given component is used for. 
+We start off by finding the $4.096$ principal components and the corresponding explained variance ratio of the data by using Principal Components Analysis. By doing so we get an understanding of which components for predictions are the most important. Next, the mean coordinate of the principal components, $\bar{\bm{x}}$ is found. The closest point is then stored. We then explore each principal component by "walking" from $\bar{\bm{x}}$ along the principal component in positive and negative direction, with various step sizes. After each "walk" the closest real data point is found and stored. By doing so we can compare the heatmaps of the observations from a "walk" in positive and negative direction, which will give us an idea of what a given component is used for. 
 \\
 \\
-When doing the walk along a principal component, we made the step size be equal to $c \cdot \sqrt{\lambda}$, where $c$ is a constant and $\lambda$ is the explained variance of the principal component. By doing so we ensure, that we are not walking too far, ending up with misleading visualizations as there will be far from the end point to the nearest observation. Some of the results have been visualized in Figure \ref{fig:shape_analysis}.
+When doing the walk along a principal component, we made the step size be equal to $c \cdot \sqrt{\lambda}$, where $c$ is a constant and $\lambda$ is the explained variance of the principal component. By doing so we ensure, that we are not walking too far, ending up with misleading visualizations due to long distance between the end point to the nearest observation. Some of the results have been visualized in Figure \ref{fig:shape_analysis}.
 \\
 \\
 By looking at Figure \ref{fig:shape_analysis} we can see, that the first principal component is used for determining if the person is sitting or standing up. This is very clear, as the person sits down if we are "walking" in the negative direction from the mean coordinate, and on the otherhand the person straightens up if we are "walking" in the positive direction from the mean coordinate.
 \\
 \\
-We can also see, that principal component $2$, $3$, $10$ and $30$ do not have an easy-to-see pattern, like it is the case with the first principal component. This could probably be becuase they explain a very little amount of the variance in the data, resulting in a very small step size, as well as patterns contributing very little to the prediction of the model.
+We can also see, that principal component $2$, $3$, $10$ and $30$ do not have an easy-to-see pattern, like it is the case with the first principal component. This could probably be because they explain a very little amount of the variance in the data, resulting in a very small step size, as well as patterns contributing very little to the prediction of the model.
 \\
 \\
 Lastly, we can see, that principal components $50$ and onwards do not have any variations in their corresponding results. This results in them acting as noise, and hints towards how the model could be using many fewer filters in the bottleneck.
@@ -78,7 +78,7 @@ Lastly, we can see, that principal components $50$ and onwards do not have any v
 \end{figure}
 \\
 \\
-All in all, by doing the shape analysis of the latent space of the hourglass, we have learned how the model has learned the difference between people sitting down and standing up (and the poses in between), as well as possibly have identified some redundancy, in the form of the model using more filters in the bottleneck, than what might is needed. 
+All in all, by doing the shape analysis of the latent space of the hourglass, we have learned how the model has learned the difference between people sitting down and standing up (and the poses in between), as well as possibly have identified some redundancy, in the form of the model using more filters in the bottleneck than necessary.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width = \textwidth]{entities/latent_space_all_skeletons.png}

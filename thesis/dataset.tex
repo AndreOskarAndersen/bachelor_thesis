@@ -2,7 +2,7 @@
 
 \begin{document}
 \section{The Dataset}\label{sec:dataset}
-To perform the pose estimation, we need some data on which to train, validate and test our model. Throughout this section the used data and the relevant preprocessing is described. The section consists of two parts: Section \ref{subsec:COCO}, where a brief overview of the dataset is described, and Section \ref{subsec:data_preprocessing}, where the preprocessing of the data is described. 
+To perform the pose estimation, we need some data on which to train, validate and test our model. Throughout this section the used data and the relevant preprocessing is described. The section consists of two parts: Section \ref{subsec:COCO}, where a brief overview of the dataset is given, and Section \ref{subsec:data_preprocessing}, where the preprocessing of the data is described. 
 
 \subsection{The COCO Dataset}\label{subsec:COCO}
 \begin{figure}[htbp]
@@ -25,7 +25,7 @@ The training and validation sets contains a total of about $123.000$ various ima
 
 \subsection{Data Preprocessing}\label{subsec:data_preprocessing}
 \subsubsection{Creating the test dataset}
-To create the dataset which will be used for testing we take the training set, since it is the larger of the training and validation set, and sample $5.064$ images randomly without replacement, to create a test set. This ensures that the test-set and validation-set are of the same size. This new test set will not be used when training the model nor used when tuning the parameters. Instead, it will only be used to evaluate the very final model. 
+To create the testing dataset we take the training set, since it is the larger of the training and validation set, and sample $5.064$ images randomly without replacement, to create a test set. This ensures that the test-set and validation-set are of the same size. This new test set will not be used when training the model nor used when tuning the parameters. Instead, it will only be used to evaluate the very final model. 
 
 \subsubsection{Preprocessing the images}
 \begin{table}[htbp]
@@ -33,14 +33,14 @@ To create the dataset which will be used for testing we take the training set, s
     \begin{tabular}{l|c|c}
          & Amount of images & Percentage \\
         \hline
-        Training set & 124.040 & 92,45 \\
+        Training set & $124.040$ & $92,45\%$ \\
         \hline
-        Validation set & 5.064 & 3,77 \\
+        Validation set & $5.064$ & $3,77\%$ \\
         \hline
-        Testing set & 5.064 & 3,77 \\
+        Testing set & $5.064$ & $3,77\%$ \\
         \hline
         \hline
-        \textbf{Total} & \textbf{134.168} & \textbf{100} \\
+        \textbf{Total} & $\bm{134.168}\%$ & $\bm{100}\%$ \\
         \hline
     \end{tabular}
     \caption{Data distribution}
@@ -62,7 +62,7 @@ It is possible for each bounding box to contain multiple people. This is a probl
 Since each keypoint does not necessarily lie on the edge of the person, the bounding boxes could result in not all of the pixels of the corresponding person being in the bounding box. For this reason, each bounding box is expanded with $10\%$ in the height and width. If, however, the image cannot contain the expanded bounding box, the bounding box is then expanded as much as possible, while still being a square. If it is the case, that one of the corners of the bounding box lies outside of the image, then the bounding box is moved either up or down, making the corner of the bounding box be inside the image and keeping the annotated person centered along the $x$-axis. 
 \\
 \\
-When all of the above is done, the image is finally croped to each bounding box, resulting in multiple squared images, each containing an unique person at the center. Each of these squared images are then resized to a $256 \times 256$ image. We then center the rgb-values of each image by subtracting the mean rgb of all of the images from the training set from each image. Then, each images is saved as an \texttt{.png}.
+When all of the above is done, the image is finally cropped to each bounding box, resulting in multiple squared images, each containing an unique person at the center. Each of these squared images are then resized to a $256 \times 256$ image. We then center the rgb-values of each image by subtracting the mean rgb of all of the images from the training set from each image. Then, each images is saved as an \texttt{.png}.
 \\
 \\
 By doing the data preprocessing as described above, we get the distribution of images displayed in Table \ref{tab:data_distribution}. In Figure \ref{fig:crop_img}, the results of processing the image from Figure \ref{fig:coco_example} are shown with the corresponding labels. Lastly, the data is shuffled to help the developed model generalize the data better.

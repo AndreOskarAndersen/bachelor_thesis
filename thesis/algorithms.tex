@@ -11,7 +11,7 @@ In this section the various algorithms and architectures used throughout this th
     \caption{Visualization of an undercomplete autoencoder \cite{AE}}
     \label{fig:AE}
 \end{figure}
-\noindent \textit{Autoencoders} (often shortened as \textit{AE}) is a class of neural networks that are trained to output the input of the model. An autoencoder consists of two parts: the \textit{encoder} and the \textit{decoder}, where each part usually consist of multiple hidden layers. When data is fed to the autoencoder, the data is passed through the encoder, which then passes the data to the decoder, where the data is again processed and finally returned \cite{DeepLearning}. 
+\noindent \textit{Autoencoders} (often shortened as \textit{AE}) is a class of neural networks that are trained unsupervised to output the input of the model. An autoencoder consists of two parts: the \textit{encoder} and the \textit{decoder}, where each part usually consist of multiple hidden layers. When data is fed to the autoencoder, the data is passed through the encoder, which then passes the data to the decoder, where the data is again processed and finally returned \cite{DeepLearning}. 
 \\
 \\
 If all of the layers of the autoencoder have the same dimensionality, the network can easily learn how to copy the input to its output. For this reason we often talk about \textit{undercomplete} autoencoders instead, where the dimension of the output of the encoder is smaller than the dimension of the input and output of the network, as visualized in Figure \ref{fig:AE}. By making use of an undercomplete autoencoder, the encoder learns how to encode the input to a lower dimensionality, forcing the network to learn the most important features of the training data \cite{DeepLearning}.
@@ -32,7 +32,7 @@ We have decided to make use of the Stacked hourglass described by Newell \textit
     \caption{Visualization of the residual module \cite{Newell}}
     \label{fig:residual}
 \end{figure}
-\noindent The Stacked hourglass makes heavily use of so-called \textit{residual modules}, one of which is visualized in Figure \ref{fig:residual}. The module works by taking an input, which is sent through a $1 \times 1$ and a $3 \times 3$ convolution, each with $128$ channels. Then, the $128$ output featuremaps are sent through a $1 \times 1$ convolution with $256$ channels. Lastly, element-wise addition is then used to add the $256$ output featuremaps to the input of the module, which the module then returns. All convolutions are followed by an acitvation function and are \textit{same convolutions}, meaning the output featuremaps are of the same dimensions as the input featuremeaps.
+\noindent The Stacked hourglass makes heavily use of so-called \textit{residual modules}, one of which is visualized in Figure \ref{fig:residual}. The module works by taking an input, which is sent through a $1 \times 1$ convolution and a $3 \times 3$ convolution, each with $128$ channels. Then, the $128$ output feature maps are sent through a $1 \times 1$ convolution with $256$ channels. Lastly, element-wise addition is then used to add the $256$ output feature maps to the input of the module, which the module then returns. All convolutions are followed by an acitvation function and are \textit{same convolutions}, meaning the output feature maps are of the same dimensions as the input featuremeaps.
 
 \subsubsection{The Hourglass}
 \begin{figure}[htbp]
@@ -41,13 +41,13 @@ We have decided to make use of the Stacked hourglass described by Newell \textit
     \caption{Visualization of a single hourglass \cite{Newell}}
     \label{fig:hourglass}
 \end{figure}
-\noindent The Stacked hourglass consists of hourglasses, where each hourglass is split into an encoder, where the featuremaps is downsampeld, and a decoder, where the featuremaps are upsampled. The hourglass is symmetric, in the sense, that it has an equal amount of downsampling layers in the encoder as there are upsampling layers in the decoder. In Figure \ref{fig:hourglass} a single hourglass han been visualized, where each box is a residual module.
+\noindent The Stacked hourglass consists of hourglasses, where each hourglass is split into an encoder, where the feature maps is downsampeld, and a decoder, where the feature maps are upsampled. The hourglass is symmetric, in the sense, that it has an equal amount of downsampling layers in the encoder as there are upsampling layers in the decoder. In Figure \ref{fig:hourglass} a single hourglass han been visualized, where each box is a residual module.
 \\
 \\
-The hourglass works by using residuals and max poolings to process features down to a low resolution. Then, nearest neighbor upsampling is used to upsample the featuremaps until the featuremaps have the same dimensions as the input of the hourglass. Before each max pool in the encoder, the network branches off and applies a residual. The output of this residual is then added back element-wise to the corresponding level in the decoder, which helps to ensure that lost information from the encoder is kept. This is then fed into a residual in the decoder.
+The hourglass works by using residuals and max poolings to process features down to a low resolution. Then, nearest neighbor upsampling is used to upsample the feature maps until the feature maps have the same dimensions as the input of the hourglass. Before each max pool in the encoder, the module branches off and applies a residual. The output of this residual is then added back element-wise to the corresponding level in the decoder, which helps to ensure that lost information from the encoder is kept. This is then fed into a residual in the decoder.
 \\
 \\
-Between the encoder and decoder the network has a bottleneck, where no downsampling or upsampling happens, instead only residuals are processing the featuremaps. After the decoder two $1 \times 1$ convolution layers er applied to produce the final predictions of the network.
+Between the encoder and decoder the module has a bottleneck, where no downsampling or upsampling happens, instead only residuals are processing the feature maps. After the decoder two $1 \times 1$ convolution layers er applied to produce the final predictions of the network.
 
 \subsubsection{The Stacked Hourglass}
 \begin{figure}[htbp]
@@ -80,10 +80,10 @@ By the end the whole network outputs $n$ heatmaps corresponding to the $n$ joint
     \end{algorithmic}
     \label{Algorithm:PCA}
 \end{algorithm}
-\noindent It is very common, that a given dataset has an enormous amount of dimensions. This is quickly become a problem, as it can be difficult to visualize or it can lead to other problems, such as models becoming too complex, thus being prone to overfitting. This is a common phenomen called the \textit{Curse of Dimensionality} \cite{ESL}. For this reason multiple techniques have been developed for reducing the dimensions of a given dataset. We have already seen in Section \ref{subsec:AE}, how autoencoders can be used as non-linear dimensionality reduction. Another very common technique for reducing the dimension of a dataset is \textit{Principal Components Analysis} (\textit{PCA}).
+\noindent It is very common, that a given dataset has an enormous amount of dimensions. This quickly becomes a problem, as it can be difficult to visualize or it can lead to other problems, such as models becoming too complex, thus being prone to overfitting. This is a common phenomen called the \textit{Curse of Dimensionality} \cite{ESL}. For this reason multiple techniques have been developed for reducing the dimensions of a given dataset. We have already seen in Section \ref{subsec:AE}, how autoencoders can be used as non-linear dimensionality reduction. Another very common technique for reducing the dimension of a dataset is \textit{Principal Components Analysis} (\textit{PCA}).
 \\
 \\
-PCA is an unsupervised linear projection method used for reducing the dimension of a dataset from $D$ down to $k$ dimensions. The algorithm works by finding the $k$ orthogonal vectors that maximizes the variance of the input data. \cite{MAD_book} 
+PCA is an unsupervised linear projection method used for reducing the dimension of a dataset from $D$ down to $k$ dimensions. The algorithm works by finding the $k$ orthogonal vectors that maximizes the variance of the input data, which the input data is projected onto \cite{MAD_book}.
 \\
 \\
 The pseudocode of the algorithm has been visualized in Algorithm \ref{Algorithm:PCA}. The algorithm starts off by finding the sample covariance matrix $\bm{C}$. It then finds the $k$ vectors, that maximizes the variance of the input data. The $k$ vectors that maximizes the variance are the $k$ eigenvectors with the corresponding highest eigenvalues. Thus, the projection with the first eigenvector captures the most variance, the projection with the second eigenvector captures the second most variance, and so on. The projection down to $k$ dimensions then happens by stacking the $k$ eigenvectors, forming a $D \times k$ matrix, where $D$ is the input dimensions, which is then multiplied with the input data, resulting in the projected data. \cite{MAD_book}

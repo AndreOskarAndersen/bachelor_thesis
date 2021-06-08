@@ -9,23 +9,22 @@ Throughout this section the theory of machine learning that will be used in this
 It can be difficult for humans to recognize certain patterns and trends in data. This becomes more difficult the greater the quantity of the data is, which is becomming more and more common with the rapidly growing topic of \textit{Big Data}. For this reason, computers are often used instead of humans to recognize patterns and trends in the data by analyzing the data, which is what is called \textit{Machine Learning}. In this thesis, we will use machine learning in section \ref{experiement} to develop a model to estimate the 2D pose of a single human in an image. Later, in section \ref{sec:XAI}, we will use machine learning to improve our understanding of the model.
 
 \subsection{Machine Learning Paradigms}\label{subsec:ml_paradigmes}
-Machine learning is usally split into the following three paradigms
+Machine learning is usally split into the at least two
 \begin{enumerate}
-    \item \textit{Supervised learning} where the data consists of features and labels. By analyizing the data the algorithm learns to predict the labels given the features \cite{ESL}. Supervised learning is further split into \textit{classification} and \textit{regression}. If the value of each label is limited, then the task is a classification task. If the value of each label is not limited, then the task is a regression task. 
+    \item \textit{Supervised learning} where the data consists of features and labels. By analyizing the data the algorithm learns to predict the labels given the features \cite{ESL}. Supervised learning is further split into \textit{classification} and \textit{regression}.
     \item \textit{Unsupervised learning} where the data only consists of features. The algorithm then learns properties of the data, without any provided labels \cite{ESL}.
-    \item \textit{Reinforcement learning} where the algorithm learns to perform the action in a given environment that yields the highest reward \cite{PRML}.
 \end{enumerate}
-In this thesis we will make use of supervised learning when developing our model for pose estimation. Later, unsupervised learning is used when we explore our developed model.
+In this thesis we will make use of supervised learning when developing our model for pose estimation, where we will make use of regression. Later, unsupervised learning is used when we explore our developed model.
 
 \subsection{Evaluation of Machine Learning Models}\label{subsec:evaluation}
-When developing a machine learning model it is important to know how trustworthy the developed model is. This is usually done by testing how good the model is at generalizing unseen data, which is done by making use of \textit{evaluation metrics}.
+When developing a machine learning model it is important to know how trustworthy the developed model is. This is usually done by testing how good the model is at generalizing to unseen data, which is done by making use of several dataset splits and \textit{evaluation metrics}.
 
 \subsubsection{Splitting the dataset}
 When developing a machine learning model, the data needs to both create the model, but also to evaluate the model. For the evaluation of the model, one of the two following techniques is usually used
 
 \begin{enumerate}
-    \item \textit{Cross validation} where the data is split into $K$ random non-overlapping chunks of equal size. The model is then trained for $K$ rounds on $K - 1$ of the chunks, where the last chunk is used for evaluating the model. After each round the parameters of the model is reset to ensure one round does not affect another round. After the $K$ rounds the average loss of the $K$ rounds is the loss of the model \cite{MAD_book}.
-    \item \textit{Train-validation-test} where the data is split into $3$ random non-overlapping chunks. The training dataset is then used for training the model and the validation dataset is used for evaluating the model as it is being developed - this often means, that the \textit{hyperparameters}, the paramters that are not possible to fit from the data, are being tweaked to yield the best validation loss. Lastly, the testing dataset is used as a final evaluation of the model to yield an unbiased evaluation of the model. Once the testing dataset has been used it can no longer be used for evaluating the data, as this ensure an unbiased evaluation \cite{MAD_L3}.
+    \item \textit{Cross validation} where the data is split into $K$ non-overlapping chunks. The model is then trained for $K$ rounds on $K - 1$ chunks, where the last chunk is used for evaluating the model \cite{MAD_book}.
+    \item \textit{Train-validation-test} where the data is split into $3$ random non-overlapping chunks. The training dataset is then used for training the model and the validation dataset is used for evaluating the model as it is being developed - this often means, that the \textit{hyperparameters}, the paramters that are not possible to fit from the data, are being tweaked to yield the best validation loss. Lastly, the testing dataset is used as a final evaluation of the model to yield an unbiased evaluation of the ability of the model to generalize to unseen data. Once the testing dataset has been used it can no longer be used for evaluating the data, as this potentially introduces bias in future evaluations \cite{MAD_L3}.
 \end{enumerate}
 Throughout this thesis the train-validation-test technique will be used over cross validation for evaluating the developed models. This is done, since cross validation is better suited for smaller datasets, as the runtime is much greater than the runtime of the train-validation-test technique.
 
@@ -56,11 +55,11 @@ The main goal of a machine learning model is to generalize well on unseen data. 
 \\
 \\
 \textbf{Gradient Descent} \\
-The goal of a machine learning model when training is to minimize its loss. There are different methods to do so, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$, a starting position $\bm{\theta}$ and a function $f$ as input, where $f$ is the (loss) function to minimize. It then computes the gradient of $f$ with respect to $\bm{\theta}$, and subtracts the gradient times $\eta$ from $\bm{\theta}$. This is done untill a stopping condition is met, such as when the magnitude of the gradient $\left| \nabla f(\bm{\theta}) \right|$ is small or untill a maximum amount of iterations has been reached \cite{d2l}.
+The goal of a machine learning model when training is to minimize its loss. There are different methods to do so, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$, a starting position $\bm{\theta}$ and a function $f$ as input, where $f$ is the (loss) function to be minimized. It then computes $\nabla_{\bm{\theta}} f$ and subtracts the gradient times $\eta$ from $\bm{\theta}$. This is done until a stopping condition is met, such as when the magnitude of the gradient $\left| \nabla f(\bm{\theta}) \right|$ is small or until a maximum amount of iterations has been reached \cite{d2l}.
 \\
 \\
 \noindent \textbf{Online, Mini-batch and Batch methods} \\
-\noindent When gradient descent is used in machine learning, computing $\nabla f(\bm{x})$ is usually done by averaging the gradient of each of the $n$ observations of the trainingset, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size \cite{d2l}. \\
+\noindent When gradient descent is used in machine learning, computing $\nabla f(\bm{x})$ can be done by averaging the gradient of each of the $n$ observations of the training set, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size \cite{d2l}. \\
 Choosing the right batch size can be difficult, however, there are a few guidelines which one can follow \cite{EML_optimization} \cite{d2l}
 \begin{enumerate}
     \item Batch gradient descent uses the fewest iterations, however, each iteration takes the longest to compute. On the other hand, in online gradient descent each iteration is the fastest to compute, however, it is also the method that uses the most iterations. Lastly, mini-batch gradient descent combines the two: it uses less iterations than online gradient descent, but more than batch gradient descent, and each iteration takes less time than in the case with batch gradient descent, but longer than in the case with online gradient descent.
@@ -137,7 +136,7 @@ One problem with SGD is how slow it often can be. For this reason \textit{moment
 \\
 \\
 \textbf{Batch Normalization} \\
-\textit{Batch normalization} is a reparametrization method, which is applied to individual layers. If $\bm{x} \in \mathcal{B}$ is an input to the batch normalization, $\text{BN}$, then batch normalization is done by the following
+\textit{Batch normalization} is a reparametrization method, which is applied to individual layers in a neural network. If $\bm{x} \in \mathcal{B}$ is an input to the batch normalization, $\text{BN}$, then batch normalization is done by the following
 $$\text{BN}(\bm{x}) = \bm{\gamma} \odot \frac{\bm{x} - \hat{\bm{\mu}}_{\mathcal{B}}}{\hat{\bm{\sigma}}_{\mathcal{B}}} + \bm{\beta}$$
 where
 $$\hat{\bm{\mu}} = \frac{1}{|\mathcal{B}|} \sum_{i} \mathcal{B}_i$$
@@ -147,7 +146,7 @@ which makes the minibatch have $0$ mean and unit variance. $\bm{\gamma}$ and $\b
 \\
 \\
 \textbf{Epoch} \\
-An \textit{epoch} is an iteration through the whole dataset during fitting of the network. Multiple epochs are often needed to reach the minimum of the loss function \cite{d2l}.
+An \textit{epoch} is an iteration through the complete dataset during fitting of the network. Multiple epochs are often needed to reach the minimum of the loss function \cite{d2l}.
 \\
 \begin{figure}[htbp]
     \centering
@@ -157,7 +156,7 @@ An \textit{epoch} is an iteration through the whole dataset during fitting of th
 \end{figure}
 \\
 \noindent \textbf{The Architecture and Forwardpropagation} \\
-One of the most common types of neural networks are \textit{feedforward neural networks}, where the data flows unidirectionally through the network. Such a network is visualized in Figure \ref{feedforward_nn}. The network is built up of three types of components: the \textit{input layer}, the \textit{hidden layers} and the \textit{output layer}. Each layer is built up of \textit{units}, also called \textit{neurons} (which are visualized as circles in Figure \ref{feedforward_nn}), where each neuron has a \textit{bias} assigned to it, and is connected to one or two other layers through \textit{edges} (which are visualized as arrows in Figure \ref{feedforward_nn}), where each edge has a \textit{weight} assigned to it. Hidden layers are connected to two other layers - one before the hidden layer and one after the hidden layer - where the input layer is only connected to the next layer in the network and the output layer is only connected to the previous layer in the network. \\
+One of the most common types of neural networks are \textit{feedforward neural networks}, where the data flows unidirectionally through the network. Such a network is visualized in Figure \ref{feedforward_nn}. The network is a directed acyclic graph and is built up of three types of components: the \textit{input layer}, the \textit{hidden layers} and the \textit{output layer}. Each layer is built up of \textit{units}, also called \textit{neurons} (which are visualized as circles in Figure \ref{feedforward_nn}), where each neuron has a \textit{bias} assigned to it, and is connected to one or two other layers through \textit{edges} (which are visualized as arrows in Figure \ref{feedforward_nn}), where each edge has a \textit{weight} assigned to it. Hidden layers are connected to two other layers - one before the hidden layer and one after the hidden layer - where the input layer is only connected to the next layer in the network and the output layer is only connected to the previous layer in the network. \\
 We can define the network mathemaically by letting $a_n ^{(i)}$ denote the value of the $n$th node in the $i$th layer, $w_{m, n}$ denote the value of the weight of the edge connecting the $n$th node in the $i$th layer to the $m$th node in layer $i + 1$ and $b_n ^{(i)}$ denote the bias corresponding to the $n$th node in the $i$th layer. \\
 When data flows through the model it follows the following formula
 $$\bm{a}^{(i + 1)} = g^{(i + 1)} \left( \bm{z}^{(i + 1)} \right)$$
@@ -201,9 +200,9 @@ $\bm{b}^{(i + 1)}$ is the values of the biases of layer $i + 1$ defined by
         \end{pmatrix}
     \end{math}
 \end{center}
-and $g$ is an \textit{activation function}, that is typically applied element-wise \cite{DeepLearning} \cite{3b1b_1}. One often used activation function is the \textit{rectified linear activation function} (or \textit{ReLU} for short) defined by
+and $g$ is a non-linear \textit{activation function}, that is typically applied element-wise \cite{DeepLearning} \cite{3b1b_1}. The purpose behind using non-linear activation functions is to make it possible for the output of the network to be non-linear. One often used activation function is the \textit{rectified linear activation function} (or \textit{ReLU} for short) defined by
 $$g(x) = \max\{0, x\}.$$
-The ReLU-function is very close to being linear, making the function keep many of the properties of linear functions that make them easy to optimize and generalizing, which are two great advantages of using the ReLU-function. Another great advantage of using the ReLU-function is stated by the \textit{universal approximation theorem} which states, that a feedforward network with a linear output layer and at least one hidden layer with the ReLU-function (or another activation function from a wide class of activation functions) can approximate any continuous function on a closed and bounded subset of $\mathbb{R}^n$ (and actually some functions outside of this class), as long as the network has enough hidden neurons \cite{DeepLearning}. 
+The ReLU-function is very close to being linear, making the function keep many of the properties of linear functions that make them easy to optimize and generalizing, which are two great advantages of using the ReLU-function. Another great advantage of using the ReLU-function is stated by the \textit{universal approximation theorem} which states, that a feedforward network with a linear output layer and at least one hidden layer with the ReLU-function (or another non-linear activation function from a wide class of activation functions) can approximate any continuous function on a closed and bounded subset of $\mathbb{R}^n$ (and actually some functions outside of this class), as long as the network has enough hidden neurons \cite{DeepLearning}. 
 \\
 \\
 \noindent \textbf{Backpropagation} \\
@@ -234,7 +233,7 @@ if $\bm{a}^{(i)}$ is not the output-layer. Once the partial derivative of all we
     \caption{Convolutions visualized}
     \label{fig:convolutionexample}
 \end{figure}
-Feedforward neural networks introduced in \ref{subsubsec:FeedforwardNN} can be used for pattern recognition within images, however, they are usually not used for this task. Consider a colored input image of dimension $64 \times 64$. If we were to use a feedforward neural network on this image, each neuron in the first hidden layer would be connected to the input layer through $12.288$ weights. Not only would this use a lot of computational power and time to train, however, a network of this size would also be prone to overfitting. Instead, \textit{convolutional neural networks} (also known as \text{CNN}'s) are usually used. A CNN usually consists of \textit{convolutional layers}, \textit{pooling layers} and \textit{fully-connected layers}, where the fully-connected layers are analogous to the layers in a feedforward neural network \cite{CNN}.
+\noindent Feedforward neural networks introduced in \ref{subsubsec:FeedforwardNN} can be used for pattern recognition within images, however, they are usually not used for this task. Consider a colored input image with $3$ channels of dimension $64 \times 64$. If we were to use a feedforward neural network on this image, each neuron in the first hidden layer would be connected to the input layer through $12.288$ weights. Not only would this use a lot of computational power and time to train, however, a network of this size would also be prone to overfitting. Instead, \textit{convolutional neural networks} (also known as \text{CNN}'s) are usually used. A CNN usually consists of \textit{convolutional layers}, \textit{pooling layers} and \textit{fully-connected layers}, where the fully-connected layers are analogous to the layers in a feedforward neural network \cite{CNN}.
 \\
 \\
 \textbf{Convolutional layers} \\
@@ -245,14 +244,12 @@ As described previously, by using a convolutional layer we can dramatically decr
 \textbf{Pooling layers} \\
 Pooling layers are layers used to reduce the dimension of the input. The most common pooling layer is the \textit{maxpooling}-operation. The operation works by considering each $k \times k$ grid, like in the case with the convolutional layer, in which the maximum entry in that grid is being inserted into the output \cite{CNN}.
 \\
-\\
-\textbf{Nearest Neighbour Upsampling} \\
 \begin{algorithm}[htbp]
     \caption{Nearest Neighbour Upsampling \cite{NNUpsampling}}
     \label{Algorithm:NNUpsampling}
     \begin{algorithmic}[1]
         \Require Input image $X$ of size $m \times n$
-        \Require Wanted output size $xm \times yn$
+        \Require Wanted output size $xm \times yn$, where $x, y \in \mathbb{Z}^{+}$
         \State Create empty image $O$ of size $xm \times yn$
         \ForAll{pixel, $p$, in $X$}
             \State $i,j = \text{index of } p \text{ in } X$
@@ -264,6 +261,8 @@ Pooling layers are layers used to reduce the dimension of the input. The most co
         \State \textbf{return} $O$
     \end{algorithmic}
 \end{algorithm}
-Sometimes we want to increase the size of an image. This is done by making use of \textit{upsampling} (also known as \textit{interpolation}) techniques. One of the most common upsampling techniques is \textit{nearest neighbour upsampling}, whose pseudocode has been written in \ref{Algorithm:NNUpsampling}. The algorithm starts off by taking an image, $X$, of size $m \times n$, as input, which we wish to upsample to size $xm \times yn$. The algorithm then loops over each pixel, $p$, in $X$, finds the corresponding index, $i, j$, of $p$ in $X$, and places $p$ at index $(xi, yj)$ in the output image $O$ of size $xm \times yn$. When this is done, it assigns each of the empty pixel in $O$ the value of their nearest neighbour, making each pixel in $O$ have a value, and then returns $O$ \cite{NNUpsampling}.
+\\
+\noindent \textbf{Nearest Neighbour Upsampling} \\
+Sometimes we want to increase the size of an image. This can be done by making use of \textit{upsampling} (also known as \textit{interpolation}) techniques. One of the most common upsampling techniques is \textit{nearest neighbour upsampling}, whose pseudocode has been written in Algorithm \ref{Algorithm:NNUpsampling}. The algorithm starts off by taking an image, $X$, of size $m \times n$, as input, which we wish to upsample to size $xm \times yn$, where $x$ and $y$ are positive whole numbers. The algorithm then loops over each pixel, $p$, in $X$, finds the corresponding index, $i, j$, of $p$ in $X$, and places $p$ at index $(xi, yj)$ in the output image $O$ of size $xm \times yn$. When this is done, it assigns each of the empty pixel in $O$ the value of their nearest neighbour, making each pixel in $O$ have a value, and then returns $O$ \cite{NNUpsampling}.
 
 \end{document}
