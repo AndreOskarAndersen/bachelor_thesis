@@ -57,7 +57,7 @@ Throughout this thesis the train-validation-test technique will be used over cro
 \noindent When we have trained a model, we need to somehow evaluate how well the model per forms on unseen data. This is usually done by making use of evaluation metrics. In articulated human pose estimation, one commonly used evaluation metric is the \textit{Percentage of Correct Keypoints} (\textit{PCK}), which states the percentage of predictions that are within a normalized distance of the ground truth.
 \\
 \\
-The pseudocode of PCK has been visualized in Algorithm \ref{Algorithm:PCK}. The algorithm works by iterating over each annotated ground truth heatmap and the corresponding predicted heatmap. It then finds the Euclidean distance between the maximum activation of a ground truth heatmap and the corresponding predicted heatmap. The distance is then normalized by a constant $c$ and compared to a threshold radius $r$. The ratio of normalized distances that are less than the threshold $r$ are then computed and returned, yielding the PCK accuracy between the ground truth heatmaps and the corresponding predicted heatmaps \cite{Camilla} \cite{SHG}. The aim is thus to maximize the PCK accuracy.
+The pseudocode of PCK is visualized in Algorithm \ref{Algorithm:PCK}. The algorithm works by iterating over each annotated ground truth heatmap and the corresponding predicted heatmap. It then finds the Euclidean distance between the maximum activation of a ground truth heatmap and the corresponding predicted heatmap. The distance is then normalized by a constant $c$ and compared to a threshold radius $r$. The ratio of normalized distances that are less than the threshold $r$ are then computed and returned, yielding the PCK accuracy between the ground truth heatmaps and the corresponding predicted heatmaps \cite{Camilla} \cite{SHG}. The aim is thus to maximize the PCK accuracy.
 
 \subsection{General Machine Learning Terminology}
 \noindent \textbf{Loss Functions} \\
@@ -132,10 +132,10 @@ Choosing the right batch size can be difficult, however, there are a few guideli
     \end{algorithmic}
 \end{algorithm}
 \noindent \textbf{Optimization Algorithms} \\
-\noindent One problem of the gradient descent algorithm is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \textit{Stochastic Gradient Descent} (\textit{SGD}). SGD is very closely related to the algorithm behind gradient descent, however, instead of updating the parameters for each sample, SGD instead uses the mean of $n$ samples. The pseudocode behind SGD with \textit{momentum} has been visualized in \ref{Algorithm:SGD_momentum}.
+\noindent One problem of the gradient descent algorithm is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \textit{Stochastic Gradient Descent} (\textit{SGD}). SGD is very closely related to the algorithm behind gradient descent, however, instead of updating the parameters for each sample, SGD instead uses the mean of $n$ samples. The pseudocode behind SGD with \textit{momentum} is visualized in \ref{Algorithm:SGD_momentum}.
 \\
 \\
-Another common optimization algorithm is \textit{RMSProp}, which has been visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discards knowledge from the past, so that it can converge after finding a convex bowl of the loss function. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
+Another common optimization algorithm is \textit{RMSProp}, which is visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discards knowledge from the past, so that it can converge after finding a convex bowl of the loss function. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
 \\
 \\
 \textbf{Momentum} \\

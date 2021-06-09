@@ -27,7 +27,7 @@ The training and validation sets contains a total of about $123.000$ various ima
 \subsubsection{Creating the test dataset}
 To create the testing dataset we take the training set, since it is the larger of the training and validation set, and sample $5.064$ images randomly without replacement, to create a test set. This ensures that the test-set and validation-set are of the same size. This new test set will not be used when training the model nor used when tuning the parameters. Instead, it will only be used to evaluate the very final model. 
 
-\subsubsection{Preprocessing the images}
+\subsubsection{Preprocessing the Images}
 \begin{table}[htbp]
     \centering
     \begin{tabular}{l|c|c}
@@ -65,9 +65,9 @@ Since each keypoint does not necessarily lie on the edge of the person, the boun
 When all of the above is done, the image is finally cropped to each bounding box, resulting in multiple squared images, each containing an unique person at the center. Each of these squared images are then resized to a $256 \times 256$ image. We then center the rgb-values of each image by subtracting the mean rgb of all of the images from the training set from each image. Then, each images is saved as an \texttt{.png}.
 \\
 \\
-By doing the data preprocessing as described above, we get the distribution of images displayed in Table \ref{tab:data_distribution}. In Figure \ref{fig:crop_img}, the results of processing the image from Figure \ref{fig:coco_example} are shown with the corresponding labels. Lastly, the data is shuffled to help the developed model generalize the data better.
+By doing the data preprocessing as described above, we get the distribution of images displayed in Table \ref{tab:data_distribution}. In Figure \ref{fig:crop_img}, the results of processing the image from Figure \ref{fig:coco_example} are shown with the corresponding labels. Lastly, the data is shuffled to help the developed model generalize to unseen data better.
 
-\subsubsection{Handling the labels}
+\subsubsection{Handling the Keypoints}
 % NOTE: MÅSKE BRUG EGEN HEATMAPS I FIGUR?
 \begin{figure}[htbp]
     \centering
@@ -76,7 +76,7 @@ By doing the data preprocessing as described above, we get the distribution of i
     \caption{An example of the heatmaps of a single image fused together and put over the original image \cite{survey_1}}
     \label{fig:heatmaps_ex}
 \end{figure}
-\noindent For each image our model outputs $17$ heatmaps, one for each possible joint in the image. An example of such heatmaps fused together can be seen in Figure \ref{fig:heatmaps_ex}. The ground truth heatmap of a single joint is created firstly by initializing an all-zero 2D array with size $64 \times 64$. Next, at coordinate $\left( x \cdot \frac{64}{256}, y \cdot \frac{64}{256} \right)$, where $(x, y)$ is the annotated position of the joint in the original image, a $1$ is places, representing the position of the corresponding joint in the output image - by placing the $1$ in a heatmap of size $64 \times 64$ instead of in a heatmap of size $256 \times 256$, which is later resize to $64 \times 64$, we ensure, that the $1$ is not lost once resized. Next, a Gaussian filter is used to smear out the heatmap, where the standard deviation of the Gaussian filter depends on the visibility, $v$, of the joint: if the joint is visible, that is if $v = 2$, then the standard deviation is set to be $0.5$, whereas the standard deviation of the Gaussian filter is set to be $1$ if the joint is not visible, as there there are more uncertainty with the labeling of such keypoints. We do all of this for all of the $17$ joints for each image, resulting in the keypoints which will be used for developing our model.
+\noindent For each image our model outputs $17$ heatmaps, one for each possible joint in the image. An example of such heatmaps fused together can be seen in Figure \ref{fig:heatmaps_ex}. The ground truth heatmap of a single joint is created firstly by initializing an all-zero 2D array with size $64 \times 64$. Next, at coordinate $\left( x \cdot \frac{64}{256}, y \cdot \frac{64}{256} \right)$, where $(x, y)$ is the annotated position of the joint in the original image, a $1$ is places, representing the position of the corresponding joint in the output image - by placing the $1$ in a heatmap of size $64 \times 64$ instead of in a heatmap of size $256 \times 256$, which is later resize to $64 \times 64$, we ensure, that the $1$ is not lost once the heatmap is resized. Next, a Gaussian filter is used to smear out the heatmap, where the standard deviation depends on the visibility, $v$, of the joint: if the joint is visible, that is if $v = 2$, then the standard deviation is set to be $0.5$, whereas the standard deviation of the Gaussian filter is set to be $1$ if the joint is not visible, as there there are more uncertainty with the labeling of such keypoints. In the case of a not-annotated keypoint, that is, when $v = 0$, we do not place a $1$ in the heatmap, leaving the heatmap empty. We do all of this for all of the $17$ joints for each image, resulting in the keypoints which will be used for developing our model \cite{Newell}.
 
 
 \end{document}

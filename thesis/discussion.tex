@@ -2,16 +2,16 @@
 
 \begin{document}
 \section{Discussion}\label{sec:discussion}
-In the following we will be discussing our procedure as well as our results. We will start off in Section \ref{subsec:summary}, where we will be giving a brief summary of our obtained results from Section \ref{experiement}, \ref{sec:XAI} and \ref{sec:improving}. We will then in Section \ref{subsec:comparisons} compare our results with the results of Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla}, as well as discuss the differences in the results. In Section \ref{subsec:why_improvement} we will argue and discuss the why the autoencoder improved our initial model. Lasty, we will in Section \ref{subsec:Future_work} comment on potential future work in relation to this project.
+In the following we will be discussing our procedure as well as our results. We will start off in Section \ref{subsec:summary}, where we will be giving a brief summary of our obtained results from Section \ref{experiement}, \ref{sec:XAI} and \ref{sec:improving}. We will then in Section \ref{subsec:comparisons} compare our results with the results of Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla}, as well as discuss the differences in the results. In Section \ref{subsec:why_improvement} we will argue and discuss why the autoencoder improved our initial model. Lasty, we will in Section \ref{subsec:Future_work} comment on potential future work in relation to this project.
 
 \subsection{Summary of the Obtained Results}\label{subsec:summary}
-In Section \ref{experiement} we succefully implemented and trained a Stacked hourglass, consisting of a single hourglass. We did this by following the configuration details described by Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla}. The developed model has a validation PCK accuracy of $0.433$ and a test PCK accuracy of $0.441$. 
+In Section \ref{experiement}, we succefully implemented and trained a Stacked hourglass, consisting of a single hourglass. We did this by following the configuration details described by Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla}. The developed model has a validation PCK accuracy of $0.433$ and a test PCK accuracy of $0.441$. 
 \\
 \\
-In Section \ref{sec:XAI} we gained an understanding of how the devleoped model works by exploring the different components of the model. We could verify, that the skip-connections of the model were used for recreating details that are lost during the encoder-phase of the model, as claimed by Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla}. We then used PCA to gain an understanding of the structure of the latent space of the model. By doing so we came to the conclusion, that the first principal component of the latent space is used for deciding if a given person is sitting down or standing up,, as well as possibly discovering some redundancy in the model, as principal componet $50$ and above seemed to act as noise. Lastly, we clustered the latent space to gain an understanding of how the model works. By doing so we learned, that the model knows the difference between fully-annotated people and not-fully annotated people, as well as knows the difference between stationary people and moving people. Here we also identified some possible reasons for inaccuracies of the model, as these classifications are not always correct.
+In Section \ref{sec:XAI} we gained an understanding of how the devleoped model works by exploring the different components of the model. We could verify, that the skip-connections of the model were used for recreating details that are lost during the encoder-phase of the model, as claimed by Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla}. We then used PCA to gain an understanding of the structure of the latent space of the model. By doing so we came to the conclusion, that the first principal component of the latent space is used for deciding if a given person is sitting down or standing up,, as well as possibly discovering some redundancy in the model, as principal componet $50$ and above seemed to act as noise. Lastly, we clustered the latent space to gain an understanding of how the model works. By doing so we learned, that the model knows the difference between fully-annotated people and not-fully annotated people, as well as knows the difference between stationary people and moving people. Here we also identified some possible reasons for inaccuracies of the model, as these groupings are not always correct.
 \\
 \\
-In Section \ref{sec:improving} we used our knowledge of the model to improve the performance of the model. This was done by developing and training an autoencoder, which was placed in the model. We decided to make use of an autoencoder, as we knew from the previous section, that the latent space of the Stacked hourglass contained a lot of noise, as well as some missclassifications, which the autoencoder possibly could help on. By doing so, both the validation and test PCK accuracy increased to $0.467$ and $0.473$, respectively.
+In Section \ref{sec:improving}, we used our knowledge of the model to improve the performance of the model. This was done by developing and training an autoencoder, which was placed in the model. We decided to make use of an autoencoder, as we knew from the previous section, that the latent space of the Stacked hourglass contained a lot of noise, as well as some missclassifications, which the autoencoder possibly could help on. By doing so, both the validation and test PCK accuracy increased to $0.467$ and $0.473$, respectively.
 
 \subsection{Comparison of Models}\label{subsec:comparisons}
 \begin{table}[htbp]
@@ -30,7 +30,7 @@ In Section \ref{sec:improving} we used our knowledge of the model to improve the
         \textbf{Our modified SHG} & $\bm{1}$ & $\bm{0.576}$ \\
         \hline
     \end{tabular}
-    \caption{Comparison of our developled models with Olsens developed model \cite{Camilla}. The models have only been tested on fully-visible joints (that is, where $v = 2$)}
+    \caption{Comparison of our developled models with Olsens developed model \cite{Camilla}. The testing accuracy is only based on fully-visible joints (that is, where $v = 2$)}.
     \label{fig:Olsen_comparison}
 \end{table}
 \noindent To further understand the performance of our developed models, we have in Table \ref{fig:Olsen_comparison} compared our models with the models developed by Olsen \cite{Camilla}, which consisted of $2$ stacks.
@@ -66,7 +66,7 @@ In Section \ref{subsec:improv_motivation} we argued the following two reasons fo
     \caption{Results of performing $K$-Means clustering on $10.000$ random samples of the latent space of the autoencoder}
     \label{fig:SHG_AE_clusters}
 \end{figure}
-\noindent In Figure \ref{fig:SHG_AE_clusters} we have visualized the results of performing $K$-Means on the latent space of the autoencoder with $K = 2$. Due to memory limitations only $10.000$ training samples were used. 
+\noindent In Figure \ref{fig:SHG_AE_clusters}, we have visualized the results of performing $K$-Means on the latent space of the autoencoder with $K = 2$. Due to memory limitations only $10.000$ training samples were used. 
 \\
 \\
 In Figure \ref{fig:clusters_all_skeletons} we visualized equivalent results of performing the same procedure on the latent space of the Stacked hourglass. In correlation to Figure \ref{fig:clusters_all_skeletons} we argued, that the two clusters contained some missclassifications, which could explain the poor performance of the model. More specifically, \textit{Cluster 1}, the cluster containing samples with a lot of keypoints missing, contained a lot of samples that should ideally have been in \textit{Cluster 0}.
