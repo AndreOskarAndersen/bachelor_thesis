@@ -54,7 +54,7 @@ Throughout this thesis the train-validation-test technique will be used over cro
         \State \textbf{return} $ratio$
     \end{algorithmic}
 \end{algorithm}
-\noindent When we have trained a model, we need to somehow evaluate how well the model per forms on unseen data. This is usually done by making use of evaluation metrics. In articulated human pose estimation, one commonly used evaluation metric is the \textit{Percentage of Correct Keypoints} (\textit{PCK}), which states the percentage of predictions that are within a normalized distance of the ground truth.
+\noindent When we have trained a model, we need to somehow evaluate how well the model performs on unseen data. This is usually done by making use of evaluation metrics. In articulated human pose estimation, one commonly used evaluation metric is the \textit{Percentage of Correct Keypoints} (\textit{PCK}), which states the percentage of predictions that are within a normalized distance of the ground truth.
 \\
 \\
 The pseudocode of PCK is visualized in Algorithm \ref{Algorithm:PCK}. The algorithm works by iterating over each annotated ground truth heatmap and the corresponding predicted heatmap. It then finds the Euclidean distance between the maximum activation of a ground truth heatmap and the corresponding predicted heatmap. The distance is then normalized by a constant $c$ and compared to a threshold radius $r$. The ratio of normalized distances that are less than the threshold $r$ are then computed and returned, yielding the PCK accuracy between the ground truth heatmaps and the corresponding predicted heatmaps \cite{Camilla} \cite{SHG}. The aim is thus to maximize the PCK accuracy.
@@ -67,7 +67,7 @@ where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the es
 
 \noindent \textbf{Overfitting and Regularization} \\
 % Lidt uenig med definitionen af overfitting - taget fra DeepLearning. Tænk på underfitting.
-The main goal of a machine learning model is to generalize well on unseen data. This can often be difficult, as the model simply "remembers" the training data instead of learning the patterns in the training data. In other words, the gap between the training error and the test error is too large, which is a concept called \textit{overfitting}. Certain techniques are designed to reduce the test error - these techniques are collectively called \textit{regurlization} \cite{DeepLearning}. 
+The main goal of a machine learning model is to generalize well on unseen data. This can often be difficult, as the model simply "remembers" the training data instead of learning the patterns in the training data. In other words, the gap between the training error and the test error is too large, which is a concept called \textit{overfitting}. Certain techniques are designed to reduce the test error - these techniques are collectively called \textit{regurlization} \cite{DeepLearning}. One commonly used Regularization technique is \textit{batch normalization}, which we will be using when we in Section \ref{experiment} wil be developing our model. Batch normalization will be described further in Section \ref{subsec:NeuralNetworks}.
 \\
 \begin{algorithm}[htbp]
     \caption{Gradient Descent \cite{d2l}}
@@ -132,14 +132,14 @@ Choosing the right batch size can be difficult, however, there are a few guideli
     \end{algorithmic}
 \end{algorithm}
 \noindent \textbf{Optimization Algorithms} \\
-\noindent One problem of the gradient descent algorithm is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \textit{Stochastic Gradient Descent} (\textit{SGD}). SGD is very closely related to the algorithm behind gradient descent, however, instead of updating the parameters for each sample, SGD instead uses the mean of $n$ samples. The pseudocode behind SGD with \textit{momentum} is visualized in \ref{Algorithm:SGD_momentum}.
+\noindent An example of a mini-batch based optimization algorithm is \textit{Stochastic Gradient Descent} (\textit{SGD}). SGD is very closely related to the algorithm behind gradient descent, however, instead of updating the parameters for each sample, SGD instead uses the mean gradient of $n$ samples to update its parameters.
 \\
 \\
-Another common optimization algorithm is \textit{RMSProp}, which is visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discards knowledge from the past, so that it can converge after finding a convex bowl of the loss function. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
+\noindent One problem of the gradient descent algorithm is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \textit{RMSProp}, which is visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discards knowledge from the past, so that it can converge after finding a convex bowl of the loss function. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
 \\
 \\
 \textbf{Momentum} \\
-One problem with SGD without momentum is how slow it often can be. For this reason \textit{momentum} is often used to accelerate learning. Momentum works by accumulating a decaying moving average of the past gradients and continuing to move in their direction. This is done by introducing two new variable; $\bm{v}$, which is the direction and speed of which the parameters move through the parameter space, and $\alpha \in [0, 1)$, which describes how quickly the contribution of previous gradients decay. Common values of $\alpha$ are $0.5, 0.9$ and $0.99$ \cite{DeepLearning}. 
+One problem with SGDis how slow it often can be. For this reason \textit{momentum} is often used to accelerate learning. Momentum works by accumulating a decaying moving average of the past gradients and continuing to move in their direction. This is done by introducing two new variable; $\bm{v}$, which is the direction and speed of which the parameters move through the parameter space, and $\alpha \in [0, 1)$, which describes how quickly the contribution of previous gradients decay. Common values of $\alpha$ are $0.5, 0.9$ and $0.99$ \cite{DeepLearning}. 
 \\
 \\
 \textbf{Epoch} \\
@@ -248,7 +248,7 @@ which makes the minibatch have $0$ mean and unit variance. $\bm{\gamma}$ and $\b
 A convolutional layer is composed of a set of \textit{kernels} (also known as \textit{filters}), which are matrices of weights of dimension $c \times k \times k$, where $c$ is the amount of channels (or amount of filters to be applied) and $k$ kernel-size, usually $5$, $3$ or $1$. The convolutional layer thus consists of $c$ filters, each of $k \times k$ parameters, where each weight is a parameter for the model to be learned \cite{Everything}. Each kernel is used on the input to produce a \textit{feature map}. The kernels are applied to the input by "sliding" over the input (where the step size is called \textit{stride}). Each $k \times k$ grid of the input (called the \textit{local receptive field}) is then used to compute the dot-product between the grid and each kernel, which is then placed in the corresponding feature map of each kernel, as visualized in Figure \ref{fig:convolutionexample}. When all of the feature maps have been computed of a convolutional layer an activation function can be applied.
 \\
 \\
-As described previously, by using a convolutional layer we can dramatically decrease the amount of weights used by the layer. If we were to use a $3 \times 3 \times 3$ kernel on a colored image with $3$ channels, we would reduce the amount of weights on each neuron in the following layer from $12.288$ down to just $27$, reducing both the training time and making the network less prone to overfit \cite{CNN}.
+As described previously, by using a convolutional layer we can dramatically decrease the amount of weights used by the layer. If we were to use a $3 \times 3 \times 3$ convolution on a colored image with $3$ channels, we would reduce the amount of weights on each neuron in the following layer from $12.288$ down to just $27$, reducing both the training time and making the network less prone to overfit \cite{CNN}.
 \\
 \\
 \textbf{Pooling layers} \\
