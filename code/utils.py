@@ -692,17 +692,22 @@ def find_correct_incorrect(gt_heatmaps, pred_heatmaps, normalizing_const = 6.4, 
  
 	return correct, incorrect, unanotated_indexes
 
-def load_data(IMGS_PATH, HEATMAPS_PATH):
+def load_data(IMGS_PATH, HEATMAPS_PATH, max_samples = None):
 	""" 
-		Load all the images and the corresponding heatmaps, located at IMGS_PATH and HEATMAPS_PATH
+		Load all the images and the corresponding heatmaps, located at IMGS_PATH and HEATMAPS_PATH.
+		If max_samples is set, only max_samples random samples are loaded.
 		NOTE: IT IS ASSUMED, THAT THE IMAGES ARE .npy!
 	"""
 
 	img_res = []
 	heatmap_res = []
-	imgs = os.listdir(IMGS_PATH)
 
-	for img in tqdm(imgs, leave = False):
+	if (max_samples is None):
+		imgs = os.listdir(IMGS_PATH)
+	else:
+		imgs = np.random.choice(os.listdir(IMGS_PATH), size = max_samples, replace = False)
+
+	for img in tqdm(imgs, leave = False, total = len(imgs)):
 		img_path = IMGS_PATH + img
 		heatmap_dir = HEATMAPS_PATH + img[:-4] + "/"
 		heatmaps = []
@@ -815,6 +820,7 @@ def get_kmeans_alternative(X, min_k = 2, max_k = 10, max_iter = 1000, fig_saving
 		
 		# Computes silhouette score
 		cur_sil = silhouette_score(X, labels, metric = 'euclidean')
+		print("Silhouette score for k = {}: {}".format(k, cur_sil))
 
 		# Compares current silhouette score with the best silhouette score of the current k
 		if (cur_sil > overall_best_sil):
@@ -890,7 +896,7 @@ def get_kmedoids(X, max_k = 10, max_iter = 1000):
 
 	return best_model, sil, best_centroids
 
-def visualize_clusters_pca(X, heatmaps, labels, fig_saving_path = None):
+def visualize_clusters_pca(X, heatmaps, labels, fig_saving_path = None, fig_size = (20, 10)):
 	NUM_CLUSTERS = len(np.unique(labels))
 	clusters = [[] for _ in range(NUM_CLUSTERS)]
 	points_in_each_cluster = np.zeros(NUM_CLUSTERS)
@@ -904,7 +910,7 @@ def visualize_clusters_pca(X, heatmaps, labels, fig_saving_path = None):
 	for i in range(NUM_CLUSTERS):
 		clusters[i] = np.array(clusters[i]).reshape((int(points_in_each_cluster[i]), -1))
 
-	figs, axs = plt.subplots(1, 2, figsize = (20, 10))
+	figs, axs = plt.subplots(1, len(np.unique(labels)), figsize = fig_size)
 
 	# Draws the clusters in 2D space
 	for i in tqdm(range(NUM_CLUSTERS), leave = False):

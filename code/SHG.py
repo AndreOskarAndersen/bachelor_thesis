@@ -1,8 +1,5 @@
 import torch.nn as nn
 from torch.nn.functional import relu
-import torch.cuda
-from tqdm.notebook import tqdm
-from AE import CONV_AE
 
 class Residual(nn.Module):
     def __init__(self, in_channels = 256):
@@ -181,7 +178,6 @@ class SHG(nn.Module):
         x = self.pre_residual2(x)
         x = self.pre_residual3(x)
             
-        # NOTE: The following for-loop is probably wrong, however, as I am only using 1 hourglass it has not effect
         for i in range(self.num_hourglasses - 1):
             self.input_branch = x
             x = self.hourglasses[i](x)
@@ -206,34 +202,3 @@ class SHG(nn.Module):
         x = self.last_conv_2(x)
         
         return x, bottleneck_res
-
-class SHG_AE(nn.Module):
-    def __init__(self, SHG_model, AE_model):
-        super(SHG_AE, self).__init__()
-        self.SHG_model = SHG_model
-        self.AE_model = AE_model
-        
-    def forward(self, x):
-        # SHG prework
-        x = self.SHG_model.pre_conv1(x)
-        x = self.SHG_model.bn_pre(x)
-        x = relu(x)
-        x = self.SHG_model.pre_residual1(x)
-        x = self.SHG_model.pre_max_pool(x)
-        x = self.SHG_model.pre_residual2(x)
-        x = self.SHG_model.pre_residual3(x)
-        
-        # SHG + AE bottleneck
-        x = self.SHG_model.hourglasses[-1].encode(x)
-        x, _ = self.SHG_model.hourglasses[-1].bottleneck(x)
-        _, x = self.AE_model.forward(x, add_noise = False)
-        x = self.SHG_model.hourglasses[-1].decode(x)
-        
-        # SHG postwork
-        x = self.SHG_model.last_res(x)
-        x = self.SHG_model.last_conv_1(x)
-        x = self.SHG_model.bn_last(x)
-        x = relu(x)
-        x = self.SHG_model.last_conv_2(x)
-        
-        return x
