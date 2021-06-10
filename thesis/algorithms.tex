@@ -35,7 +35,7 @@ We have decided to make use of the Stacked hourglass described by Newell \textit
 \noindent The Stacked hourglass makes heavily use of so-called \textit{residual modules}, one of which is visualized in Figure \ref{fig:residual}. The module works by taking an input, which is sent through a $1 \times 1$ convolution and a $3 \times 3$ convolution, each with $128$ channels. Then, the $128$ output feature maps are sent through a $1 \times 1$ convolution with $256$ channels. Lastly, element-wise addition is then used to add the $256$ output feature maps to the input of the module, which the module then returns. All convolutions are followed by an acitvation function and are \textit{same convolutions}, meaning the output feature maps are of the same dimensions as the input featuremeaps.
 \\
 \\
-The residual module makes use of a skip-connection to avoid the problem of \textit{vanishing gradient}. The problem mostly occurs in deep neural networks. As the gradient is backpropagated through the network, the repeated process can make the gradient very small, making the changes to each parameter have almost no effect
+\noindent The residual module makes use of skip-connections to help the model learn. If many residual modules without the skip-connection were stacked, the network could have problems choosing the values of the parameters, making the network perform worse, than in the case of shallower networks. By making use of the skip-connection, the module can easily learn to "skip" unnecessary parameters, essentially making network act as if it was shallower \cite{ResNet}.
 
 \subsubsection{The Hourglass}
 \begin{figure}[htbp]

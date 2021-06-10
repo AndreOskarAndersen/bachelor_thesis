@@ -59,7 +59,7 @@ Throughout this thesis the train-validation-test technique will be used over cro
 \\
 The pseudocode of PCK is visualized in Algorithm \ref{Algorithm:PCK}. The algorithm works by iterating over each annotated ground truth heatmap and the corresponding predicted heatmap. It then finds the Euclidean distance between the maximum activation of a ground truth heatmap and the corresponding predicted heatmap. The distance is then normalized by a constant $c$ and compared to a threshold radius $r$. The ratio of normalized distances that are less than the threshold $r$ are then computed and returned, yielding the PCK accuracy between the ground truth heatmaps and the corresponding predicted heatmaps \cite{Camilla} \cite{SHG}. The aim is thus to maximize the PCK accuracy.
 
-\subsection{General Machine Learning Terminology}
+\subsection{General Machine Learning Terminology}\label{subsec:general_ML_terminology}
 \noindent \textbf{Loss Functions} \\
 The training of a machine learning model is done by minimizing a given \textit{loss function}, which measures the error of the model. There are many different loss functions, each with their own advantages and disadvantages. One of the most common loss functions for regression is the \textit{Mean Squared Error (MSE)}, defined as
 $$MSE = \frac{1}{n} \sum_{i = 1} ^n \left( y_i - \hat{y}_i \right)^2$$
