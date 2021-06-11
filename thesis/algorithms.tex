@@ -23,7 +23,7 @@ To make the autoencoder more robust in relation to small variances, some noise i
 When performing the pose estimation in section \ref{experiement}, we will be implementing and using the \textit{Stacked hourglass} (also knowns as \textit{SHG}) by Newell \textit{et al.} \cite{Newell}. The following description and explanation of the architecture is based on an interpretation of Newell \textit{et al.} \cite{Newell} and Olsen \cite{Camilla}.
 
 \subsubsection{Motivation behind using the Stacked Hourglass}\label{subsec:reasoning}
-We have decided to make use of the Stacked hourglass described by Newell \textit{et al.} \cite{Newell}, as it is an architecture that has shown state-of-the-art results. At the same time the architecture of the network is similar to the architecture of autoencoders, making the architecture useful for encoding the data into a lower dimension, which can be useful in section \ref{sec:XAI}, when we will be doing the interpretation of the model.
+\textbf{MANGLER}
 
 \subsubsection{The Residual Module}
 \begin{figure}[htbp]
@@ -50,7 +50,7 @@ We have decided to make use of the Stacked hourglass described by Newell \textit
 The hourglass works by using residuals and max poolings to process features down to a low resolution. Then, nearest neighbor upsampling is used to upsample the feature maps until the feature maps have the same dimensions as the input of the hourglass. Before each max pool in the encoder, the module branches off and applies a residual at different resolutions. The output of this residual is then added back element-wise to the corresponding level in the decoder, which helps to ensure that lost information from the encoder is kept. This is then fed into a residual in the decoder.
 \\
 \\
-Between the encoder and decoder the module has the bottleneck, where no downsampling or upsampling happens, instead only residuals are processing the feature maps. After the decoder a residual and two $1 \times 1$ convolution layers with $256$ and $n$ channels, respectievely, are applied to produce the final predictions of the network, where $n$ is the amount of keypoints to be predicted.
+Between the encoder and decoder the module has the bottleneck, where no downsampling or upsampling happens, instead only residuals are processing the feature maps. After the decoder a residual and two $1 \times 1$ convolution layers with $256$ and $n$ channels, respectievely, are applied to produce the final predictions, where $n$ is the amount of keypoints to be predicted.
 
 \subsubsection{The Stacked Hourglass}
 \begin{figure}[htbp]
