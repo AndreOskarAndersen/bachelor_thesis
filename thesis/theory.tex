@@ -223,7 +223,7 @@ where
 $$\hat{\bm{\mu}}_{\mathcal{B}} = \frac{1}{|\mathcal{B}|} \sum_{\bm{x} \in \mathcal{B}_{\bm{x}}}$$
 and
 $$\hat{\bm{\sigma}}_{\mathcal{B}} = \sqrt{\frac{1}{|\mathcal{B}|} \sum_{\bm{x} \in \mathcal{B}} \left(\bm{x} - \hat{\bm{\mu}}_{\mathcal{B}} \right)^2 + \epsilon},$$
-which makes the minibatch have $0$ mean and unit variance. $\bm{\gamma}$ and $\bm{\beta}$ are often trainable parameters, that are used to make the mini-batch have an arbitrary mean and standard deviation. This helps the network to converge, as the batch normalization keeps centering the mean and standard deviation of the mini-batches. The small constant $\epsilon > 0$ is simply used to avoid division by zero. \cite{d2l}.
+which makes the minibatch have $0$ mean and unit variance. $\bm{\gamma}$ and $\bm{\beta}$ are often trainable parameters, that are used to make the mini-batch have an arbitrary mean and standard deviation and have the same shape as $\bm{x}$. This helps the network to converge, as the batch normalization keeps centering the mean and standard deviation of the mini-batches. The small constant $\epsilon > 0$ is simply used to avoid division by zero. \cite{d2l}.
 
 \subsubsection{Convolutional Neural Networks} \label{subsubsec:CNN}
 \begin{figure}[htbp]
