@@ -68,7 +68,7 @@ By the end the whole network outputs $n$ heatmaps corresponding to the $n$ keypo
 As the Stacked hourglass performs regression, the $MSE$ will be minimized during training to optimize the performance of the model.
 
 \subsection{Principal Components Analysis (PCA)}\label{subsec:PCA}
-\noindent It is very common, that a given dataset has an enormous amount of dimensions. This quickly becomes a problem, as it can be difficult to visualize or it can lead to other problems, such as models becoming too complex, thus being prone to overfitting. This is a common phenomen called the \textit{Curse of Dimensionality} \cite{ESL}. For this reason multiple techniques have been developed for reducing the dimensions of a given dataset. We have already seen in Section \ref{subsec:AE}, how autoencoders can be used as non-linear dimensionality reduction. Another very common technique for reducing the dimension of a dataset is \textit{Principal Components Analysis} (\textit{PCA}).
+\noindent It is very common, that a given dataset has an enormous amount of dimensions. This quickly becomes a problem, as it can be difficult to visualize or it can lead to other problems, such as models becoming too complex, thus being prone to overfitting. This is a common phenomen called the \textit{Curse of Dimensionality} \cite{ESL}. For this reason multiple techniques have been developed for reducing the dimensions of a given dataset. We have already seen in Section \ref{subsec:AE}, how autoencoders can be used for non-linear dimensionality reduction. Another very common technique for reducing the dimension of a dataset is \textit{Principal Components Analysis} (\textit{PCA}).
 \\
 \\
 PCA is an unsupervised linear projection method used for reducing the dimension of a dataset from $D$ down to $k$ dimensions. The algorithm works by finding the $k$ orthogonal vectors that maximizes the variance of the input data, which the input data is then projected onto \cite{MAD_book}.
@@ -117,7 +117,7 @@ The pseudocode of the algorithm is visualized in Algorithm \ref{Algorithm:PCA}. 
 \noindent Often we want to find patterns in data that has not been labelled. One common group of techniques for this purpose is the \textit{clustering algorithms}, that are used to group observations into clusters, such that observations from the same cluster are more similar, than observations from different clusters. One common clustering technique is $K$\textit{-Means}.
 \\
 \\
-$K$-Means is a unsupervised method used for clustering observations into $K$ groups of similar observations, such that no observation occurs in multiple clusters. The algorithm uses distance as a measure of similarity, such that observations closer to each other are more likely to being grouped to the same cluster, than two observations far appart. In the middle of each cluster is a synthetic observation (that is, not a real observation), called the \textit{centroid}, which is defined as the mean of the cluster. The pseudocode of the algorithm is visualized in Algorithm \ref{Algorithm:KMeans}. The algorithm is an iterative process, which works firstly by assigning each observation to the closest centroid. Next, each centroid is updated accordingly. This is done until the assigning of each observation is unchanged \cite{MAD_book}.
+$K$-Means is an unsupervised method used for clustering observations into $K$ groups of similar observations, such that no observation occurs in multiple clusters. The algorithm uses distance as a measure of similarity, such that observations closer to each other are more likely to being grouped to the same cluster, than two observations far appart. In the middle of each cluster is a synthetic observation (that is, not a real observation), called the \textit{centroid}, which is defined as the mean of the cluster. The pseudocode of the algorithm is visualized in Algorithm \ref{Algorithm:KMeans}. The algorithm is an iterative process, which works firstly by assigning each observation to the closest centroid. Next, each centroid is updated accordingly. This is done until the assigning of each observation is unchanged \cite{MAD_book}.
 \\
 \\
 $K$-Means is guaranteed to converge to a local minimum of the total distance between the objects and their corresponding centroid, however, it is not guaranteed to reach the global minimum. This only depends on the initial position of the centroids. To partly overcome this problem it is common to run the algorithm multiple times with different random initial positions of the centroids and use the best solution as the final output \cite{MAD_book}.
@@ -132,10 +132,10 @@ Choosing the optimal $K$ can often be difficult, as it is often not clear how ma
         \ForAll{cluster $\bm{C}_i$}
             \ForAll{sample $\bm{x} \in \bm{C}_i$}
                 \State \begin{varwidth}[t]{\linewidth}
-                    Compute the mean euclidean distance from $\bm{x}$ to the other samples in the same cluster: $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
+                    Compute the mean distance from $\bm{x}$ to the other samples in the same cluster: $a(\bm{x}) = \frac{1}{|\bm{C}_i| - 1} \sum_{\bm{y} \in \bm{C}_i} D(\bm{x}, \bm{y})$
                 \end{varwidth}
                 \State \begin{varwidth}[t]{\linewidth}
-                Compute the mean euclidean distance from $\bm{x}$ to the nearest other cluster: $\bm{C}_j$ $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
+                Compute the mean distance from $\bm{x}$ to the nearest other cluster: $\bm{C}_j$ $b(\bm{x}) = \frac{1}{| \bm{C}_j |} \sum_{\bm{z} \in \bm{C}_j} D(\bm{x}, \bm{z})$
                 \end{varwidth}
                 \State Compute the Silhouette of $\bm{x}$:
                 \begin{math}

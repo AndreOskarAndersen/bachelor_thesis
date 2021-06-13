@@ -3,7 +3,7 @@
 \begin{document}
 
 \section{Machine Learning Theory}\label{sec:theory}
-Throughout this section the theory of machine learning that will be used in this thesis is described and explained. In Section \ref{subsec:motivation_theory} we describe the general motivation behind using machine learning. Then, in Section \ref{subsec:ml_paradigmes} we will be giving a brief introduction to the two most common machine learning paradigms, as well as how we will be using them. In Section \ref{subsec:evaluation}, we give a brief overview of how to evaluate a developed model. Lastly, in Section \ref{subsec:NeuralNetworks}, we describe the mathematics behind feedforward- and convolutional neural networks .
+Throughout this section the theory of machine learning that will be used in this thesis is described and explained. In Section \ref{subsec:motivation_theory} we describe the general motivation behind using machine learning. Then, in Section \ref{subsec:ml_paradigmes} we will be giving a brief introduction to the two most common machine learning paradigms, as well as how we will be using them. In Section \ref{subsec:evaluation}, we give a brief overview of how to evaluate a developed model. In Section \ref{subsec:general_ML_terminology} basic machine learning terminology is described. Lastly, in Section \ref{subsec:NeuralNetworks}, we describe the mathematics behind feedforward- and convolutional neural networks .
 
 \subsection{Motivation}\label{subsec:motivation_theory}
 It can be difficult for humans to recognize certain patterns and trends in data. This becomes more difficult the greater the quantity of the data is, which is becomming more and more common with the rapidly growing topic of \textit{Big Data}. For this reason, computers are often used instead of humans to recognize patterns and trends in the data by analyzing the data, which is what is called \textit{Machine Learning}. In this thesis, we will use machine learning in section \ref{experiement} to develop a model for estimating the $2$D pose of a single human in an image. Later, in section \ref{sec:XAI}, we will use machine learning to improve our understanding of the model.
@@ -65,11 +65,11 @@ Machine learning uses a bunch of different terminologies. The most general machi
 \noindent \textbf{Loss Functions} \\
 The training of a machine learning model is done by minimizing a given \textit{loss function}, which measures the error of the model. There are many different loss functions, each with their own advantages and disadvantages. One of the most common loss functions for regression is the \textit{Mean Squared Error (MSE)}, defined as
 $$MSE = \frac{1}{n} \sum_{i = 1} ^n \left( y_i - \hat{y}_i \right)^2$$
-where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the estimated value of the $i$th observation. Thus, $MSE$ measures the average squared difference between the true observation and the estimated observation \cite{ISL}. $MSE$ will we be using in Section \ref{experiement}, when we develop our model.
+where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the estimated value of the $i$th observation. Thus, $MSE$ measures the average squared difference between the true observation and the estimated observation \cite{ISL}. $MSE$ will we be using in Section \ref{experiement}, when we develop the Stacked hourglass.
 \\
 \\
 \noindent \textbf{Overfitting and Regularization} \\
-The main goal of a machine learning model is to generalize well on unseen data. This can often be difficult, as the model simply "remembers" the training data instead of learning the patterns in the training data. In other words, the gap between the training error and the test error is too large, which is a concept called \textit{overfitting}. Certain techniques are designed to reduce the test error - these techniques are collectively called \textit{regurlization} \cite{DeepLearning}. One commonly used Regularization technique is \textit{batch normalization}, which we will be using when we in Section \ref{experiment} wil be developing our model. Batch normalization will be described further in Section \ref{subsec:NeuralNetworks}.
+The main goal of a machine learning model is to generalize well on unseen data. This can often be difficult, as the model simply "remembers" the training data instead of learning the patterns in the training data. In other words, the gap between the training error and the test error is too large, which is a concept called \textit{overfitting}. Certain techniques are designed to reduce the test error - these techniques are collectively called \textit{regurlization} \cite{DeepLearning}. One commonly used Regularization technique is \textit{batch normalization}, which we will be using when we in Section \ref{experiement} wil be developing our model. Batch normalization will be described further in Section \ref{subsec:NeuralNetworks}.
 \\
 \\
 \textbf{Gradient Descent}
@@ -140,7 +140,7 @@ An example of a mini-batch based optimization algorithm is \textit{Stochastic Gr
 \\
 \\
 \textbf{Momentum} \\
-One problem with SGD is how slow it often can be. For this reason \textit{momentum} is often used to accelerate learning. Momentum works by accumulating a decaying moving average of the past gradients and continuing to move in their direction. This is done by introducing two new variable; $\bm{v}$, which is the direction and speed of which the parameters move through the parameter space, and $\alpha \in [0, 1)$, which describes how quickly the contribution of previous gradients decay. Common values of $\alpha$ are $0.5, 0.9$ and $0.99$ \cite{DeepLearning}. 
+One problem with SGD is how slow it often can be. For this reason \textit{momentum} is often used to accelerate learning. Momentum works by accumulating a decaying moving average of the past gradients and continuing to move in their direction. This is done by introducing two new variable: $\bm{v}$, which is the direction and speed of which the parameters move through the parameter space, and $\alpha \in [0, 1)$, which describes how quickly the contribution of previous gradients decay. Common values for $\alpha$ are $0.5, 0.9$ and $0.99$ \cite{DeepLearning}. 
 \\
 \\
 \textbf{Epoch} \\
@@ -208,13 +208,13 @@ The ReLU-function is very close to being linear, making the function keep many o
 \\
 \\
 \noindent \textbf{Backpropagation} \\
-Backpropagation is an algorithm used to compute the gradient of the network. It is used together with an optimization algorithm to train the model by minimizing the training loss of the model. Backpropagation happens after data has flowed through the model from the input to the output, and works by computing the gradient of each parameter sequentially from the output to the input of the model, using the chain rule \cite{DeepLearning}. By using the chain-rule we find, that the partial derivative of the loss $L$ for each weight is
+Backpropagation is an algorithm used to compute the gradient of the network. It is used together with an optimization algorithm to train the model by minimizing the training loss of the model. Backpropagation happens after data has flown through the model from the input to the output, and works by computing the gradient of each parameter sequentially from the output to the input of the model, using the chain rule \cite{DeepLearning}. By using the chain-rule we find, that the partial derivative of the loss $L$ for each weight is
 $$\frac{\partial L}{\partial w_{jk} ^{(i)}} = \frac{\partial z_j ^{(i)}}{\partial w_{jk} ^{(i)}} \frac{\partial a_j ^{(i)}}{\partial z_j ^{(i)}} \frac{\partial L}{\partial a_j ^{(i)}} = a_k ^{(i - 1)} g ^{\prime (i)} \left( z_j ^{(i)} \right) \frac{\partial L}{\partial a_j ^{(i)}}$$
 and the partial derivative of each bias is
 $$\frac{\partial L}{\partial b^{(i)} _j} = \frac{\partial z^{(i)} _j}{\partial b^{(i)} _j} \frac{\partial a_j ^{(i)}}{\partial z^{(i)} _j} \frac{\partial L}{\partial a_j ^{(i)}} = g^{\prime (i)} \left( z_j ^{(i)} \right) \frac{\partial L}{\partial a_j ^{(i)}}$$
 where for both cases
 $$ \frac{\partial L}{\partial a_j ^{(i)}} = \sum_{j = 0} ^{n_i - 1} w_{jk} ^{(i + 1)} g^{\prime (i + 1)} \left( z_j ^{(i + 1)} \right) \frac{\partial L}{\partial a_j ^{(i + 1)}}.$$
-if $\bm{a}^{(i)}$ is not the output-layer. Once the partial derivative of all weights and biases has been found, the gradient vector can be formed and an optimization method can be used to optimize the parameters of the model \cite{3b1b_4}.
+if $\bm{a}^{(i)}$ is not the output-layer. Once the partial derivative of all weights and biases have been found, the gradient vector can be formed and an optimization method can be used to optimize the parameters of the model \cite{3b1b_4}.
 \\
 \\
 \textbf{Batch Normalization} \\
@@ -246,7 +246,7 @@ which makes the minibatch have $0$ mean and unit variance, where the small const
 \\
 \\
 \textbf{Convolutional layers} \\
-A convolutional layer is composed of a set of \textit{kernels} (also known as \textit{filters}), which are matrices of weights of dimension $c \times k \times k$, where $c$ is the amount of channels (or amount of filters to be applied) and $k$ kernel-size, usually $5$, $3$ or $1$. The convolutional layer thus consists of $c$ filters, each of $k \times k$ parameters, where each weight is a parameter for the model to be learned \cite{Everything}. Each kernel is used on the input to produce a \textit{feature map}. The kernels are applied to the input by "sliding" over the input (where the step size is called \textit{stride}). Each $k \times k$ grid of the input (called the \textit{local receptive field}) is then used to compute the dot-product between the grid and each kernel, which is then placed in the corresponding feature map of each kernel, as visualized in Figure \ref{fig:convolutionexample}. When all of the feature maps have been computed, an activation function can be applied.
+A convolutional layer is composed of a set of \textit{kernels} (also known as \textit{filters}), which are matrices of weights of dimension $c \times k \times k$, where $c$ is the amount of channels (or the amount of filters to be applied) and $k$ is the kernel-size. The convolutional layer thus consists of $c$ filters, each of $k \times k$ parameters, where each weight is a parameter for the model to be learned \cite{Everything}. Each kernel is used on the input to produce a \textit{feature map}. The kernels are applied to the input by "sliding" over the input (where the step size is called \textit{stride}). Each $k \times k$ grid of the input (called the \textit{local receptive field}) is then used to compute the dot-product between the grid and each kernel, which is then placed in the corresponding feature map of each kernel, as visualized in Figure \ref{fig:convolutionexample}. When all of the feature maps have been computed, an activation function can be applied.
 \\
 \\
 \textbf{Pooling layers}\\
@@ -272,6 +272,6 @@ Pooling layers are layers used to reduce the dimension of the input. The most co
     \end{algorithmic}
 \end{algorithm}
 \newline
-Sometimes we want to increase the size of an image. This can be done by making use of \textit{upsampling} (also known as \textit{interpolation}) techniques. One of the most common upsampling techniques is \textit{nearest neighbour upsampling}, whose pseudocode has been written in Algorithm \ref{Algorithm:NNUpsampling}. The algorithm starts off by taking an image, $X$, of size $m \times n$, as input, which we wish to upsample to size $xm \times yn$, where $x$ and $y$ are positive whole numbers. The algorithm then loops over each pixel $p \in X$, finds the corresponding index $(i, j)$, of $p$ in $X$, and places $p$ at index $(xi, yj)$ in the output image $O$ of size $xm \times yn$. When this is done, it assigns each of the empty pixel in $O$ the value of their nearest neighbour and returns $O$ \cite{NNUpsampling}.
+Sometimes we want to increase the size of an image. This can be done by making use of \textit{upsampling} techniques. One of the most common upsampling techniques is \textit{nearest neighbour upsampling}, whose pseudocode is written in Algorithm \ref{Algorithm:NNUpsampling}. The algorithm starts off by taking an image $X$ of size $m \times n$, as input, which we wish to upsample to size $xm \times yn$, where $x$ and $y$ are positive whole numbers. The algorithm then loops over each pixel $p \in X$, finds the corresponding index $(i, j)$, of $p$ in $X$, and places $p$ at index $(xi, yj)$ in the output image $O$ of size $xm \times yn$. When this is done, it assigns each of the empty pixel in $O$ the value of their nearest neighbour and returns $O$ \cite{NNUpsampling}.
 
 \end{document}
