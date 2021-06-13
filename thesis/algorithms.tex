@@ -2,7 +2,7 @@
 
 \begin{document}
 \section{Autoencoders, Stacked Hourglass, PCA and $K$-Means}\label{sec:algorithms}
-In this section the various algorithms and architectures used throughout this thesis is described and explained in details. The section starts off with Section \ref{subsec:AE}, where we will be giving a brief introduction to autoencoders. Throughout Section \ref{subsec:SHG} the Stacked hourglass, used for pose estimation, is described. Then, in Section \ref{subsec:PCA} the algorithm of Principal Components Analysis is described. In the last section, Section \ref{subsec:K_means}, $K$-Means clustering is described.
+In this section the various algorithms and architectures used throughout this thesis is described and explained in details. The section starts off with Section \ref{subsec:AE}, where we will be giving a brief introduction to autoencoders. Throughout Section \ref{subsec:SHG} the Stacked hourglass is described. Then, in Section \ref{subsec:PCA} the algorithm of Principal Components Analysis is described. In the last section, Section \ref{subsec:K_means}, $K$-Means clustering is described.
 
 \subsection{Autoencoders (AE)}\label{subsec:AE}
 \begin{figure}[htbp]
@@ -11,7 +11,7 @@ In this section the various algorithms and architectures used throughout this th
     \caption{Visualization of an undercomplete autoencoder \cite{AE}}
     \label{fig:AE}
 \end{figure}
-\noindent \textit{Autoencoders} (often shortened as \textit{AE}) is a class of neural networks that are trained unsupervised to output the input of the model. An autoencoder consists of two parts: the \textit{encoder} and the \textit{decoder}, where each part usually consist of multiple hidden layers. When data is fed to the autoencoder, the data is passed through the encoder, which then passes the data to the decoder, where the data is again processed and finally returned \cite{DeepLearning}. 
+\noindent \textit{Autoencoders} (often shortened as \textit{AE}) is a class of neural networks that is trained unsupervised to output the input of the model. An autoencoder consists of two parts: the \textit{encoder} and the \textit{decoder}. When data is fed to the autoencoder, the data is passed through the encoder which processes the data and passes the data to the decoder, where the data is again processed and finally returned \cite{DeepLearning}. 
 \\
 \\
 If all of the layers of the autoencoder have the same dimensionality, the network can easily learn how to copy the input to its output. For this reason we often talk about \textit{undercomplete} autoencoders instead, where the dimension of the output of the encoder is smaller than the dimension of the input and output of the network, as visualized in Figure \ref{fig:AE}. By making use of an undercomplete autoencoder, the encoder learns how to encode the input to a lower dimensionality, forcing the network to learn the most important features of the training data \cite{DeepLearning}.
@@ -56,10 +56,10 @@ Between the encoder and decoder the module has the bottleneck, where no downsamp
     \caption{Visualization of the Stacked hourglass \cite{Newell}}
     \label{fig:SHG}
 \end{figure}
-\noindent The full network is build by stacking multiple hourglasses end-to-end, making the output of one hourglass be the input of the next hourglass, as shown in Figure \ref{fig:SHG}, which makes each hourglass reevaluate estimates. To evaluate each hourglass, intermediate supervision is used by applying a loss to each hourglass' intermediate prediction.
+\noindent The full network is build by stacking multiple hourglasses end-to-end, making the output of one hourglass be the input of the next hourglass, as shown in Figure \ref{fig:SHG}, which makes each hourglass reevaluate estimates. To evaluate each hourglass, intermediate supervision is used by applying a loss to the intermediate predictions of each hourglass.
 \\
 \\
-The input of the network is a $256 \times 256$ RGB-image. To lower the memory usage, the network starts off with a $256 \times 7 \times 7$ convolution layer with stride 2, followed by a residual module and max pooling to bring the resolution down to the output resolution of $64 \times 64$, which is then input to the first hourglass.
+The input of the network is a $256 \times 256$ rgb-image. To lower the memory usage, the network starts off with a $256 \times 7 \times 7$ convolution layer with stride 2, followed by a residual module and max pooling to bring the resolution down to the output resolution of $64 \times 64$, which is then input to the first hourglass.
 \\
 \\
 By the end the whole network outputs $n$ heatmaps corresponding to the $n$ keypoints it should predict for a single person. The prediction of a keypoint is thus the maximum activation of the corresponding heatmap.
@@ -86,7 +86,7 @@ As the Stacked hourglass performs regression, the $MSE$ will be minimized during
 \noindent It is very common, that a given dataset has an enormous amount of dimensions. This quickly becomes a problem, as it can be difficult to visualize or it can lead to other problems, such as models becoming too complex, thus being prone to overfitting. This is a common phenomen called the \textit{Curse of Dimensionality} \cite{ESL}. For this reason multiple techniques have been developed for reducing the dimensions of a given dataset. We have already seen in Section \ref{subsec:AE}, how autoencoders can be used as non-linear dimensionality reduction. Another very common technique for reducing the dimension of a dataset is \textit{Principal Components Analysis} (\textit{PCA}).
 \\
 \\
-PCA is an unsupervised linear projection method used for reducing the dimension of a dataset from $D$ down to $k$ dimensions. The algorithm works by finding the $k$ orthogonal vectors that maximizes the variance of the input data, which the input data is projected onto \cite{MAD_book}.
+PCA is an unsupervised linear projection method used for reducing the dimension of a dataset from $D$ down to $k$ dimensions. The algorithm works by finding the $k$ orthogonal vectors that maximizes the variance of the input data, which the input data is then projected onto \cite{MAD_book}.
 \\
 \\
 The pseudocode of the algorithm is visualized in Algorithm \ref{Algorithm:PCA}. The algorithm starts off by finding the sample covariance matrix $\bm{C}$. It then finds the $k$ vectors, that maximizes the variance of the input data. The $k$ vectors that maximizes the variance are the $k$ eigenvectors with the corresponding highest eigenvalues. Thus, the projection with the first eigenvector captures the most variance, the projection with the second eigenvector captures the second most variance, and so on. The projection down to $k$ dimensions then happens by stacking the $k$ eigenvectors, forming a $D \times k$ matrix, where $D$ is the input dimensions, which is then multiplied with the input data, resulting in the projected data. \cite{MAD_book}
@@ -99,7 +99,7 @@ $K$-Means is a unsupervised method used for clustering observations into $K$ gro
 \\
 \\
 $K$-Means is guaranteed to converge to a local minimum of the total distance between the objects and their corresponding centroid, however, it is not guaranteed to reach the global minimum. This only depends on the initial position of the centroids. To partly overcome this problem it is common to run the algorithm multiple times with different random initial positions of the centroids and use the best solution as the final output \cite{MAD_book}.
-
+\\
 \begin{algorithm}[htbp]
     \caption{$K$-Means \cite{DS_manual}}
     \begin{algorithmic}[1]
@@ -122,7 +122,6 @@ $K$-Means is guaranteed to converge to a local minimum of the total distance bet
     \end{algorithmic}
     \label{Algorithm:KMeans}
 \end{algorithm}
-
 \begin{algorithm}[htbp]
     \caption{Compute Silhouette Score \cite{MAD_L12}}
     \label{Algorithm:Silhouette_score}
@@ -150,6 +149,7 @@ $K$-Means is guaranteed to converge to a local minimum of the total distance bet
         \State \textbf{return} mean of the Silhouettes
     \end{algorithmic}
 \end{algorithm}
+\\
 \noindent Choosing the optimal $K$ can often be difficult, as it is often not clear how many clusters there are in the data. For choosing the optimal $k$ the \textit{Silhouette score} is often computed, following the pseudocode visualized in Algorithm \ref{Algorithm:Silhouette_score}. For computing the Silhouette score, various values of $K$ are used for training various $K$-Means models. After each model has been trained, let $a_i$ be the average distance of the $i$th sample to the other samples in the same cluster as the $i$th sample. Then, let $b_i$ be the average distance of the $i$th sample to the samples in the nearest cluster. Ideally, we want $a_i < b_i$, as $b_i < a_i$ means that the $i$th sample probably has been grouped to the wrong cluster. For that reason, the $i$th silhouette score is set to $1 - \frac{a_i}{b_i}$ if $a_i < b_i$ or $\frac{b_i}{a_i} - 1$ if $a_i > b_i$. By the end of the algorithm the mean silhouette score is returned. By computing the silhouette score for various values of $K$, the $K$ with the silhouette score closest to $1$ is chosen as the optimal $K$ \cite{MAD_L12}.
 
 
