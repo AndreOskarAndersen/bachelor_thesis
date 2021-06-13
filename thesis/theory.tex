@@ -29,7 +29,7 @@ When developing a machine learning model, the data needs to both create the mode
 Throughout this thesis the train-validation-test technique will be used over cross validation for evaluating the developed models. This will be done, since cross validation is better suited for smaller datasets, as the runtime is much greater than the runtime of the train-validation-test technique.
 
 \subsubsection{Evaluation Metrics for Supervised Machine Learning}
-\begin{algorithm}[t]
+\begin{algorithm}[htbp]
     \caption{PCK \cite{Camilla}\cite{SHG}}
     \label{Algorithm:PCK}
     \begin{algorithmic}[1]
@@ -66,11 +66,13 @@ Machine learning uses a bunch of different terminologies. The most general machi
 The training of a machine learning model is done by minimizing a given \textit{loss function}, which measures the error of the model. There are many different loss functions, each with their own advantages and disadvantages. One of the most common loss functions for regression is the \textit{Mean Squared Error (MSE)}, defined as
 $$MSE = \frac{1}{n} \sum_{i = 1} ^n \left( y_i - \hat{y}_i \right)^2$$
 where $y_i$ is the true value of the $i$th observation and $\hat{y}_i$ is the estimated value of the $i$th observation. Thus, $MSE$ measures the average squared difference between the true observation and the estimated observation \cite{ISL}. $MSE$ will we be using in Section \ref{experiement}, when we develop our model.
-
+\\
+\\
 \noindent \textbf{Overfitting and Regularization} \\
-% Lidt uenig med definitionen af overfitting - taget fra DeepLearning. Tænk på underfitting.
 The main goal of a machine learning model is to generalize well on unseen data. This can often be difficult, as the model simply "remembers" the training data instead of learning the patterns in the training data. In other words, the gap between the training error and the test error is too large, which is a concept called \textit{overfitting}. Certain techniques are designed to reduce the test error - these techniques are collectively called \textit{regurlization} \cite{DeepLearning}. One commonly used Regularization technique is \textit{batch normalization}, which we will be using when we in Section \ref{experiment} wil be developing our model. Batch normalization will be described further in Section \ref{subsec:NeuralNetworks}.
 \\
+\\
+\textbf{Gradient Descent}
 \begin{algorithm}[htbp]
     \caption{Gradient Descent \cite{d2l}}
     \label{Algorithm:gradient_descent_alg}
@@ -83,13 +85,15 @@ The main goal of a machine learning model is to generalize well on unseen data. 
         \EndWhile
     \end{algorithmic}
 \end{algorithm}
-\\
-\textbf{Gradient Descent} \\
+\newline
 There are different methods for minimizing the loss function of a model during training, however, the most common algorithms are variants of \textit{gradient descent}, whose algorithm is described in Algorithm \ref{Algorithm:gradient_descent_alg}. The algorithm works by taking a learning rate $\eta$ and the initial parameter $\bm{\theta}$ as input. It then computes $\nabla_{\bm{\theta}} L\left( f(\bm{x}; \bm{\theta}), \bm{y} \right)$, which is multiplied by $\eta$ and  subtracted from $\bm{\theta}$. This is done until a stopping condition is met, such as when the magnitude of the gradient $\left|  \nabla_{\bm{\theta}} L\left( f(\bm{x}; \bm{\theta}), \bm{y} \right) \right|$ is small or until a maximum amount of iterations has been reached \cite{d2l}.
 \\
 \\
 \noindent \textbf{Online, Mini-batch and Batch methods} \\
-\noindent When gradient descent is used in machine learning, computing $\nabla_{\bm{\theta}} L\left( f(\bm{x}; \bm{\theta}), \bm{y} \right)$ can be done by averaging the gradient of each of the $n$ observations of the training set, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size. Thus, batch gradient descent uses the fewest iterations, however, each iteration takes the longest to compute, whereas in online gradient descent each iteration is computed quickly, however, it also uses more iterations  \cite{d2l}. \\
+\noindent When gradient descent is used in machine learning, computing $\nabla_{\bm{\theta}} L\left( f(\bm{x}; \bm{\theta}), \bm{y} \right)$ can be done by averaging the gradient of each of the $n$ observations of the training set, which is called a \textit{batch gradient method} and is computational inefficient, as the cost is $\mathcal{O}(n)$. It is therefore common to use variants of gradient descents, that reduces the cost of computing the gradient. In \textit{online gradient methods} a single observation from the dataset is used to compute the gradient, which brings the cost down to $\mathcal{O}(1)$. In \textit{mini-batch gradient methods} a subset of the dataset is used to compute the gradient, making the cost $\mathcal{O}(|\mathcal{B}|)$, where $|\mathcal{B}|$ is the mini-batch size. Thus, batch gradient descent uses the fewest iterations, however, each iteration takes the longest to compute, whereas in online gradient descent each iteration is computed quickly, however, it also uses more iterations  \cite{d2l}.
+\\
+\\
+\noindent \textbf{Optimization Algorithms}\\
 \begin{algorithm}[htbp]
     \caption{Stochastic Gradient Descent with Momentum \cite{DeepLearning}}
     \label{Algorithm:SGD_momentum}
@@ -128,8 +132,8 @@ There are different methods for minimizing the loss function of a model during t
         \EndWhile
     \end{algorithmic}
 \end{algorithm}
-\noindent \textbf{Optimization Algorithms} \\
-\noindent An example of a mini-batch based optimization algorithm is \textit{Stochastic Gradient Descent} (\textit{SGD}). SGD is very closely related to the algorithm behind gradient descent, however, instead of updating the parameters for each sample, SGD instead uses the mean gradient of $n$ randomly selected samples to update its parameters.
+\newline
+An example of a mini-batch based optimization algorithm is \textit{Stochastic Gradient Descent} (\textit{SGD}). SGD is very closely related to the algorithm behind gradient descent, however, instead of updating the parameters for each sample, SGD instead uses the mean gradient of $n$ randomly selected samples to update its parameters.
 \\
 \\
 \noindent One problem of the gradient descent algorithm is, that the learning rate can be difficult to choose. Therefore, there have been developed a range of various optimization algorithms that uses a separate learning rate for each parameter and automatically adapt these learning rates. One of which is \textit{RMSProp}, which is visualized in Algorithm \ref{Algorithm:RMSProp}. The algorithm works by using an decaying average that discards knowledge from the extreme past, so that it can converge after finding a convex bowl of the loss function. The algorithm uses a hyperparameter $\rho$, that controls the length scale of the moving average \cite{DeepLearning}.
@@ -245,9 +249,11 @@ which makes the minibatch have $0$ mean and unit variance, where the small const
 A convolutional layer is composed of a set of \textit{kernels} (also known as \textit{filters}), which are matrices of weights of dimension $c \times k \times k$, where $c$ is the amount of channels (or amount of filters to be applied) and $k$ kernel-size, usually $5$, $3$ or $1$. The convolutional layer thus consists of $c$ filters, each of $k \times k$ parameters, where each weight is a parameter for the model to be learned \cite{Everything}. Each kernel is used on the input to produce a \textit{feature map}. The kernels are applied to the input by "sliding" over the input (where the step size is called \textit{stride}). Each $k \times k$ grid of the input (called the \textit{local receptive field}) is then used to compute the dot-product between the grid and each kernel, which is then placed in the corresponding feature map of each kernel, as visualized in Figure \ref{fig:convolutionexample}. When all of the feature maps have been computed, an activation function can be applied.
 \\
 \\
-\textbf{Pooling layers} \\
+\textbf{Pooling layers}\\
 Pooling layers are layers used to reduce the dimension of the input. The most common pooling layer is the \textit{maxpooling}-operation. The operation works by considering each $k \times k$ local receptive field, in which the maximum entry is being inserted into the output \cite{CNN}.
 \\
+\\
+\noindent \textbf{Nearest Neighbour Upsampling}
 \begin{algorithm}[htbp]
     \caption{Nearest Neighbour Upsampling \cite{NNUpsampling}}
     \label{Algorithm:NNUpsampling}
@@ -265,8 +271,7 @@ Pooling layers are layers used to reduce the dimension of the input. The most co
         \State \textbf{return} $O$
     \end{algorithmic}
 \end{algorithm}
-\\
-\noindent \textbf{Nearest Neighbour Upsampling} \\
+\newline
 Sometimes we want to increase the size of an image. This can be done by making use of \textit{upsampling} (also known as \textit{interpolation}) techniques. One of the most common upsampling techniques is \textit{nearest neighbour upsampling}, whose pseudocode has been written in Algorithm \ref{Algorithm:NNUpsampling}. The algorithm starts off by taking an image, $X$, of size $m \times n$, as input, which we wish to upsample to size $xm \times yn$, where $x$ and $y$ are positive whole numbers. The algorithm then loops over each pixel $p \in X$, finds the corresponding index $(i, j)$, of $p$ in $X$, and places $p$ at index $(xi, yj)$ in the output image $O$ of size $xm \times yn$. When this is done, it assigns each of the empty pixel in $O$ the value of their nearest neighbour and returns $O$ \cite{NNUpsampling}.
 
 \end{document}

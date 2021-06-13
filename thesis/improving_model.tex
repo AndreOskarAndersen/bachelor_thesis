@@ -10,7 +10,7 @@ In Section \ref{sec:XAI} we explored the developed model from Section \ref{exper
 \subsection{Configuration Details}\label{subsec:improv_conf_details}
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width = \textwidth]{entities/Ae_model.png}
+    \includegraphics[width = \textwidth - 1 cm]{entities/Ae_model.png}
     \caption{Visualization of the architecture of the developed autoencoder. The numbers in each box represents the dimensions of the output of the corresponding layer.}
     \label{fig:AE_model}
 \end{figure}
@@ -21,7 +21,7 @@ The input of the autoencoder has the dimensions of $256 \times 4 \times 4$. As t
 \\
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width = \textwidth]{entities/SHG_AE.png}
+    \includegraphics[width = \textwidth - 1 cm]{entities/SHG_AE.png}
     \caption{Visualization of the proposed combination of the hourglass and autoencoder for the Stacked hourglass.}
     \label{fig:SHG_AE}
 \end{figure}
@@ -38,17 +38,17 @@ to each input training sample, where $x$ is the value of the training sample. To
 \\
 \\
 After the autoencoder has been trained it is placed in the hourglass of the developed Stacked hourglass. The modified Stacked hourglass is then trained by following Newell \textit{et al.} \cite{Newell} as described in Section \ref{subsec:conf_details}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[height = 8 cm]{entities/AE_evolution.png}
+    \caption{Visualization of the evolution of the training- and validation loss of the autoencoder during training. The left column shows all of the $100$ epochs. Right column shows epoch $21$ and foward}
+    \label{fig:AE_evolution}
+\end{figure}
 
 \subsection{Results}\label{sec:improv_results}
 \begin{figure}[htbp]
     \centering
-    \includegraphics[height = 10 cm]{entities/AE_evolution.png}
-    \caption{Visualization of the evolution of the training- and validation loss of the autoencoder during training. The left column shows all of the $100$ epochs. Right column shows epoch $21$ and foward}
-    \label{fig:AE_evolution}
-\end{figure}
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width = \textwidth]{entities//SHG_AE_Evolution.png}
+    \includegraphics[width = \textwidth - 1 cm]{entities//SHG_AE_Evolution.png}
     \caption{Visualization of the evolution of the training- and validation loss, as well as the PCK validation accuracy of the combination of the Stacked hourglass and autoencoder, compared with the evolution of training the orignial Stacked hourglass. The top row is of all of the $57$ epochs. The bottom row shows epoch $47$ and forward.}
     \label{fig:SHG_AE_evolution}
 \end{figure}

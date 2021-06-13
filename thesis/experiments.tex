@@ -48,36 +48,19 @@ While training the model the PCK accuracy is computed after each epoch, keeping 
 We do not make use of automated stopping criterias, such as \textit{automated early stopping}, as these have certain parameters that can be difficult to choose. Instead, we train the network and save a copy of the model after each epoch. While the training is happening, we note the training loss, validation loss as well as the validation PCK accuracy of the model after each epoch, and stop the training process in case the model does not improve for a while.
 
 \subsection{Results}\label{subsec:results}
-In Figure \ref{fig:results}, the evolution of the training loss, validation loss and validation PCK accuracy is visualized. The model were initially set to train for $100$ epochs, however, we decided to stop the training early, as the PCK validation accuracy seemed to have converged, as well as the model clearly started to overfit after $32$ epochs, as seen by comparing the training and validation loss.
-\\
-\\
-The reduction of the learning rate happened after $21$ epochs. By looking at the validation accuracy in Figure \ref{fig:results} we can see, that the accuracy rapidly increases shortly after the reduction of the learning rate, hinting at the effectiveness of dropping the learning rate. 
-\\
-\\
-Comparing the training loss, validation loss and the validation accuracy from Table \ref{tab:results} we see, that the there is not an overlap between the models yielding the best training loss, validation loss and validation accuracy. As we in section \ref{sec:XAI} want to explore a model that performs decently well, we will be using the model with the highest validation accuracy as our model going forward. Thus, our model is the model from epoch $47$, which has a training loss of $4.19 \cdot 10^{-5}$, a validation loss of $5.43 \cdot 10^{-5}$ and a validation accuracy of $0.433$. If we test the model on the held-out testing set from Section \ref{sec:dataset}, we get a PCK score of $0.441$, which is based on all annotated keypoints (that is, both for $v = 1$ and $v = 2$)
-\begin{table}[b]
-    \centering
-    \begin{tabular}{|l|c|c|c|c|}
-        \hline
-        \textbf{Description} & \textbf{Epoch} & \textbf{Training loss} & \textbf{Validation loss} & \textbf{Validation accuracy} \\
-        \hline
-        Best training loss & $50$ & $4.11 \cdot 10^{-5}$ & $5.45 \cdot 10^{-5}$ & $0.43$ \\
-        \hline
-        Best validation loss & $32$ & $5.01 \cdot 10^{-5}$ & $5.15 \cdot 10^{-5}$ & $0.42$ \\
-        \hline
-        Best validation accuracy & $47$ & $4.19 \cdot 10^{-5}$ & $5.43 \cdot 10^{-5}$  & $0.433$ \\
-        \hline
-    \end{tabular}
-    \caption{Comparison of the the epochs yielding the best training loss, validation loss and validation accuracy}
-    \label{tab:results}
-\end{table}
-
-\begin{figure}[t]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width = \textwidth]{entities/results.png}
     \caption{Visualization of the evolution of the training loss, validation loss and validation PCK accuracy of the trained model. Top row shows all of the $50$ epochs. Bottom row shows epoch $2$ and forward to ease the reading of the training loss}
     \label{fig:results}
 \end{figure}
+\noindent In Figure \ref{fig:results}, the evolution of the training loss, validation loss and validation PCK accuracy is visualized. The model were initially set to train for $100$ epochs, however, we decided to stop the training early, as the PCK validation accuracy seemed to have converged, as well as the model clearly started to overfit after $32$ epochs, as seen by comparing the training and validation loss.
+\\
+\\
+The reduction of the learning rate happened after $21$ epochs. By looking at the validation accuracy in Figure \ref{fig:results} we can see, that the accuracy rapidly increases shortly after the reduction of the learning rate, hinting at the effectiveness of dropping the learning rate. 
+\\
+\\
+Comparing the training loss, validation loss and the validation accuracy we see, that the there is not an overlap between the models yielding the best training loss, validation loss and validation accuracy. As we in section \ref{sec:XAI} want to explore a model that performs decently well, we will be using the model with the highest validation accuracy as our model going forward. Thus, our model is the model from epoch $47$, which has a training loss of $4.19 \cdot 10^{-5}$, a validation loss of $5.43 \cdot 10^{-5}$ and a validation accuracy of $0.433$. If we test the model on the held-out testing set from Section \ref{sec:dataset}, we get a PCK score of $0.441$, which is based on all annotated keypoints (that is, both for $v = 1$ and $v = 2$)
 
 \subsection{Training Details}\label{subsec:training_details}
 The Stacked hourglass was implemented in Python 3.8.2 using PyTorch version 1.7.1 and Cuda version 10.2 on a machine using Windows 10 version 20H2, build 19042. The network was trained on an 8 GB NVIDIA GeForce GTX 1070 GPU using a Samsung 840 EVO SSD for data storage. Training the network takes about $70$ minutes per epoch, totalling to about $58$ hours for $50$ epochs.

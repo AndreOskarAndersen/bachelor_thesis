@@ -63,7 +63,7 @@ In Section \ref{sec:XAI} we interpreted the Stacked hourglass developed in Secti
 
 \subsubsection{Verification of the Skip-Connections}
 In Section \ref{subsec:verifying_skip_cons} we verified the effects of the skip-connections of the Stacked hourglass. This was done by disabling the skip-connections of the already trained Stacked hourglass and comparing the corresponding results with results of the the Stacked hourglass with the skip-connections enabled. This approach however, is not optimal, as we will be having some biased results, due to the fact, that the network was trained with the skip-connections enabled. To get an full understanding of the effects of the skip-connections, we should have trained a Stacked hourglass with the skip-connections disabled, whose results should have been compared with the Stacked hourglass with the skip-connections enabled. We decided to not train a Stacked hourglass with the skip-connections disabled due to time constraints, as well as the fact, that our approach does give a brief view into the effects of the skip-connections.
-
+\newpage
 \subsubsection{Dimensionality Analysis of the Latent Space}
 \begin{figure}[htbp]
     \centering
