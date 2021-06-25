@@ -19,27 +19,31 @@
     \frametitle{Introduktion}
     \begin{minipage}{0.5\textwidth}
         \begin{itemize}
-          \item<2-> \textit{Articulated Human Pose Estimation}
+          \item<2-> \textit{Articulated Human Pose Estimation} og \textit{explainable artificial intelligence}
           \item<3-> Anvendelse
           \begin{enumerate}
               \item Motion analysis
               \item Augmented reality
               \item Virtual reality
           \end{enumerate}
-          \item<4-> Problem definition
-          \begin{enumerate}
-              \item Implementer Stacked Hourglass af Newell \textit{et al.}
-              \item Udforsk Stacked Hourglass
-              \item Modificer Stacked Hourglass vha. viden
-          \end{enumerate}
+          \item <4-> Få kilder udforsker pose estimation algoritmer
         \end{itemize}
       \end{minipage} \hfill
       \begin{minipage}{0.45\textwidth}
-        \uncover<2->{
-          \begin{figure}
-            \includegraphics[width = 4cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/pose_estimation_example_img.jpg}
-          \end{figure}
-        }
+        \begin{itemize}
+            \item <5-> Hvorfor gør brug af XAI?
+            \begin{enumerate}
+                \item Forbedrer præstation
+                \item Bygger tillid
+                \item Vi kan lære af modellen
+            \end{enumerate}
+            \item<6-> Problem definition
+            \begin{enumerate}
+                \item Implementer Stacked Hourglass af Newell \textit{et al.}
+                \item Udforsk Stacked Hourglass
+                \item Modificer Stacked Hourglass vha. viden
+            \end{enumerate}
+        \end{itemize}
       \end{minipage}
 \end{frame}
 
@@ -59,7 +63,7 @@
             \begin{itemize}
                 \item Træning + validering: $69$.000 billeder
                 \item Flere personer i hvert billede
-                \item Optil $17$ keypoints per person
+                \item Op til $17$ keypoints per person
             \end{itemize}
         \end{itemize}
     \end{minipage}
@@ -132,15 +136,47 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Resultat}
+    \frametitle{Eksperiment og resultat}
+    \begin{minipage}{\textwidth}
+        \begin{itemize}
+            \item<2-> Kun ét hourglass
+            \item<3-> Følger ellers Newell \textit{et al.} og Camilla Olsen
+            \item<4-> Overfit
+            \item<5-> Epoch 47 - Validation PCK accuracy: 0.433. Test PCK accuracy: 0.441
+        \end{itemize}
+    \end{minipage}
+    \begin{minipage}{\textwidth}
+        \only<4>{
+          \begin{figure}
+            \includegraphics[height = 3.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/results_2.PNG}
+          \end{figure}
+        }
+    \end{minipage}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Fortolkning af modellen 1}
+    \frametitle{Fortolkning af modellen 1 - effekt af skip-connections}
+    \begin{itemize}
+        \item<2-> Påstand: anvendes til at "redde" information
+        \item<3-> SHG med skip-connection vs SHG uden skip-connection
+        \item<4-> Resultat
+    \end{itemize}
+    \begin{minipage}{\textwidth}
+        \only<2>{
+          \begin{figure}
+            \includegraphics[height = 3.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/hourglass.PNG}
+          \end{figure}
+        }
+        \only<4>{
+          \begin{figure}
+            \includegraphics[height = 6cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/pred_comparisons_2.PNG}
+          \end{figure}
+        }
+    \end{minipage}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Fortolkning af modellen 2}
+    \frametitle{Fortolkning af modellen 2 - Effekt af principal komponenter}
 \end{frame}
 
 \begin{frame}
