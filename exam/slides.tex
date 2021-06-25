@@ -1,0 +1,166 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+
+\begin{document}
+
+\title{2D Articulated Human Pose Estimation
+\newline \small Using Explainable Artificial Intelligence}
+
+\author{André Oskar Andersen
+\newline \small \texttt{wpr684}}
+
+\institute{Datalogisk Institut, Københavns Universitet}
+
+\date{2021}
+
+\frame{\titlepage}
+
+\begin{frame}
+    \frametitle{Introduktion}
+    \begin{minipage}{0.5\textwidth}
+        \begin{itemize}
+          \item<2-> \textit{Articulated Human Pose Estimation}
+          \item<3-> Anvendelse
+          \begin{enumerate}
+              \item Motion analysis
+              \item Augmented reality
+              \item Virtual reality
+          \end{enumerate}
+          \item<4-> Problem definition
+          \begin{enumerate}
+              \item Implementer Stacked Hourglass af Newell \textit{et al.}
+              \item Udforsk Stacked Hourglass
+              \item Modificer Stacked Hourglass vha. viden
+          \end{enumerate}
+        \end{itemize}
+      \end{minipage} \hfill
+      \begin{minipage}{0.45\textwidth}
+        \uncover<2->{
+          \begin{figure}
+            \includegraphics[width = 4cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/pose_estimation_example_img.jpg}
+          \end{figure}
+        }
+      \end{minipage}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Data}
+    % Hvilken datasæt bruger vi?
+    % Beskrivelse af datasæt
+    % Preprocessing
+    \begin{minipage}{0.5\textwidth}
+        \begin{itemize}
+            \item<2-> 2017 Microsoft COCO datasæt
+            \begin{enumerate}
+                \item Passer til problemet
+                \item State-of-the-art
+            \end{enumerate}
+            \item<3-> Beskrivelse
+            \begin{itemize}
+                \item Træning + validering: $69$.000 billeder
+                \item Flere personer i hvert billede
+                \item Optil $17$ keypoints per person
+            \end{itemize}
+        \end{itemize}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \uncover<2->{
+          \begin{figure}
+            \includegraphics[width = 5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/coco_example.PNG}
+          \end{figure}
+        }
+    \end{minipage}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Preprocessing af data}
+    \begin{minipage}{0.5\textwidth}
+        \begin{itemize}
+            \item<2-> Billederne
+            \begin{enumerate}
+                \item Centrerer billede omkring hver person
+                \item Resizer til $256 \times 256$
+                \item Trække gennemsnitlig rgb fra
+            \end{enumerate}
+            \item<3-> Keypoints
+            \begin{enumerate}
+                \item Indsætter $1$ i et tomt $64 \times 64$ billede
+                \item Gaussfilter
+                \item $17$ heatmaps
+            \end{enumerate}
+        \end{itemize}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \uncover<2->{
+          \begin{figure}
+            \includegraphics[width = 4cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/crop_img_2.PNG}
+          \end{figure}
+        }
+    \end{minipage}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Stacked hourglass}
+    % Stacked hourglass
+    % Hourglass
+    % Residual
+    \begin{minipage}{1\textwidth}
+        \begin{itemize}
+            \item<2-> Stacked hourglass
+            \item<3-> Hourglass
+            \item<4-> Residual module
+            \item<5-> Activation- og lossfunction
+        \end{itemize}
+    \end{minipage}
+    \begin{minipage}{1\textwidth}
+        \only<2>{
+            \begin{figure}
+                \includegraphics[width = 9cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/SHG.PNG}
+            \end{figure}
+        }
+        \only<3>{
+            \begin{figure}
+                \includegraphics[width = 7cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/hourglass.PNG}
+            \end{figure}
+        }
+        \only<4>{
+            \begin{figure}
+                \includegraphics[width = 6cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/residual.PNG}
+            \end{figure}
+        }
+    \end{minipage}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Resultat}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fortolkning af modellen 1}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fortolkning af modellen 2}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fortolkning af modellen 3}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Modificering af model}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Diskussion}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Konklusion}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fejl og rettelser}
+\end{frame}
+
+\end{document}
