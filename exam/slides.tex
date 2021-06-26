@@ -1,5 +1,10 @@
 \documentclass{beamer}
 \usepackage{graphicx}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage[ruled]{algorithm}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
 
 \begin{document}
 
@@ -19,25 +24,24 @@
     \frametitle{Introduktion}
     \begin{minipage}{0.5\textwidth}
         \begin{itemize}
-          \item<2-> \textit{Articulated Human Pose Estimation} og \textit{explainable artificial intelligence}
-          \item<3-> Anvendelse
-          \begin{enumerate}
-              \item Motion analysis
-              \item Augmented reality
-              \item Virtual reality
-          \end{enumerate}
-          \item <4-> Få kilder udforsker pose estimation algoritmer
+          \item<1-> \textit{Articulated Human Pose Estimation} og \textit{explainable artificial intelligence}
+          \item <2-> Få kilder udforsker pose estimation algoritmer
         \end{itemize}
       \end{minipage} \hfill
       \begin{minipage}{0.45\textwidth}
+        \only<1>{
+            \begin{figure}
+                \includegraphics[width = 4cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/pose_estimation_example_img.jpg}
+            \end{figure}
+        }
         \begin{itemize}
-            \item <5-> Hvorfor gør brug af XAI?
+            \item <3-> Hvorfor gør brug af XAI?
             \begin{enumerate}
                 \item Forbedrer præstation
-                \item Bygger tillid
+                \item Bygger tillid - styrker og svagheder
                 \item Vi kan lære af modellen
             \end{enumerate}
-            \item<6-> Problem definition
+            \item<4-> Problem definition
             \begin{enumerate}
                 \item Implementer Stacked Hourglass af Newell \textit{et al.}
                 \item Udforsk Stacked Hourglass
@@ -49,26 +53,17 @@
 
 \begin{frame}
     \frametitle{Data}
-    % Hvilken datasæt bruger vi?
-    % Beskrivelse af datasæt
-    % Preprocessing
     \begin{minipage}{0.5\textwidth}
         \begin{itemize}
-            \item<2-> 2017 Microsoft COCO datasæt
-            \begin{enumerate}
-                \item Passer til problemet
-                \item State-of-the-art
-            \end{enumerate}
-            \item<3-> Beskrivelse
-            \begin{itemize}
-                \item Træning + validering: $69$.000 billeder
-                \item Flere personer i hvert billede
-                \item Op til $17$ keypoints per person
-            \end{itemize}
+            \item 2017 Microsoft COCO
+            \item Træning + validering: $69$.000 billeder
+            \item Flere personer i hvert billede
+            \item Op til $17$ keypoints per person
+            \item Centrerer billede omkring hver person
         \end{itemize}
     \end{minipage}
     \begin{minipage}{0.45\textwidth}
-        \uncover<2->{
+        \uncover<1->{
           \begin{figure}
             \includegraphics[width = 5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/coco_example.PNG}
           \end{figure}
@@ -77,59 +72,31 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Preprocessing af data}
-    \begin{minipage}{0.5\textwidth}
-        \begin{itemize}
-            \item<2-> Billederne
-            \begin{enumerate}
-                \item Centrerer billede omkring hver person
-                \item Resizer til $256 \times 256$
-                \item Trække gennemsnitlig rgb fra
-            \end{enumerate}
-            \item<3-> Keypoints
-            \begin{enumerate}
-                \item Indsætter $1$ i et tomt $64 \times 64$ billede
-                \item Gaussfilter
-                \item $17$ heatmaps
-            \end{enumerate}
-        \end{itemize}
-    \end{minipage}
-    \begin{minipage}{0.45\textwidth}
-        \uncover<2->{
-          \begin{figure}
-            \includegraphics[width = 4cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/crop_img_2.PNG}
-          \end{figure}
-        }
-    \end{minipage}
-\end{frame}
-
-\begin{frame}
     \frametitle{Stacked hourglass}
-    % Stacked hourglass
-    % Hourglass
-    % Residual
     \begin{minipage}{1\textwidth}
         \begin{itemize}
-            \item<2-> Stacked hourglass
-            \item<3-> Hourglass
-            \item<4-> Residual module
-            \item<5-> Activation- og lossfunction
+            \item<1-> Stacked hourglass
+            \begin{itemize}
+                \item Stakker hourglasses
+                \item Input: $256 \times 256$ billede der downsample inden første hourglass
+                \item Output: $17 \times 64 \times 64$ heatmaps
+            \end{itemize}
+            \item<2-> Hourglass
+            \begin{itemize}
+                \item Residuale modules
+            \end{itemize}
+            \item<3> Loss- og activationfunction
         \end{itemize}
     \end{minipage}
     \begin{minipage}{1\textwidth}
-        \only<2>{
+        \only<1>{
             \begin{figure}
                 \includegraphics[width = 9cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/SHG.PNG}
             \end{figure}
         }
-        \only<3>{
+        \only<2>{
             \begin{figure}
                 \includegraphics[width = 7cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/hourglass.PNG}
-            \end{figure}
-        }
-        \only<4>{
-            \begin{figure}
-                \includegraphics[width = 6cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/residual.PNG}
             \end{figure}
         }
     \end{minipage}
@@ -139,14 +106,14 @@
     \frametitle{Eksperiment og resultat}
     \begin{minipage}{\textwidth}
         \begin{itemize}
-            \item<2-> Kun ét hourglass
-            \item<3-> Følger ellers Newell \textit{et al.} og Camilla Olsen
-            \item<4-> Overfit
-            \item<5-> Epoch 47 - Validation PCK accuracy: 0.433. Test PCK accuracy: 0.441
+            \item<1-> Kun ét hourglass
+            \item<2-> Følger ellers Newell \textit{et al.} og Camilla Olsen
+            \item<3-> Overfit
+            \item<4-> Validation PCK accuracy: 0.433. Test PCK accuracy: 0.441
         \end{itemize}
     \end{minipage}
     \begin{minipage}{\textwidth}
-        \only<4>{
+        \only<3>{
           \begin{figure}
             \includegraphics[height = 3.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/results_2.PNG}
           \end{figure}
@@ -155,19 +122,19 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Fortolkning af modellen 1 - effekt af skip-connections}
+    \frametitle{Fortolkning af modellen 1 - Effekt af skip-connections}
     \begin{itemize}
-        \item<2-> Påstand: anvendes til at "redde" information
-        \item<3-> SHG med skip-connection vs SHG uden skip-connection
-        \item<4-> Resultat
+        \item<1-> Påstand: anvendes til at "redde" information
+        \item<2-> Fremgang: SHG med skip-connection vs SHG uden skip-connection
+        \item<3-> Resultat
     \end{itemize}
     \begin{minipage}{\textwidth}
-        \only<2>{
+        \only<1>{
           \begin{figure}
             \includegraphics[height = 3.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/hourglass.PNG}
           \end{figure}
         }
-        \only<4>{
+        \only<3>{
           \begin{figure}
             \includegraphics[height = 6cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/pred_comparisons_2.PNG}
           \end{figure}
@@ -177,26 +144,233 @@
 
 \begin{frame}
     \frametitle{Fortolkning af modellen 2 - Effekt af principal komponenter}
+    \begin{itemize}
+        \item<1-> Formål: effekt af \textit{latent space}s principal komponenter
+        \item<2-> PCA og "Gå" ud af gennemsnitspunkt med stepsize = $c \cdot \sqrt{\lambda}$
+    \end{itemize}
+    \begin{minipage}{\textwidth}
+        \only<3>{
+          \begin{figure}
+            \includegraphics[height = 7.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/shape_analysis.PNG}
+          \end{figure}
+        }
+    \end{minipage}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Fortolkning af modellen 3}
+    \frametitle{Fortolkning af modellen 3 - Clustering af latent space}
+    \begin{itemize}
+        \item<1-> Formål: Har modellen lært at relatere lignende datapunkter til hinanden?
+        \item<2-> Resultater
+    \end{itemize}
+    \only<3>{
+        \begin{figure}
+        \includegraphics[height = 5.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/cluster_all_skeletons.PNG}
+        \end{figure}
+    }
+    \only<4>{
+        \begin{figure}
+        \includegraphics[height = 5.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/cluster_full_skeletons.PNG}
+        \end{figure}
+    }
 \end{frame}
 
 \begin{frame}
-    \frametitle{Modificering af model}
+    \frametitle{Modificering af Stacked hourglass}
+    \only<1-3>{
+        \begin{itemize}
+            \item<1-3> Formål: Anvende viden fra XAI til at optimere model
+            \item<2-3> Forbedringspunkter:
+            \begin{enumerate}
+                \item Støj
+                \item Misklassificeringer
+            \end{enumerate}
+            \item<3> Løsning: Autoencoder
+        \end{itemize}
+    }
+    \only<4->{
+        \begin{figure}
+        \includegraphics[width = \textwidth]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/Ae_model.PNG}
+        \end{figure}
+    }
+    \uncover<5->{
+        \begin{figure}
+            \includegraphics[width = \textwidth]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/SHG_AE_2.PNG}
+        \end{figure}
+    }
 \end{frame}
 
 \begin{frame}
-    \frametitle{Diskussion}
+    \frametitle{Resultat}
+    \begin{itemize}
+        \item<1-> Bedre performance
+        \item<2-> Plateau 
+        \item<3-> Validation PCK accuracy: 0.467 (+7.8\%/0.034)
+        \item<3-> Testing PCK accuracy: 0.474 (+7.48\%/0.033)
+    \end{itemize}
+    \only<1-2>{
+        \begin{figure}
+        \includegraphics[width = \textwidth]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/SHG_Ae_Evolution_2.PNG}
+        \end{figure}
+    }
+\end{frame}
+
+\begin{frame}
+    \frametitle{Diskussion 1 - Sammenligning af modeller}
+    \begin{itemize}
+        \item<1-2> Camilla Olsen (kun synlige keypoints)
+        \begin{tabular}{l|c|c}
+            Beskrivelse & \# Stakke & Testing accuracy \\
+            \hline
+            Olsen - $2A$ & $2$ & $0.72$ \\
+            \hline
+            Olsen - $2B$ & $2$ & $0.81$ \\
+            \hline
+            Olsen - $2M$ & $2$ & $0.83$ \\
+            \hline
+            \hline
+            Min SHG & $1$ & $0.469$ \\
+            \hline
+            \textbf{Min modificeret SHG} & $\bm{1}$ & $\bm{0.576}$ \\
+            \hline
+        \end{tabular}
+        \item<2> Forskelle
+        \begin{enumerate}
+            \item Antal stakke
+            \item Trænet kun på synlige keypoints
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Diskussion 1 - Sammenligning af modeller}
+    \begin{itemize}
+        \item<1-> Newell \textit{et al.}
+        \begin{itemize}
+            \item<1-> Ét hourglass: keypoints ikke forbundet til overkrop/hoved under træning: $0.65$
+            \item<1-> Mine:
+            \begin{enumerate}
+                \item Standard SHG: 0.32
+                \item Modificeret SHG: 0.38
+            \end{enumerate}
+        \end{itemize}
+    \end{itemize}
+    \uncover<1>{
+        \begin{figure}
+        \includegraphics[width = 7 cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/newell_accuracy.PNG}
+        \end{figure}
+    }
+\end{frame}
+
+\begin{frame}
+    \frametitle{Diskussion 1 - Sammenligning af modeller}
+    \begin{itemize}
+        \item<1-> Newell \textit{et al.}
+        \begin{itemize}
+            \item Ingen accuracy for alle keypoints, dog for keypoints ikke forbundet til overkrop/hoved, maximeres løbende accuracy ved $0.65$
+            \item<1-> Min:
+            \begin{enumerate}
+                \item Standard SHG: 0.32
+                \item Modificeret SHG: 0.38
+            \end{enumerate}
+        \end{itemize}
+        \item<1-> Forskelle:
+        \begin{enumerate}
+            \item Forskellig data
+            \item Forskelligt setup skyldet manglende information
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Diskussion 2 - Hvorfor hjalp autoencoderen?}
+    \begin{enumerate}
+        \item<1-> Clustering
+        \item<2> Fjernet støj i latent space
+    \end{enumerate}
+    \only<1>{
+        \begin{figure}
+            \includegraphics[width = 6.5 cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/cluster_all_skeletons.PNG}
+            \includegraphics[width = 6.5 cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/SHG_AE_clusters.PNG}
+            \caption{Top: SHG. Bund: SHG + AE}
+        \end{figure}
+    }
+    \uncover<2>{
+        \begin{figure}
+            \includegraphics[width = 5 cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/SHG_pca_var_dist.PNG}
+            \includegraphics[width = 5 cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/SHG_AE_pca_var_dist.PNG}
+            \caption{Venstre: SHG. Højre: SHG + AE}
+        \end{figure}
+    }
+\end{frame}
+
+\begin{frame}
+    \frametitle{Future work}
+    \begin{enumerate}
+        \item<1-> Effekt af at stakke flere modificeret hourglasses
+        \item<2-> Redudans andre steder + introduktion af redudans ved flere hourglasses
+        \item<3-> Forbedring ved yderligere korrektion af misklassification
+    \end{enumerate}
 \end{frame}
 
 \begin{frame}
     \frametitle{Konklusion}
+    \begin{enumerate}
+        \item<1-> Implementeret Stacked hourglass
+        \item<2-> Udforsket model
+        \begin{enumerate}
+            \item Bekræftet påstand om skip-connections
+            \item Effekt af første principal komponent, samt støj
+            \item Seperation
+        \end{enumerate}
+        \item<3-> Brugt opnået viden til at forbedre Stacked hourglass
+    \end{enumerate}
 \end{frame}
 
 \begin{frame}
     \frametitle{Fejl og rettelser}
+    \begin{enumerate}
+        \item<1-> Normalfordeling
+        $$\mathcal{N} \left(\mu,  \sigma^2\right)$$
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fejl og rettelser}
+    \begin{enumerate}
+        \item Normalfordeling
+        \item Nearest Neighbour Upsampling
+    \end{enumerate}
+    \begin{algorithm}[H]
+        \caption{Nearest Neighbour Upsampling}
+        \begin{algorithmic}[1]
+            \Require Input image $X$ of size $m \times n$
+            \Require Wanted output size $xm \times yn$, where $x, y \in \mathbb{Z}^{+}$
+            \State Create empty image $O$ of size $xm \times yn$
+            \ForAll{pixel $p \in X$}
+                \State $i,j = \text{index of } p \text{ in } X$
+                \State Insert $p$ at index $(\color{red}{\lfloor}\color{black}xi\color{red}{\rfloor}\color{black}, \color{red}{\lfloor}\color{black}yj\color{red}{\rfloor}\color{black})$ in $O$
+            \EndFor
+            \ForAll{empty pixel $p \in O$}
+                \State Let $p$ be the value of the nearest neighbour
+            \EndFor
+            \State \textbf{return} $O$
+        \end{algorithmic}
+    \end{algorithm}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fejl og rettelser}
+    \begin{enumerate}
+        \item Normalfordeling
+        \item Nearest Neighbour Upsampling
+        \item Effekt af principal komponenter
+    \end{enumerate}
+    \only<1>{
+        \begin{figure}
+            \includegraphics[height = 6cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/shape_analysis.PNG}
+          \end{figure}
+    }
 \end{frame}
 
 \end{document}

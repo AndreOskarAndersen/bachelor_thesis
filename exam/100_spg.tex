@@ -146,7 +146,18 @@ Det kommer af
 $$\mathcal{N} \left(0, x^2e-2 \right) = 0.1 \cdot x \cdot N \sim \mathcal{N} \left( 0, 1 \right)$$
 Så vi lader variancen afhænge af inputtet.
 
+\subsection{Hvorfor reducerer du ikke bare bottleneck istedet for at anvende autoencoder?}
+Det kunne jeg sagtens have gjort. Den største udfordring med dette er dog en tidsbegrænsning. Havde jeg dog gjort dette skulle jeg også ændre på decoderen, idet den forventer et bestemt input størrelse. Dertil skulle jeg altså også ændre på encoder (pga. skip cons) og vi er snart ude i en helt omskrivning af SHG, hvilket potentielt ville forværre dens performance.
+
+\subsection{Hvordan ved du, at SHG ikke bare bliver forbedret fordi den trænes længere og ikke fordi der gøres brug af en autoencoder?}
+Jeg ved dette, idet ved SHG plateued accuracies, samt validation loss steg, hvilket ikke var tilfældet ved brugen af autoencoderen
+
+\subsection{Hvorfor sammenligner du ikke din model med Newells performance på albue og håndled?}
+Newells performance på albue og håndled er for en model med $8$ hourglass, istedet kun for det ene som jeg anvender. Denne sammenligning ville simpelthen være alt for unfair.
+
 \section{Discussion}
+\subsection*{Er den tredje cluster ved clustering på alle skeleter ikke bare seperationen som du beskriver ved clustering på fulde skeleter?}
+Det kunne godt være, men jeg tvivler på det. Ved clustering på fulde skeleter ser vi, at der gøres forskel på skeleter i bevægelse og skeleter der er stilstående. Det samme ses ikke i de to clusters i Cluster 0.
 
 \section{Andet}
 Hvilke andre teorier kunne man bruge?
