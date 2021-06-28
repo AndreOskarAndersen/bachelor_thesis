@@ -147,3 +147,60 @@ Forberedelse til møde 10:
 4. Nearest neighbours
 5. Der er vel to forskellige måder man kan gå til XAI? Kigge på modellen og kigge på dataen? Man kan vel lave en masse statistik på de to
 grupper (dem den har fået rigtigt og dem den har fået forkert)
+
+Forberedelse til møde 11/12:
+1. Normalt når jeg laver en rapport skal jeg argumentere for mine valg, det har jeg lidt svært ved i SHG (hvorfor MSE/
+hvorfor gøres der brug af MSE/hvorfor 256 antal channels?) Er det vigtigt?
+2. Skal jeg lave statistik på clusters for at fremhæve forskelle?
+3. Finder jeg centroid rigtigt?
+4. Skal jeg standardisere inden jeg finder centroid?
+5. Skal jeg finde centroid før eller efter projektering?
+6. Skal jeg overhovedet projektere? (DTU gør ikke)
+7. Hvorfor gør man egentlig brug af PCA her? (Hvorfor ikke bare gå ud af akserne istedet?)
+8. Når jeg eksempelvis gør brug af den anden PC, skal jeg så kun projektere ind på den eller skal jeg projektere ind på både PC 1 og PC 2?
+9. Hvad kalder man denne procedure?
+10. Hvorfor var det, at jeg kun skulle fokusere på fuld-annoteret billeder?
+
+Forberedelse til møde 13:
+1. På figur hvor jeg sammenligner preds w/ og w/o skip cons: kan jeg godt skrive, at modellen uden skip cons fungerer nogenlunde på større led 
+(skuldrer og hofter), hvilket kan skyldes at der er mindre sandsynlighed for at deres information bliver tabt ved max pooling?
+2. Kan man kalde det "shape analysis"?
+3. Hvorfor gør man brug af PCA til at gå ud af akserne (er det pga manifold?)
+4. Shape analysis: samme trend ser ikke ud til at holde hvis man gør brug af flere "skridt"
+5. Skal jeg finde mean shape før eller efter projektering?
+6. Skal jeg kun projektere ned til den PC jeg ønsker at gå ud af (eks. ned til PC 2 (dvs. 1 dimension)) eller også de PC der er lavere (eks. ned til
+7. både PC 1 og PC 2 (dvs. 2 dimensioner)?)
+8. Er det forkert af mig at køre kmeans på fuld dim. i forholdet til curse of dimensionality?
+9. Burde jeg lave statistik på clusters?
+10. Må jeg kalde det for "latent space"?
+11. Er min autoencoder implementation rigtig?
+12. Skal jeg træne autoencoder på alt data eller kun fulde skeleter?
+
+Forberedelse til møde 14:
+1. Kan den kedelige shape analysis skyldes, at dataen ligger i et ikke linæert rum, hvilket PCA ikke kan forklares? eller er det fordi, at akserne
+(pånær den første) ikke har så meget varians?
+2. Er det dumt af mig i shape analysis, at jeg plotter PC > 402, idet PC402 forklarer 95% data (og de det restende derved bare er støj?)
+
+3. Skal jeg skrive Newell's og Camillas acc. sammen med min?
+4. Mangler et overordnet formål ved XAI (normal: styrker og ulemper til trust, eller forbedring af model)
+
+5. Er det dumt jeg ikke gør brug af maxpooling?
+6. Er det dumt jeg gør brug af same convolutions?
+7. Er det dumt at mit linært lag ikke reducerer dims?
+8. Er det forkert, at min noise kommer fra en standard normal fordeling?
+9. Er det rigtigt forstået, at jeg ikke skal træne SHG + AE om?
+10. Kombinerer jeg SHG og AE rigtigt (AE skal sendes helt ind efter bottleneck og bare køres normalt?)?
+- Hvis ja: hvordan kan det så optimere modellen?
+
+Forberedelse til møde 15:
+1. Er det dumt, at jeg beskriver matematikken bag forward/back prop.?
+2. Er mit thesis for langt?
+3. Ved "aritulated" (pose estimation) menes der, at det er led/skeletet man predictor?
+4. Hvis jeg skulle verify skip-cons effekt, burde jeg så egentlig ikke have trænet en ny model uden skip cons?
+5. Er SGD og mini-batch gradient descent det samme?
+6. Er Conv2dTranpose med stride = 1 det samme som Conv2d?
+7. Skal jeg træne SHG længere, så den matcher SHG + AE?
+8. Skal jeg lave XAI på SGH + AE?
+9. Er i tvivl om hvad man skal i diskussionen?
+10. Jeg kan jo tage meget af Camillas diskussion?
+11. Dato og tidspunkt for eksamen

@@ -7,6 +7,7 @@
 \usepackage[noend]{algpseudocode}
 
 \begin{document}
+\beamertemplatenavigationsymbolsempty
 
 \title{2D Articulated Human Pose Estimation
 \newline \small Using Explainable Artificial Intelligence}
@@ -58,8 +59,9 @@
             \item 2017 Microsoft COCO
             \item Træning + validering: $69$.000 billeder
             \item Flere personer i hvert billede
-            \item Op til $17$ keypoints per person
+            \item $17$ keypoints per person
             \item Centrerer billede omkring hver person
+            \item Laver $17$ heatmaps
         \end{itemize}
     \end{minipage}
     \begin{minipage}{0.45\textwidth}
@@ -163,12 +165,12 @@
         \item<1-> Formål: Har modellen lært at relatere lignende datapunkter til hinanden?
         \item<2-> Resultater
     \end{itemize}
-    \only<3>{
+    \only<2>{
         \begin{figure}
         \includegraphics[height = 5.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/cluster_all_skeletons.PNG}
         \end{figure}
     }
-    \only<4>{
+    \only<3>{
         \begin{figure}
         \includegraphics[height = 5.5cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/cluster_full_skeletons.PNG}
         \end{figure}
@@ -371,6 +373,16 @@
             \includegraphics[height = 6cm]{C:/Users/André/OneDrive 2/OneDrive/Skrivebord/bachelor_thesis/thesis/entities/shape_analysis.PNG}
           \end{figure}
     }
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fejl og rettelser}
+    \begin{enumerate}
+        \item Normalfordeling
+        \item Nearest Neighbour Upsampling
+        \item Effekt af principal komponenter
+        \item Batch normalization bruges ikke for at undgå overfitting
+    \end{enumerate}
 \end{frame}
 
 \end{document}

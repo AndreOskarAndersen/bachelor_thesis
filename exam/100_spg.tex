@@ -19,6 +19,12 @@
 \maketitle
 
 \section{Theory}
+\subsection{I PCA, hvorfor gør man så brug af covariance matricen?}
+Covairance matricen viser om forskellige dimensioner increaser eller decreaser sammen
+
+\subsection{Hvordan fungerer Batch Normalization som regularization?}
+Det er nok en fejl, at jeg har skrevet Batch Normalization er den regularization som jeg anvender, idet den vel ikke helt fungerer som det, men istedet bare hjælper modellen med at træne. Istedet gør jeg brug af en mini batch størrelse på $16$ hvilket fungerer som regularization, idet den ikke husker hele datasættet
+
 \subsection{Hvordan kan man gøre brug af classification til pose estimation?}
 Man kan inddele input billedet i del billeder. Ved at klassificere i hvilket delbillede et led ligger i, kan man finde ud af positionen af ledet.
 
@@ -41,7 +47,7 @@ Jeg valgte at følge Newell og gøre brug af MSE, idet målet med denne thesis i
 Momentum sker i linje 4, hvor der gøres brug af ligningen $\bm{v} = \alpha \bm{v} - \eta \bm{g}$. Her bestemmer $\alpha$ effekten af tidligere velocities, som så bruges til at peje i retning af hvor algoritmen skal bevæge sig hen imod.
 
 \subsection{Kan du forklare RMSProp?}
-RMSProp minder meget om SGD. Ideen er at straffe parameterer der får gradienten til at svinge meget. Den første forskel ligger i linje 5, hvor $\bm{r} = \rho \bm{r} + (1 - \rho) \bm{g} \odot \bm{g}$, som vægter hvilke parametrer der får gradient til at svinge meget. Her bruges $\rho$ til at bestemme effekten af tidligere squared gradients, samt begrænser den nuværende squared gradient og $\bm{g} \odot \bm{g}$ bruges til at få parameter der svinger meget, til at svinge endnu mere. I den næste linje udregnes så $- \frac{\eta}{\sqrt{\delta + \bm{r}}} \odot \bm{g}$, som straffer parameterne der får gradienten til at svinge meget.
+RMSProp minder meget om SGD. Ideen er at straffe parameterer der får gradienten til at svinge meget. Den første forskel ligger i linje 5, hvor $\bm{r} = \rho \bm{r} + (1 - \rho) \bm{g} \odot \bm{g}$, som vægter hvilke parametrer der får gradient til at svinge meget. Her bruges $\rho$ til at bestemme effekten af tidligere squared gradients, samt sørger for, at $\bm{r}$ ikke eksploderer og $\bm{g} \odot \bm{g}$ bruges til at få parameter der svinger meget, til at svinge endnu mere. I den næste linje udregnes så $- \frac{\eta}{\sqrt{\delta + \bm{r}}} \odot \bm{g}$, som straffer parameterne der får gradienten til at svinge meget.
 
 \subsection{Hvad er fordelen ved at gøre brug af ReLU?}
 Fordelene ligger primært i (1) \textit{universal approxmiation theorem} der siger, at et neuralt netværk med mindst ét lag med ReLU og nok knuder, kan approksimere en begrænset funktion på et lukket interval, (2) ReLU er nem/hurtig at udregne, idet den bare skal vælge imellem $0$ og $x$, samt (3) den afledte af ReLU er nem/hurtig at udregne, idet den bare er $0$ hvis $x < 0$ og $1$ hvis $x > 0$. Derudover undviger den lidt \textit{the vanishing gradient problem}, mosat Sigmoid hvis afledte ligger imellem $0$ og $0.25$.
@@ -144,7 +150,7 @@ Jeg mener, at SHG kun gør brug af ReLU som sin activationfunction. Havde jeg i 
 \subsection{Hvorfor gør du brug af den normal distribution som du gør, når du tilføjer støj til dataen for AE?}
 Det kommer af
 $$\mathcal{N} \left(0, x^2e-2 \right) = 0.1 \cdot x \cdot N \sim \mathcal{N} \left( 0, 1 \right)$$
-Så vi lader variancen afhænge af inputtet.
+Så vi lader variancen afhænge af inputtet. Ved nærmere eftertanke er dette måske ikke helt rigtigt, idet $x^2$ måske er lidt i overkanten.
 
 \subsection{Hvorfor reducerer du ikke bare bottleneck istedet for at anvende autoencoder?}
 Det kunne jeg sagtens have gjort. Den største udfordring med dette er dog en tidsbegrænsning. Havde jeg dog gjort dette skulle jeg også ændre på decoderen, idet den forventer et bestemt input størrelse. Dertil skulle jeg altså også ændre på encoder (pga. skip cons) og vi er snart ude i en helt omskrivning af SHG, hvilket potentielt ville forværre dens performance.
@@ -156,7 +162,7 @@ Jeg ved dette, idet ved SHG plateued accuracies, samt validation loss steg, hvil
 Newells performance på albue og håndled er for en model med $8$ hourglass, istedet kun for det ene som jeg anvender. Denne sammenligning ville simpelthen være alt for unfair.
 
 \section{Discussion}
-\subsection*{Er den tredje cluster ved clustering på alle skeleter ikke bare seperationen som du beskriver ved clustering på fulde skeleter?}
+\subsection{Er den tredje cluster ved clustering på alle skeleter ikke bare seperationen som du beskriver ved clustering på fulde skeleter?}
 Det kunne godt være, men jeg tvivler på det. Ved clustering på fulde skeleter ser vi, at der gøres forskel på skeleter i bevægelse og skeleter der er stilstående. Det samme ses ikke i de to clusters i Cluster 0.
 
 \section{Andet}
