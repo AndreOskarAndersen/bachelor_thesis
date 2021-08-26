@@ -1,2 +1,0 @@
-* Læs SHG slut sektion 2 og hele sektion 3
-* Overvej om input billederne skal laves om fra 128 x 128 til 256 x 256 (som beskrevet i SHG).
